@@ -1,0 +1,315 @@
+openapi: 3.1.0
+info:
+  title: Tradeverifyd Documents Relationships API
+  description: '
+
+    The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
+
+
+    For more information visit [tradeverifyd.com](https://tradeverifyd.com).
+
+
+    If you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.
+
+
+    When making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.
+
+
+    For example:
+
+
+    ```bash
+
+    curl --silent --location -G ''https://.../v1/search/entities'' \
+
+    --data-urlencode ''name=Contoso Corporation'' \
+
+    --data-urlencode ''jurisdiction=US'' \
+
+    --header "ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY"
+
+    ```
+
+    '
+  termsOfService: https://tradeverifyd.com/terms-of-service
+  contact:
+    name: tradeverifyd.com
+    url: https://tradeverifyd.com/
+    email: support@tradeverifyd.com
+  license:
+    name: Proprietary License
+    url: https://tradeverifyd.com/terms-of-service
+  version: 0.2.0
+servers:
+- url: https://api.tradeverifyd.com
+  description: Production server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Relationships
+  description: Relationships between entities
+paths:
+  /v1/relationship-types:
+    get:
+      tags:
+      - Relationships
+      summary: Get Relationship Types Detailed
+      description: 'Get all available relationship types with enhanced metadata.
+
+
+        This endpoint provides a comprehensive list of all relationship types used in the system
+
+        with additional metadata including category, display name, and bidirectional flag.
+
+
+        **Categories:**
+
+        Relationship types are organized into two categories:
+
+        - `affiliate`: Affiliate connections including ownership, control, and partnership relationships
+
+        - `trade`: Trade relationships including supply chain, financial, corporate, and other business connections
+
+
+        Use this endpoint to understand the meaning and categorization of relationship types
+
+        that appear in other API responses such as entity graphs and relationship queries.'
+      operationId: get_relationship_types_detailed_relationship_types_get
+      responses:
+        '200':
+          description: List of all available relationship types with enhanced metadata
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/RelationshipTypeDetailResponse'
+                type: array
+                title: Response Get Relationship Types Detailed Relationship Types Get
+              examples:
+                relationship_types:
+                  summary: Example Relationship Types
+                  value:
+                  - type: IS_SUPPLIER_OF
+                    display_name: Is Supplier Of
+                    category: trade
+                    description: An entity provides goods or services to another entity, usually in a commercial context.
+                    bidirectional: false
+                  - type: IS_AFFILIATE_OF
+                    display_name: Is Affiliate Of
+                    category: affiliate
+                    description: An entity is associated with another, usually through ownership or control.
+                    bidirectional: false
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+  /v1/relationship-type-categories:
+    get:
+      tags:
+      - Relationships
+      summary: Get Relationship Type Categories
+      description: 'Get all relationship type categories with their associated types.
+
+
+        This endpoint provides a categorized view of all relationship types,
+
+        grouping them by their business purpose (e.g., ownership, supply chain, financial).
+
+
+        Use this to understand the different categories of relationships and which
+
+        specific relationship types belong to each category.'
+      operationId: get_relationship_type_categories_relationship_type_categories_get
+      responses:
+        '200':
+          description: List of all relationship type categories with their associated types
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationshipTypeCategoriesResponse'
+              examples:
+                categories:
+                  summary: Example Categories
+                  value:
+                    categories:
+                    - name: ownership
+                      display_name: Ownership Relationships
+                      description: Relationships indicating ownership or control between entities
+                      relationship_count: 4
+                      types:
+                      - IS_MAJORITY_SHAREHOLDER_OF
+                      - IS_SUBISIDIARY_OF
+                      - IS_THE_HOLDING_COMPANY_OF
+                      - IS_THE_PARENT_COMPANY_OF
+                    - name: supply_chain
+                      display_name: Supply Chain Relationships
+                      description: Relationships in the supply chain including suppliers, manufacturers, and shipping
+                      relationship_count: 6
+                      types:
+                      - IS_SUPPLIER_OF
+                      - IS_LIKELY_SUPPLIER_OF
+                      - IS_MANUFACTURER_OF
+                      - IS_A_VENDOR_OF
+                      - SHIPS_GOODS_TO
+                      - SHIPS_VIA
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+  /v1/relationships/types:
+    get:
+      tags:
+      - Relationships
+      summary: Get Relationship Types
+      description: 'Get all available relationship types with their descriptions.
+
+
+        This endpoint provides a comprehensive list of all relationship types used in the system
+
+        (e.g., "IS_SUPPLIER_OF", "IS_OTHERWISE_LINKED_TO", "DIRECTLY_CONSOLIDATES") along with
+
+        detailed descriptions of what each type means.
+
+
+        Use this endpoint to understand the meaning of relationship types that appear in other
+
+        API responses such as entity graphs and relationship queries.'
+      operationId: get_relationship_types_relationships_types_get
+      responses:
+        '200':
+          description: List of all available relationship types with their descriptions
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/RelationshipTypeResponse'
+                type: array
+                title: Response Get Relationship Types Relationships Types Get
+              examples:
+                relationship_types:
+                  summary: Example Relationship Types
+                  value:
+                  - relationship_type: IS_SUPPLIER_OF
+                    description: An entity provides goods or services to another entity, usually in a commercial context.
+                  - relationship_type: IS_OTHERWISE_LINKED_TO
+                    description: One entity has been manually identified as relating to another, or there is a business reason to display two entities as connected when they otherwise would not be. Relations of this type must have a batch ID so they can easily be removed. The meaning of this relationship is poorly-defined and should be used sparingly as a last resort.
+                  - relationship_type: DIRECTLY_CONSOLIDATES
+                    description: The parent entity fully consolidates the accounts of the child entity, as per the accounting standard(s) specified; the child entity is the closest entity being fully consolidated by the parent in any applicable hierarchical ownership structure.
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+components:
+  schemas:
+    RelationshipTypeCategory:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: The category name
+        display_name:
+          type: string
+          title: Display Name
+          description: Human-readable name for the category
+        description:
+          type: string
+          title: Description
+          description: Description of what this category represents
+        relationship_count:
+          type: integer
+          title: Relationship Count
+          description: Number of relationship types in this category
+        types:
+          items:
+            type: string
+          type: array
+          title: Types
+          description: List of relationship type names in this category
+      type: object
+      required:
+      - name
+      - display_name
+      - description
+      - relationship_count
+      - types
+      title: RelationshipTypeCategory
+      description: "Response model for relationship type categories.\n\nAttributes:\n    name: The category name (e.g., ownership, supply_chain).\n    display_name: Human-readable name for the category.\n    description: Description of what this category represents.\n    relationship_count: Number of relationship types in this category.\n    types: List of relationship type names in this category."
+    RelationshipTypeResponse:
+      properties:
+        relationship_type:
+          type: string
+          title: Relationship Type
+          description: The type of relationship
+        description:
+          type: string
+          title: Description
+          description: Description of what this relationship type means
+      type: object
+      required:
+      - relationship_type
+      - description
+      title: RelationshipTypeResponse
+      description: "Response model for relationship types.\n\nAttributes:\n    relationship_type: The type of relationship (e.g., IS_SUPPLIER_OF, IS_OTHERWISE_LINKED_TO).\n    description: A description of what this relationship type means."
+    RelationshipTypeCategoriesResponse:
+      properties:
+        categories:
+          items:
+            $ref: '#/components/schemas/RelationshipTypeCategory'
+          type: array
+          title: Categories
+      type: object
+      required:
+      - categories
+      title: RelationshipTypeCategoriesResponse
+      description: "Response model for relationship type categories endpoint.\n\nAttributes:\n    categories: List of relationship type categories."
+    RelationshipTypeDetailResponse:
+      properties:
+        type:
+          type: string
+          title: Type
+          description: The type of relationship
+        display_name:
+          type: string
+          title: Display Name
+          description: Human-readable name for the relationship type
+        category:
+          type: string
+          title: Category
+          description: The category this relationship belongs to
+        description:
+          type: string
+          title: Description
+          description: Description of what this relationship type means
+        bidirectional:
+          type: boolean
+          title: Bidirectional
+          description: Whether this relationship type is bidirectional
+      type: object
+      required:
+      - type
+      - display_name
+      - category
+      - description
+      - bidirectional
+      title: RelationshipTypeDetailResponse
+      description: "Enhanced response model for relationship types with additional metadata.\n\nAttributes:\n    type: The type of relationship (e.g., IS_SUPPLIER_OF, DIRECTLY_CONSOLIDATES).\n    display_name: Human-readable name for the relationship type.\n    category: The category this relationship belongs to (e.g., supply_chain, ownership).\n    description: A description of what this relationship type means.\n    bidirectional: Whether this relationship type is bidirectional."
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: ocp-apim-subscription-key

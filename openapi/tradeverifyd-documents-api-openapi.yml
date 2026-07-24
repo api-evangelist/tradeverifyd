@@ -1,0 +1,180 @@
+openapi: 3.1.0
+info:
+  title: Tradeverifyd Documents API
+  description: '
+
+    The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
+
+
+    For more information visit [tradeverifyd.com](https://tradeverifyd.com).
+
+
+    If you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.
+
+
+    When making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.
+
+
+    For example:
+
+
+    ```bash
+
+    curl --silent --location -G ''https://.../v1/search/entities'' \
+
+    --data-urlencode ''name=Contoso Corporation'' \
+
+    --data-urlencode ''jurisdiction=US'' \
+
+    --header "ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY"
+
+    ```
+
+    '
+  termsOfService: https://tradeverifyd.com/terms-of-service
+  contact:
+    name: tradeverifyd.com
+    url: https://tradeverifyd.com/
+    email: support@tradeverifyd.com
+  license:
+    name: Proprietary License
+    url: https://tradeverifyd.com/terms-of-service
+  version: 0.2.0
+servers:
+- url: https://api.tradeverifyd.com
+  description: Production server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Documents
+  description: Operations involving documents
+paths:
+  /v1/file/upload:
+    post:
+      tags:
+      - Documents
+      summary: Upload a file
+      description: Uploads a file to a specific folder within your organization.
+      operationId: upload_file_file_upload_post
+      parameters:
+      - name: path
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Path
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_file_file_upload_post'
+      responses:
+        '200':
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileUploadResponse'
+              examples:
+                successful_upload:
+                  summary: Successful file upload
+                  description: File was successfully uploaded to the specified path
+                  value:
+                    success: true
+                    url: https://storage.tradeverifyd.example/org123/documents/invoice-2024-001.pdf
+                upload_with_subdirectory:
+                  summary: Upload to subdirectory
+                  description: File uploaded to a nested directory structure
+                  value:
+                    success: true
+                    url: https://storage.tradeverifyd.example/org123/compliance/2024/certificate-of-origin.pdf
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              examples:
+                no_organization:
+                  summary: No organization for user
+                  value:
+                    detail: No organization for user.
+                organization_not_found:
+                  summary: Organization not found
+                  value:
+                    detail: Organization not found.
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Body_upload_file_file_upload_post:
+      properties:
+        file:
+          type: string
+          format: binary
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_upload_file_file_upload_post
+    FileUploadResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        url:
+          type: string
+          title: Url
+      type: object
+      required:
+      - success
+      - url
+      title: FileUploadResponse
+      description: Response model for file upload operations.
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: ocp-apim-subscription-key

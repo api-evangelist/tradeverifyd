@@ -1,0 +1,232 @@
+openapi: 3.1.0
+info:
+  title: Tradeverifyd Documents US Customs API
+  description: '
+
+    The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
+
+
+    For more information visit [tradeverifyd.com](https://tradeverifyd.com).
+
+
+    If you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.
+
+
+    When making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.
+
+
+    For example:
+
+
+    ```bash
+
+    curl --silent --location -G ''https://.../v1/search/entities'' \
+
+    --data-urlencode ''name=Contoso Corporation'' \
+
+    --data-urlencode ''jurisdiction=US'' \
+
+    --header "ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY"
+
+    ```
+
+    '
+  termsOfService: https://tradeverifyd.com/terms-of-service
+  contact:
+    name: tradeverifyd.com
+    url: https://tradeverifyd.com/
+    email: support@tradeverifyd.com
+  license:
+    name: Proprietary License
+    url: https://tradeverifyd.com/terms-of-service
+  version: 0.2.0
+servers:
+- url: https://api.tradeverifyd.com
+  description: Production server
+security:
+- ApiKeyAuth: []
+tags:
+- name: US Customs
+paths:
+  /v1/us_customs/submit_presentation:
+    post:
+      tags:
+      - US Customs
+      summary: Submit Verifiable Presentation
+      description: "Submit a presentation to US Customs.\n\nRequest body:\n    credential_ids: A list of credential ids to submit to US Customs.\n\nReturns:\n    A response from submitting a presentation to US Customs."
+      operationId: submit_verifiable_presentation_us_customs_submit_presentation_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitPresentationRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitPresentationResponse'
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    SubmitPresentationResponse:
+      properties:
+        response_code:
+          type: integer
+          title: Response Code
+          description: The response code from the US Customs API
+        message:
+          type: string
+          title: Response Message
+          description: A message from the US Customs API
+        cbp_request:
+          title: CBP Request
+          description: The saved CBP Request record
+          $ref: '#/components/schemas/earthstream_services__services__us_customs__schemas__us_customs__CBPRequest'
+          nullable: true
+      type: object
+      required:
+      - response_code
+      - message
+      title: SubmitPresentationResponse
+      description: A response from submitting a presentation to US Customs
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SubmitPresentationRequest:
+      properties:
+        shipment_id:
+          type: string
+          title: Shipment ID
+          description: The shipment ID from tradeverifyd
+        credential_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: Credential IDs
+          description: The IDs of the verifiable credentials to submit
+      type: object
+      required:
+      - shipment_id
+      - credential_ids
+      title: SubmitPresentationRequest
+      description: A request to submit a presentation to US Customs
+    earthstream_services__services__us_customs__schemas__us_customs__CBPRequest:
+      properties:
+        id:
+          title: CBP Request ID
+          description: The identifier for the CBP Request
+          type: string
+          format: uuid
+          nullable: true
+        created:
+          title: Creation Timestamp
+          description: The timestamp of when the CBP was created
+          type: string
+          format: date-time
+          nullable: true
+        last_modified:
+          title: Last Modified Timestamp
+          description: The timestamp of the last modification to the CBP
+          type: string
+          format: date-time
+          nullable: true
+        shipment_id:
+          type: string
+          format: uuid
+          title: Shipment ID
+          description: The ID of the Shipment to which the CBP belongs
+        vc_ids:
+          title: Verifiable Credential IDs
+          description: A list of related VC ids
+          items:
+            type: string
+          type: array
+          nullable: true
+        presentation:
+          title: Presentation Data
+          description: The raw data of the Presentation submitted to CBP
+          type: string
+          nullable: true
+        presentation_id:
+          title: Presentation ID
+          description: The CBP may be related to a presentation
+          type: string
+          nullable: true
+        user_email:
+          type: string
+          title: User Email
+          description: The user who initiated the CBP
+        submitted_date:
+          type: string
+          format: date-time
+          title: Submission Date
+          description: The timestamp of the when the request was submitted to CBP
+        cbp_response_code:
+          title: CBP Response Code
+          description: The response code, if any, from CBP
+          type: string
+          nullable: true
+      type: object
+      required:
+      - id
+      - created
+      - last_modified
+      - shipment_id
+      - vc_ids
+      - presentation
+      - presentation_id
+      - user_email
+      - submitted_date
+      - cbp_response_code
+      title: CBPRequest
+      description: The object type for a CBP Request
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: ocp-apim-subscription-key

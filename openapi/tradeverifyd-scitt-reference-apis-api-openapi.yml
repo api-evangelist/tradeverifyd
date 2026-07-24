@@ -1,0 +1,243 @@
+openapi: 3.1.0
+info:
+  title: Tradeverifyd Documents SCITT Reference APIs API
+  description: '
+
+    The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
+
+
+    For more information visit [tradeverifyd.com](https://tradeverifyd.com).
+
+
+    If you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.
+
+
+    When making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.
+
+
+    For example:
+
+
+    ```bash
+
+    curl --silent --location -G ''https://.../v1/search/entities'' \
+
+    --data-urlencode ''name=Contoso Corporation'' \
+
+    --data-urlencode ''jurisdiction=US'' \
+
+    --header "ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY"
+
+    ```
+
+    '
+  termsOfService: https://tradeverifyd.com/terms-of-service
+  contact:
+    name: tradeverifyd.com
+    url: https://tradeverifyd.com/
+    email: support@tradeverifyd.com
+  license:
+    name: Proprietary License
+    url: https://tradeverifyd.com/terms-of-service
+  version: 0.2.0
+servers:
+- url: https://api.tradeverifyd.com
+  description: Production server
+security:
+- ApiKeyAuth: []
+tags:
+- name: SCITT Reference APIs
+  description: SCRAPI related http resources
+paths:
+  /.well-known/scitt-configuration:
+    get:
+      summary: Service Configuration
+      description: 'Get the SCITT service configuration including supported algorithms,
+
+        registration policies, and service metadata (per SCRAPI specification).
+
+        '
+      tags:
+      - SCITT Reference APIs
+      responses:
+        '200':
+          description: Service configuration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuer:
+                    type: string
+                    description: Service issuer URL
+                    example: https://transparency.example
+                  supported_algorithms:
+                    type: array
+                    items:
+                      type: string
+                    description: Supported signing algorithms
+                    example:
+                    - ES256
+                  supported_hash_algorithms:
+                    type: array
+                    items:
+                      type: string
+                    description: Supported hash algorithms
+                    example:
+                    - SHA-256
+                  registration_policy:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        description: Registration policy type
+                        example: open
+                  tile_height:
+                    type: integer
+                    description: 'Height of tiles in the Merkle tree. A tile represents the entire subtree
+
+                      of this height with its hashes as the leaves. The Merkle Tree levels between
+
+                      those expressed by the tile hashes are reconstructed by hashing the leaves.
+
+                      '
+                    example: 8
+              example:
+                issuer: http://127.0.0.1:56177
+                registration_policy:
+                  type: open
+                supported_algorithms:
+                - ES256
+                supported_hash_algorithms:
+                - SHA-256
+                tile_height: 8
+  /.well-known/scitt-keys:
+    get:
+      summary: Service Verification Keys
+      description: 'Get the service''s verification keys as a COSE Key Set in CBOR format
+
+        (per SCRAPI specification and RFC 9052 Section 7).
+
+        '
+      tags:
+      - SCITT Reference APIs
+      responses:
+        '200':
+          description: COSE Key Set
+          content:
+            application/cbor:
+              schema:
+                type: string
+                format: binary
+                description: 'CBOR-encoded array of COSE_Key structures.
+
+                  Each key includes the COSE key thumbprint (RFC 9679) as the key ID.
+
+                  '
+        '500':
+          description: Failed to generate key set
+          content:
+            text/plain:
+              schema:
+                type: string
+  /entries:
+    post:
+      summary: Register Statement
+      description: 'Register a new COSE Sign1 statement in the transparency log.
+
+        The statement will be assigned an entry ID and included in the Merkle tree.
+
+
+        Supports both application/cose and application/scitt-statement+cose content types.
+
+        '
+      tags:
+      - SCITT Reference APIs
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/cose:
+            schema:
+              type: string
+              format: binary
+              description: CBOR-encoded COSE Sign1 structure
+          application/scitt-statement+cose:
+            schema:
+              type: string
+              format: binary
+              description: CBOR-encoded COSE Sign1 SCITT statement
+      responses:
+        '201':
+          description: Statement registered successfully - returns COSE Sign1 receipt
+          content:
+            application/scitt-receipt+cose:
+              schema:
+                type: string
+                format: binary
+                description: CBOR-encoded COSE Sign1 receipt with Merkle inclusion proof
+        '400':
+          description: Invalid request (malformed COSE Sign1 or validation failure)
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized (missing or invalid API key)
+          content:
+            text/plain:
+              schema:
+                type: string
+        '415':
+          description: Unsupported Media Type
+          content:
+            text/plain:
+              schema:
+                type: string
+  /entries/{entry_id}:
+    get:
+      summary: Get Receipt
+      description: 'Retrieve a transparency receipt for a registered statement.
+
+        The receipt contains a Merkle inclusion proof and signed checkpoint.
+
+        '
+      tags:
+      - SCITT Reference APIs
+      parameters:
+      - name: entry_id
+        in: path
+        required: true
+        description: Entry ID of the registered statement
+        schema:
+          type: integer
+          format: int64
+          example: 42
+      responses:
+        '200':
+          description: Receipt retrieved successfully
+          content:
+            application/scitt-receipt+cose:
+              schema:
+                type: string
+                format: binary
+                description: CBOR-encoded COSE Sign1 receipt with Merkle inclusion proof
+        '404':
+          description: Statement not found
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: Invalid entry ID format
+          content:
+            text/plain:
+              schema:
+                type: string
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: ocp-apim-subscription-key

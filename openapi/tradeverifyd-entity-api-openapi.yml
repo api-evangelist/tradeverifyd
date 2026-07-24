@@ -1,0 +1,2622 @@
+openapi: 3.1.0
+info:
+  title: Tradeverifyd Documents Entity API
+  description: '
+
+    The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
+
+
+    For more information visit [tradeverifyd.com](https://tradeverifyd.com).
+
+
+    If you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.
+
+
+    When making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.
+
+
+    For example:
+
+
+    ```bash
+
+    curl --silent --location -G ''https://.../v1/search/entities'' \
+
+    --data-urlencode ''name=Contoso Corporation'' \
+
+    --data-urlencode ''jurisdiction=US'' \
+
+    --header "ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY"
+
+    ```
+
+    '
+  termsOfService: https://tradeverifyd.com/terms-of-service
+  contact:
+    name: tradeverifyd.com
+    url: https://tradeverifyd.com/
+    email: support@tradeverifyd.com
+  license:
+    name: Proprietary License
+    url: https://tradeverifyd.com/terms-of-service
+  version: 0.2.0
+servers:
+- url: https://api.tradeverifyd.com
+  description: Production server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Entity
+  description: Operations involving entities. Entities encompass a range of organizations and individuals, primarily focusing on companies. This section provides functionalities to manage and interact with information about various entities, including their details, activities, and roles in the supply chain.
+paths:
+  /v1/search/entities:
+    get:
+      tags:
+      - Entity
+      summary: Entity Search
+      description: Search for Entities that match the provided search parameters.
+      operationId: search_entities_search_entities_get
+      parameters:
+      - name: name
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Entity name.
+          title: Name
+        description: Entity name.
+      - name: address
+        in: query
+        required: false
+        schema:
+          description: Entity address.
+          title: Address
+          type: string
+          nullable: true
+        description: Entity address.
+      - name: jurisdiction
+        in: query
+        required: false
+        schema:
+          description: Two-letter ISO country code the entity should be associated with.
+          title: Jurisdiction
+          type: string
+          minLength: 2
+          maxLength: 2
+          nullable: true
+        description: Two-letter ISO country code the entity should be associated with.
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          description: The maximum number of results to return. Must be between 1 and 100, inclusive.
+          default: 10
+          title: Size
+        description: The maximum number of results to return. Must be between 1 and 100, inclusive.
+      - name: flagged_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: If 'true', results will be limited to Entities currently affected by 1 or more Flags.
+          default: false
+          title: Flagged Only
+        description: If 'true', results will be limited to Entities currently affected by 1 or more Flags.
+      responses:
+        '200':
+          description: Entities matching search criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EntitySearchResult'
+                title: Response Search Entities Search Entities Get
+              examples:
+                entity_name_search:
+                  summary: Search by entity name
+                  description: Find entities matching a specific company name
+                  value:
+                  - id: 507f1f77bcf86cd799439011
+                    name: Global Manufacturing Corp
+                    aliases:
+                    - GMC
+                    jurisdiction: US
+                    addresses:
+                    - 123 Industrial Blvd, Detroit, MI 48201, USA
+                    - 456 Factory St, Cleveland, OH 44113, USA
+                    flagged: true
+                    description: Large-scale manufacturing company specializing in automotive components
+                    primary_role: manufacturer
+                    url: https://globalmanufacturingcorp.example
+                    monitor: true
+                    references:
+                      flags:
+                        total: 2
+                      relationships:
+                        total: 15
+                        from_relationships:
+                          count: 8
+                        to_relationships:
+                          count: 7
+                      risk_events:
+                        total: 1
+                    external_ids:
+                    - id: US-12345678-901
+                      type: duns
+                      source: dun_bradstreet
+                    - id: '98765432109876543210'
+                      type: lei
+                      source: gleif
+                    modified_date: '2024-10-15T14:30:00Z'
+                  - id: 507f1f77bcf86cd799439012
+                    name: Global Manufacturing Example Solutions
+                    aliases:
+                    - GMES
+                    jurisdiction: CA
+                    addresses:
+                    - 789 Commerce Way, Toronto, ON M5V 3B6, Canada
+                    flagged: false
+                    description: Manufacturing solutions provider
+                    primary_role: supplier
+                    references:
+                      flags:
+                        total: 0
+                      relationships:
+                        total: 3
+                      risk_events:
+                        total: 0
+                    count_inferred_relationships:
+                      depth: 3
+                      value: 3
+                      flagged_count: 0
+                      last_updated: '2025-10-08T19:34:19.447000Z'
+                    modified_date: '2024-10-20T09:15:00Z'
+                    hs_codes:
+                      incoming:
+                      - '52'
+                      - '5214'
+                      - '521462'
+                      outgoing:
+                      - '81'
+                      - '8105'
+                      - '810507'
+                flagged_entities_only:
+                  summary: Search flagged entities only
+                  description: Find only entities with active compliance flags
+                  value:
+                  - id: 507f1f77bcf86cd799439013
+                    name: Risky Suppliers Ltd
+                    aliases:
+                    - Risky Ltd.
+                    jurisdiction: CN
+                    addresses:
+                    - Room 1001, Building A, Shenzhen, Guangdong, China
+                    flagged: true
+                    description: Electronics components supplier with compliance concerns
+                    primary_role: supplier
+                    monitor: true
+                    references:
+                      flags:
+                        total: 3
+                      relationships:
+                        total: 12
+                      risk_events:
+                        total: 2
+                    modified_date: '2024-10-18T16:45:00Z'
+                jurisdiction_search:
+                  summary: Search by jurisdiction
+                  description: Find entities in a specific country (Germany)
+                  value:
+                  - id: 507f1f77bcf86cd799439014
+                    name: Great German Engineering Co.
+                    aliases:
+                    - GEC
+                    jurisdiction: DE
+                    addresses:
+                    - Industriestraße 42, 70565 Stuttgart, Germany
+                    flagged: false
+                    description: High-precision manufacturing and engineering services
+                    primary_role: manufacturer
+                    url: https://great-engineering-example.de
+                    references:
+                      flags:
+                        total: 0
+                      relationships:
+                        total: 8
+                      risk_events:
+                        total: 0
+                    external_ids:
+                    - id: HRB123456
+                      type: company_registration
+                      source: german_trade_register
+                    count_inferred_relationships:
+                      depth: 3
+                      value: 3
+                      flagged_count: 1
+                      last_updated: '2025-01-01T00:00:00Z'
+                    modified_date: '2024-10-10T11:20:00Z'
+                    hs_codes:
+                      incoming: []
+                      outgoing:
+                      - '1050'
+                empty_results:
+                  summary: No matching entities
+                  description: Search that returns no results
+                  value: []
+        '400':
+          description: Bad Request - Invalid search parameters
+          content:
+            application/json:
+              examples:
+                missing_search_criteria:
+                  summary: Missing required search criteria
+                  value:
+                    detail: Either name or entity_id must be provided
+                invalid_jurisdiction:
+                  summary: Invalid jurisdiction code
+                  value:
+                    detail: Jurisdiction must be a 2-letter ISO country code
+                invalid_size:
+                  summary: Invalid size parameter
+                  value:
+                    detail: Size must be between 1 and 100
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/resolve/entity:
+    get:
+      tags:
+      - Entity
+      summary: Entity Resolution
+      description: Resolve to the top-scoring Entity that matches the provided search parameters.
+      operationId: resolve_entity_resolve_entity_get
+      parameters:
+      - name: name
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Entity name.
+          title: Name
+        description: Entity name.
+      - name: address
+        in: query
+        required: false
+        schema:
+          description: Entity address.
+          title: Address
+          type: string
+          nullable: true
+        description: Entity address.
+      - name: jurisdiction
+        in: query
+        required: false
+        schema:
+          description: Two-letter ISO country code the entity should be associated with.
+          title: Jurisdiction
+          type: string
+          minLength: 2
+          maxLength: 2
+          nullable: true
+        description: Two-letter ISO country code the entity should be associated with.
+      - name: flagged_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: If 'true', results will be limited to Entities currently affected by 1 or more Flags.
+          default: false
+          title: Flagged Only
+        description: If 'true', results will be limited to Entities currently affected by 1 or more Flags.
+      responses:
+        '200':
+          description: Best matching entity resolved from search criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EntitySearchResult'
+                title: Response Resolve Entity Resolve Entity Get
+              examples:
+                perfect_name_match:
+                  summary: Perfect entity name match
+                  description: Exact match found for entity name with high confidence
+                  value:
+                  - id: 507f1f77bcf86cd799439015
+                    name: Example Contoso Inc.
+                    aliases:
+                    - CONTOSO
+                    - EX CONTOSO
+                    jurisdiction: US
+                    addresses:
+                    - 123 Main Street, Anytown, State, 12345
+                    flagged: false
+                    description: Multinational technology company specializing in consumer electronics
+                    primary_role: manufacturer
+                    url: https://contoso.example
+                    monitor: true
+                    auto_research: true
+                    references:
+                      flags:
+                        total: 0
+                      relationships:
+                        total: 247
+                        from_relationships:
+                          count: 156
+                        to_relationships:
+                          count: 91
+                      risk_events:
+                        total: 0
+                    external_ids:
+                    - id: '32019387069'
+                      type: duns
+                      source: dun_bradstreet
+                    - id: HWUPKR0MPOU8FGXBT394
+                      type: lei
+                      source: gleif
+                    - id: CONT
+                      type: ticker
+                      source: nasdaq
+                    count_inferred_relationships:
+                      depth: 3
+                      value: 3
+                      flagged_count: 0
+                      last_updated: '2025-10-08T19:34:19.447000Z'
+                    modified_date: '2024-10-22T08:30:00Z'
+                    hs_codes:
+                      incoming: []
+                      outgoing:
+                      - '68'
+                      - '6802'
+                      - '680221'
+                fuzzy_name_match:
+                  summary: Fuzzy entity name match
+                  description: Best match found despite slight name variations
+                  value:
+                  - id: 507f1f77bcf86cd799439016
+                    name: Contoso Inc.
+                    aliases:
+                    - CONTOSO
+                    jurisdiction: US
+                    addresses:
+                    - 123 Main Street, Anytown, State, 12345
+                    flagged: false
+                    description: Technology corporation developing software, services, and solutions
+                    primary_role: manufacturer
+                    url: https://contoso.example
+                    monitor: true
+                    references:
+                      flags:
+                        total: 0
+                      relationships:
+                        total: 189
+                      risk_events:
+                        total: 0
+                    external_ids:
+                    - id: 06-1232893
+                      type: ein
+                      source: irs
+                    - id: CONT
+                      type: ticker
+                      source: nasdaq
+                    modified_date: '2024-10-21T14:15:00Z'
+                jurisdiction_resolved:
+                  summary: Resolution with jurisdiction filtering
+                  description: Best match within specific jurisdiction constraint
+                  value:
+                  - id: 507f1f77bcf86cd799439017
+                    name: ACME CORP
+                    aliases:
+                    - ACME
+                    jurisdiction: US
+                    addresses:
+                    - 789 1st Street, Anytown, State, 12345
+                    flagged: false
+                    description: Multinational automotive manufacturer
+                    primary_role: manufacturer
+                    url: https://acme.example
+                    monitor: true
+                    references:
+                      flags:
+                        total: 0
+                      relationships:
+                        total: 412
+                        from_relationships:
+                          count: 298
+                        to_relationships:
+                          count: 114
+                      risk_events:
+                        total: 0
+                    external_ids:
+                    - id: US-7200001008846
+                      type: corporate_number
+                      source: us_corporate_number
+                    - id: AC
+                      type: ticker
+                      source: nyse
+                    modified_date: '2024-10-19T10:45:00Z'
+                flagged_entity_resolved:
+                  summary: Flagged entity resolution
+                  description: Best match for flagged entity with compliance issues
+                  value:
+                  - id: 507f1f77bcf86cd799439018
+                    name: Sanctioned Trading LLC
+                    aliases:
+                    - Sanctioned Trading
+                    jurisdiction: RU
+                    addresses:
+                    - 123 Red Square, Moscow, Russia
+                    flagged: true
+                    description: Trading company with active sanctions flags
+                    primary_role: trader
+                    monitor: true
+                    auto_research: false
+                    references:
+                      flags:
+                        total: 5
+                      relationships:
+                        total: 23
+                      risk_events:
+                        total: 3
+                    external_ids:
+                    - id: RU-1027700132195
+                      type: ogrn
+                      source: russian_business_register
+                    modified_date: '2024-10-23T12:00:00Z'
+                no_resolution:
+                  summary: No entity resolved
+                  description: No suitable match found for search criteria
+                  value: []
+        '422':
+          description: Invalid resolution parameters.
+          content:
+            application/json:
+              examples:
+                invalid_jurisdiction:
+                  summary: Invalid jurisdiction code
+                  description: Provided jurisdiction has too many characters
+                  value:
+                    detail:
+                    - type: string_too_long
+                      loc:
+                      - query
+                      - jurisdiction
+                      msg: String should have at most 2 characters
+                      input: USA
+                      ctx:
+                        max_length: 2
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+  /v1/entities/by-flag-type/{flag_type_id}:
+    get:
+      tags:
+      - Entity
+      summary: Get Entities by Flag Type
+      description: 'Get entities that have flags of a specific flag type. To view possible flag types, use
+
+        the Get Flags Types endpoint `/flags/types`.
+
+
+        This endpoint allows customers to query entities based on specific compliance flags.
+
+        Results are filtered by organization, meaning only entities with flags that are either
+
+        public or belong to the user''s organization will be returned.
+
+
+        The response includes a list of entities that have a flag of the specified type, including information
+
+        on entity details, Tradeverifyd scores, and flag information.
+
+        Because the response can be large, entities are returned across multiple pages of the response.
+
+        The response includes information on the maximum number of pages.
+
+        Use the `limit` parameter to specify how many results should be returned in one page.
+
+        Use the `page` parameter to select a page number.'
+      operationId: get_entities_by_flag_type_entities_by_flag_type__flag_type_id__get
+      parameters:
+      - name: flag_type_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: ObjectId of the flag type to filter entities by
+          title: Flag Type Id
+        description: ObjectId of the flag type to filter entities by
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: Page number for pagination
+          default: 1
+          title: Page
+        description: Page number for pagination
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: Number of entities per page
+          default: 50
+          title: Limit
+        description: Number of entities per page
+      responses:
+        '200':
+          description: Entities with the specified flag type
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Entities By Flag Type Entities By Flag Type  Flag Type Id  Get
+              examples:
+                ndaa_1260h_entities:
+                  summary: NDAA 1260H flagged entities
+                  description: Entities flagged under Section 1260H of the National Defense Authorization Act
+                  value:
+                    entities:
+                    - id: 67ca2eb28f1f60aa37278f33
+                      name: EXAMPLE CONTOSO INC.
+                      jurisdiction: US
+                      type: Company
+                      status: Active
+                      addresses:
+                      - 123 Main Street, Anytown, State, 12345
+                      flags:
+                      - id: 6808e96feb30f71f4da957c8
+                        created_at: '2025-03-15T00:11:31.376Z'
+                        type: 67db2af315fadaf237af6a0e
+                        flag_type: Sanctions & Restricted Entities Risk
+                        flag_subtype: 1260H Entities
+                        flag_polarity: -1
+                        description: A flag that describes an staged_flag on the OpenSanctions default list.
+                        sources:
+                        - url: https://www.defense.gov/News/Releases/Release/Article/4023145/
+                      aliases:
+                      - CONTOSO
+                      - EX CONTOSO
+                    pagination:
+                      page: 1
+                      limit: 50
+                      total_entities: 127
+                      total_pages: 3
+                      has_next: true
+                      has_previous: false
+                    filter_summary:
+                      flag_type_id: 67db2af315fadaf237af6a0e
+                      flag_type: Sanctions & Restricted Entities Risk
+                      flag_subtype: 1260H Entities
+                      flag_polarity: -1
+        '400':
+          description: Bad Request - Invalid parameters
+          content:
+            application/json:
+              examples:
+                invalid_object_id:
+                  summary: Invalid flag type ID format
+                  value:
+                    detail: flag_type_id must be a valid ObjectId
+                invalid_pagination:
+                  summary: Invalid pagination parameters
+                  value:
+                    detail: page must be >= 1, limit must be >= 1 and <= 500
+        '404':
+          description: Flag type not found
+          content:
+            application/json:
+              examples:
+                flag_type_not_found:
+                  summary: Flag type does not exist
+                  value:
+                    detail: Flag type not found
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/entities/{entity_id}:
+    get:
+      tags:
+      - Entity
+      summary: Get Entity
+      description: Retrieve a single Entity by its Id
+      operationId: get_entity_entities__entity_id__get
+      parameters:
+      - name: entity_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Entity Id
+      responses:
+        '200':
+          description: Successful entity match.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEntityResponse'
+              examples:
+                entity_id_search:
+                  summary: Search by entity_id
+                  description: Find a single entity by entity_id.
+                  value:
+                    id: 507f1f77bcf86cd799439015
+                    name: Example Contoso Inc.
+                    description: Large-scale manufacturing company specializing in automotive components
+                    primary_role: manufacturer
+                    aliases:
+                    - Contoso
+                    - EX CONTOSO
+                    url: https://globalmanufacturingcorp.example
+                    jurisdiction: US
+                    addresses:
+                    - 123 Main Street, Anytown, State, 12345
+                    monitor: false
+                    created_at: '1970-01-01T00:00:00.000Z'
+                    modified: '1970-01-01T00:00:00.000Z'
+                    region: State
+                    affiliated_jurisdiction: CA
+                    tradeverifyd_score: 550
+                    references:
+                      flags:
+                        total: 2
+                      relationships:
+                        total: 15
+                        from_relationships:
+                          count: 8
+                        to_relationships:
+                          count: 7
+                      risk_events:
+                        total: 1
+                    count_inferred_relationships:
+                      depth: 2
+                      value: 2
+                      last_updated: '1970-01-01T00:00:00.000Z'
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/entities/{entity_id}/risk_events:
+    get:
+      tags:
+      - Entity
+      summary: Get Entity Risk Events
+      description: Get Risk Events affecting an Entity.
+      operationId: get_entity_risk_events_entities__entity_id__risk_events_get
+      parameters:
+      - name: entity_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Entity Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RiskEvent'
+                title: Response Get Entity Risk Events Entities  Entity Id  Risk Events Get
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/entities/{entity_id}/verification:
+    get:
+      tags:
+      - Entity
+      summary: Get Entity Verification by entity id
+      description: 'Retrieves the Tradeverifyd Supplier Assessment (TSA) details for a given entity. Returns the current
+
+        supplier assessment and compliance information recorded for the specified entity.
+
+
+        Note: To generate a Tradeverifyd Advanced Supplier Assessment (TASA), use the POST /reports endpoint.'
+      operationId: get_entity_verification_details_entities__entity_id__verification_get
+      parameters:
+      - name: entity_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Id of the Entity to use as the starting node for graph retrieval.
+          title: Entity Id
+        description: Id of the Entity to use as the starting node for graph retrieval.
+      - name: hs_code
+        in: query
+        required: false
+        schema:
+          description: 'Optional HS code (2, 4, or 6-digit) to filter the supplier graph used for assessment. When provided, only supplier relationships (IS_SUPPLIER_OF edges) that match the HS code are considered when analyzing the entity''s supply chain. This filters the graph to show suppliers of specific products. Less specific codes (e.g., ''52'') match more specific codes (e.g., ''5201'', ''520100''). Note: Supplier jurisdiction filtering will be added in future updates.'
+          title: Hs Code
+          type: string
+          nullable: true
+        description: 'Optional HS code (2, 4, or 6-digit) to filter the supplier graph used for assessment. When provided, only supplier relationships (IS_SUPPLIER_OF edges) that match the HS code are considered when analyzing the entity''s supply chain. This filters the graph to show suppliers of specific products. Less specific codes (e.g., ''52'') match more specific codes (e.g., ''5201'', ''520100''). Note: Supplier jurisdiction filtering will be added in future updates.'
+      responses:
+        '200':
+          description: Successful entity verification retrieval.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntityVerificationDetails'
+              examples:
+                verification_id_search:
+                  summary: Get entity verification details by entity_id.
+                  description: Find an entity's verification details by entity_id.
+                  value:
+                    id: 507f1f77bcf86cd799439015
+                    name: Example Contoso Inc.
+                    jurisdiction: US
+                    addresses:
+                    - 123 Main Street, Anytown, State, 12345
+                    text_summary: One company in this supply chain has been flagged for compliance issues.
+                    problematic_entities:
+                    - id: 507f1f77bcf86cd799439017
+                      name: ACME CORP.
+                      flags:
+                      - sources:
+                        - https://www.dhs.gov/uflpa-entity-list
+                        type: Human Rights Violation Risk
+                        subtype: Forced Labor Risk
+                        flag_polarity: -1
+                      addresses:
+                      - address: 789 1st Street, Anytown, State, 12345
+                        problematic: true
+                        problem_region: AK
+                      jurisdiction: US
+                      depth: 3
+                      tvpra_risks:
+                      - risk_type: forced_labor
+                        suspect_hs_codes:
+                        - '52'
+                      has_excessive_addresses: false
+                    tradeverifyd_score: 550
+                    total_entity_ct: 1
+                    identifiers:
+                    - type: lei
+                      source: https://lei-lookup.com/record/example
+                      id: 1b070d5e-eb8d-41e6-9055-a26f8f638571
+                    incoming_products:
+                    - '52'
+                    - '61'
+                    outgoing_products:
+                    - '74'
+                    top_supplier_connections:
+                    - id: 507f1f77bcf86cd799439018
+                      name: SANCTIONED TRADING LLC
+                      jurisdiction: RU
+                    top_customer_connections:
+                    - id: 507f1f77bcf86cd799439013
+                      name: RISKY SUPPLIERS LTD
+                      jurisdiction: CN
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/entities/{identifier_type}/{identifier_value}/verification:
+    get:
+      tags:
+      - Entity
+      summary: Get Entity Verification by identifier
+      description: 'Retrieves a Tradeverifyd Supplier Assesssment (TSA) for an entity from alternative identifiers.
+
+        The purpose of this endpoint is to use external IDs (such as manufacturing or bank identifiers) to
+
+        retrieve entity verification details in the form of a TSA.
+
+
+        For example:
+
+        - Retrieving by LEI id: `GET /v1/entities/lei/559312VRR0Z0AXO77J92/verification`
+
+        - Retrieving by BIC id: `GET /v1/entities/bic/XCDVTLBIXXX/verification`'
+      operationId: get_entity_verification_details_by_identifier_entities__identifier_type___identifier_value__verification_get
+      parameters:
+      - name: identifier_type
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The type of the identifier (e.g., lei, mid)
+          title: Identifier Type
+        description: The type of the identifier (e.g., lei, mid)
+      - name: identifier_value
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The value of the identifier
+          title: Identifier Value
+        description: The value of the identifier
+      - name: hs_code
+        in: query
+        required: false
+        schema:
+          description: Optional HS code to filter the graph considered when calculating verification details for the requested Entity.
+          title: Hs Code
+          type: string
+          nullable: true
+        description: Optional HS code to filter the graph considered when calculating verification details for the requested Entity.
+      responses:
+        '200':
+          description: Successful entity verification retrieval.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntityVerificationDetails'
+              examples:
+                verification_id_search:
+                  summary: Get entity verification details by identifier type and value.
+                  description: Find an entity's verification details by identifier type and value.
+                  value:
+                    id: 607f1f77bcf86cd799439016
+                    name: Example Construction Ltd.
+                    jurisdiction: US
+                    addresses:
+                    - 101 Main Street, New York City, New York, 10001
+                    text_summary: One company in this supply chain has been flagged for issues related to labor.
+                    problematic_entities:
+                    - id: 507f1f77bcf86cd799439017
+                      name: ACME CORP.
+                      flags:
+                      - sources:
+                        - https://www.dhs.gov/uflpa-entity-list
+                        type: Worker & Consumer Safety Risk
+                        subtype: Transportation Safety Violations
+                        flag_polarity: -1
+                      addresses:
+                      - address: 789 1st Street, Anytown, State, 12345
+                        problematic: true
+                        problem_region: AK
+                      jurisdiction: US
+                      depth: 3
+                      tvpra_risks:
+                      - risk_type: forced_labor
+                        suspect_hs_codes:
+                        - '52'
+                      has_excessive_addresses: false
+                    tradeverifyd_score: 550
+                    total_entity_ct: 1
+                    identifiers:
+                    - type: lei
+                      source: https://lei-lookup.com/record/example
+                      id: 1b070d5e-eb8d-41e6-9055-a26f8f638571
+                    incoming_products:
+                    - '52'
+                    - '61'
+                    outgoing_products:
+                    - '74'
+                    top_supplier_connections:
+                    - id: 507f1f77bcf86cd799439018
+                      name: SANCTIONED TRADING LLC
+                      jurisdiction: RU
+                    top_customer_connections:
+                    - id: 507f1f77bcf86cd799439013
+                      name: RISKY SUPPLIERS LTD
+                      jurisdiction: CN
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/entities/{entity_id}/graph:
+    get:
+      tags:
+      - Entity
+      summary: Get Entity Graph
+      description: 'Retrieve a graph of paginated relationships for a single Entity.
+
+
+        This endpoint provides information about the relationships of an Entity,
+
+        such as partnerships, affiliations, or any other defined connections. The
+
+        returned graph contains entity relationship data and includes
+
+        entity properties.
+
+
+        In the returned relationships data, relationships are described as having
+
+        a `source`, an `target`, and a `type`. The direction of the relationship
+
+        moves from source to target, and is described by the type.
+
+
+        The page and page_size parameters determine the number of relationships
+
+        to return per page.
+
+
+        The total_records and total_pages fields are only returned if depth is 3 or less.
+
+        If depth is greater than 3, these fields are omitted.
+
+
+        Note: This endpoint includes Flags but NOT Risk Events data. Use the
+
+        /risk_events endpoint to retrieve that information for specific entities.'
+      operationId: get_entity_graph_entities__entity_id__graph_get
+      parameters:
+      - name: entity_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Id of the Entity to use as the starting or root entity for graph retrieval.
+          title: Entity Id
+        description: Id of the Entity to use as the starting or root entity for graph retrieval.
+      - name: hs_codes
+        in: query
+        required: false
+        schema:
+          description: A comma separated list of 2, 4, or 6-digit HS codes to filter by. A less-specific HS code will always match a more-specific code with the same chapter or heading. For example, code '12' will match '1234' and '1256'. If list is empty or null, all relationships are returned.
+          title: Hs Codes
+          type: string
+          nullable: true
+        description: A comma separated list of 2, 4, or 6-digit HS codes to filter by. A less-specific HS code will always match a more-specific code with the same chapter or heading. For example, code '12' will match '1234' and '1256'. If list is empty or null, all relationships are returned.
+      - name: depth
+        in: query
+        required: false
+        schema:
+          description: Limits how many levels of related relationships the query will explore. For example, a depth of 1 returns only directly related items, while higher values include more distant connections.
+          default: 3
+          title: Depth
+          type: integer
+          nullable: true
+        description: Limits how many levels of related relationships the query will explore. For example, a depth of 1 returns only directly related items, while higher values include more distant connections.
+      - name: page
+        in: query
+        required: false
+        schema:
+          description: Page to retrieve
+          default: 1
+          title: Page
+          type: integer
+          nullable: true
+        description: Page to retrieve
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          description: Number of relationships to return per page (max 100)
+          default: 100
+          title: Page Size
+          type: integer
+          maximum: 100
+          minimum: 1
+          nullable: true
+        description: Number of relationships to return per page (max 100)
+      - name: include_affiliates
+        in: query
+        required: false
+        schema:
+          description: Set True to preserve affiliate relationships when filtering by HS codes. When True, affiliate relationships will be included in the graph even if they don't match the specified HS codes.
+          default: false
+          title: Include Affiliates
+          type: boolean
+          nullable: true
+        description: Set True to preserve affiliate relationships when filtering by HS codes. When True, affiliate relationships will be included in the graph even if they don't match the specified HS codes.
+      - name: direction
+        in: query
+        required: false
+        schema:
+          enum:
+          - in
+          - out
+          type: string
+          description: The graph direction from the root entity.  Values are 'in' and 'out'. A typical relationship such as IS_SUPPLIER_OF is an inbound relationship pointing to the root entity. The default value is 'in', resulting in a graph of inbound relationships.
+          default: in
+          title: Direction
+        description: The graph direction from the root entity.  Values are 'in' and 'out'. A typical relationship such as IS_SUPPLIER_OF is an inbound relationship pointing to the root entity. The default value is 'in', resulting in a graph of inbound relationships.
+      responses:
+        '200':
+          description: Graph of entities related to the entrypoint
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicAbridgedGraph'
+              examples:
+                returned_graph:
+                  summary: Returned graph
+                  description: Successfully returned graph
+                  value:
+                    entrypoint:
+                      id: 64ac25c572c173ba6f32e840
+                      name: COMPANY A
+                      jurisdiction: DE
+                      flags: []
+                      coordinates: []
+                      addresses: []
+                      aliases: []
+                      ids: []
+                    entities:
+                    - id: 64ac25c572c173ba6f32e840
+                      name: COMPANY A
+                      jurisdiction: DE
+                      flags:
+                      - id: 67ffefdc070a88cf06635ee9
+                        entity_id: 64ac25c572c173ba6f32e840
+                        entity_jurisdiction: DE
+                        type: Compliant
+                        subtype: Forced Labor Risk
+                        flag_polarity: 1
+                        modified: '2023-05-23T20:31:42Z'
+                        source:
+                        - https://modernslaveryregister.gov.au/statements/
+                        tags:
+                        - COMPLIANT - Australia Modern Slavery Act 2018
+                      coordinates: []
+                      addresses:
+                      - 123 abc street chicago illinois 12345
+                      aliases:
+                      - Company A. Inc.
+                      - Company A.
+                      - Company A. LLC
+                      ids:
+                      - id: AAAAAAAAAAAAAAAAAAAA
+                        active: true
+                        created: '2025-09-24T12:29:26.080132'
+                        type: lei
+                        source: https://www.gleif.org/en
+                      - id: COAAAMUXXX
+                        active: true
+                        created: '2025-09-24T12:29:26.080144'
+                        type: bic
+                        source: https://www.gleif.org/en
+                    - id: 64ac25c772c173ba6f3c9c57
+                      name: Company B
+                      jurisdiction: DE
+                      flags: []
+                      coordinates: []
+                      addresses: []
+                      aliases:
+                      - Company B. Inc.
+                      ids:
+                      - id: 12345_ABCDEFGH
+                        active: true
+                        created: '2025-09-24T12:29:26.080169'
+                        type: opencorporates
+                        source: https://www.handelsregister.de/
+                      - id: 12345_ABCDEFGH
+                        active: true
+                        created: '2025-09-24T12:29:26.080180'
+                        type: opencorporates_native_company_number
+                        source: https://www.handelsregister.de/
+                      - id: BBBBBBBBBBBBBBBBBBBB
+                        active: true
+                        created: '2025-09-24T12:29:26.080192'
+                        type: lei
+                        source: opencorporates_additional_identifiers
+                    - id: 64ac25c772c173ba6f3d0aa1
+                      name: Company C
+                      jurisdiction: JP
+                      flags: []
+                      coordinates: []
+                      addresses: []
+                      aliases:
+                      - Company C. Inc.
+                      ids:
+                      - id: CCCCCCCCCCCCCCCCCCCC
+                        active: true
+                        created: '2025-09-24T12:29:26.080207'
+                        type: lei
+                        source: https://www.gleif.org/en
+                      - id: CCCCCCCCCCCCCCCCCCCC
+                        active: true
+                        created: '2025-09-24T12:29:26.080218'
+                        type: mid
+                        source: Customs Directive 1234-567
+                    - id: 64ac25c772c173ba6f3e637f
+                      name: Company D
+                      jurisdiction: JP
+                      flags: []
+                      coordinates: []
+                      addresses: []
+                      ids:
+                      - id: DDDDDDDDDDDDDDDDDDDD
+                        active: true
+                        created: '2025-09-24T12:29:26.080233'
+                        type: lei
+                        source: https://www.gleif.org/en
+                    - id: 64ac25c872c173ba6f407757
+                      name: Company E
+                      jurisdiction: US
+                      flags: []
+                      coordinates:
+                      - lat: 100.0
+                        lng: 112.0
+                        type: headquarters
+                      - lat: 12.0
+                        lng: 24.0
+                        type: legal
+                      addresses:
+                      - 456 abc street
+                      - 123 abc street
+                      aliases:
+                      - Company E. Inc.
+                      ids:
+                      - id: EEEEEEEEEEEEEEEEEEEE
+                        active: true
+                        created: '2025-09-24T12:29:26.080247'
+                        type: lei
+                        source: https://www.gleif.org/en
+                    relationships:
+                    - id: 64ac2a7172c173ba6f57dad2
+                      type: DIRECTLY_CONSOLIDATES
+                      target: 64ac25c572c173ba6f3316cf
+                      source: 64ac25c672c173ba6f36283d
+                      modified: '2024-04-25T17:55:44.263000Z'
+                      sources:
+                      - https://search.gleif.org/#/record/AAAAAAAAAAAAAAAAAAAA/
+                      - https://search.gleif.org/#/record/BBBBBBBBBBBBBBBBBBBB/
+                    - id: 64ac2a7272c173ba6f5d4ed0
+                      type: DIRECTLY_CONSOLIDATES
+                      target: 64ac25d472c173ba6f530da1
+                      source: 64ac25d472c173ba6f541022
+                      modified: '2024-04-25T17:55:45.505000Z'
+                      sources:
+                      - https://search.gleif.org/#/record/CCCCCCCCCCCCCCCCCCCC/
+                      - https://search.gleif.org/#/record/DDDDDDDDDDDDDDDDDDDD/
+                    - id: 64ac87dd1102a154bf0cbbc8
+                      type: IS_SUPPLIER_OF
+                      target: 645a550a992fba23b295e4ea
+                      source: 645a550a992fba23b295e4e9
+                      hs_codes:
+                      - '8541'
+                      modified: '2025-02-20T16:10:51.079000Z'
+                      sources:
+                      - https://www.shu.ac.uk/helena-kennedy-centre-international-justice/research-and-projects/all-projects/in-broad-daylight
+                    page: 1
+                    page_size: 1000
+                    records: 134
+                    total_records: 134
+                    total_pages: 0
+        '400':
+          description: Invalid depth
+          content:
+            application/json:
+              examples:
+                invalid_depth:
+                  summary: Invalid depth parameter.
+                  value:
+                    detail: Depth must be between 1 and 10.
+        '422':
+          description: Unprocessable Content - invalid parameters
+          content:
+            application/json:
+              examples:
+                invalid_direction:
+                  summary: Provided direction must be 'in' or 'out'.
+                  value:
+                    detail:
+                    - type: literal_error
+                      loc:
+                      - query
+                      - direction
+                      msg: Input should be 'in' or 'out'
+                      input: between
+                      ctx:
+                        expected: '''in'' or ''out'''
+                invalid_depth_type:
+                  summary: Provided depth must be an integer.
+                  value:
+                    detail:
+                    - type: int_parsing
+                      loc:
+                      - query
+                      - depth
+                      msg: Input should be a valid integer, unable to parse string as an integer
+                      input: three
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+  /v1/entities/{entity_id}/graph/flagged_relationships:
+    get:
+      tags:
+      - Entity
+      summary: Get Entity Graph Flagged Relationships
+      description: 'Get flagged relationships for an entity with full entity, relationship, and flag details.
+
+
+        This endpoint returns the shortest paths between the specified entity and all
+
+        upstream flagged entities that pass through the provided HS codes. The response
+
+        includes complete details for all entities, relationships, and flags referenced
+
+        in the paths.
+
+
+        Args:
+
+        - entity_id: The ID of the entity to use as the starting point for relationship search
+
+        - hs_codes: List of HS codes that paths must pass through to be considered
+
+        - include_flags: Optional list of flag types to filter by (if not provided, all flag types are considered)
+
+        - include_affiliates: When True, paths connected by affiliate relationships are included
+
+        - paging: Pagination parameters
+
+
+        Returns:
+
+        - FlaggedRelationshipsResponse: Contains entities, relationships, and flags with all
+
+        ObjectIds serialized as strings with all ObjectIds serialized as strings'
+      operationId: get_entity_graph_flagged_relationships_entities__entity_id__graph_flagged_relationships_get
+      parameters:
+      - name: entity_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Entity Id
+      - name: hs_codes
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+          title: Hs Codes
+      - name: include_flags
+        in: query
+        required: false
+        schema:
+          title: Include Flags
+          type: array
+          items:
+            type: string
+          nullable: true
+      - name: include_affiliates
+        in: query
+        required: false
+        schema:
+          description: Set True to preserve affiliate relationships when filtering by HS codes. When True, affiliate relationships will be included in the graph even if they don't match the specified HS codes.
+          default: false
+          title: Include Affiliates
+          type: boolean
+          nullable: true
+        description: Set True to preserve affiliate relationships when filtering by HS codes. When True, affiliate relationships will be included in the graph even if they don't match the specified HS codes.
+      - name: page
+        in: query
+        required: false
+        schema:
+          default: 1
+          title: Page
+          type: integer
+          nullable: true
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          default: 25
+          title: Page Size
+          type: integer
+          nullable: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlaggedRelationshipsResponse'
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ExternalEnttiyId:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: The External Id
+        type:
+          type: string
+          title: Type
+          description: The type of the identifier
+        source:
+          type: string
+          title: Source
+          description: The source of the identifieer
+      type: object
+      required:
+      - id
+      - type
+      - source
+      title: ExternalEnttiyId
+      description: Class for information about external Entity Identifiers
+    EntityGraphCounts:
+      properties:
+        depth:
+          type: integer
+          title: The depth of the graph traversal
+          default: 3
+        value:
+          type: integer
+          title: The total number of relationships in the graph
+          default: 0
+        flagged_count:
+          type: integer
+          title: Flagged Count
+          description: Flagged upstream entities count
+          default: 0
+        last_updated:
+          type: string
+          format: date-time
+          title: The last time the graph counts were updated
+          default: '2026-07-20T16:50:05.374936Z'
+      type: object
+      title: EntityGraphCounts
+    ExternalEntityId:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: The external identifier value
+        type:
+          type: string
+          title: Type
+          description: The type of the identifier (e.g. lei, us_fein)
+        source:
+          type: string
+          title: Source
+          description: The source of the identifier
+      type: object
+      required:
+      - id
+      - type
+      - source
+      title: ExternalEntityId
+      description: External identifier for an Entity
+    earthstream_services__services__entity__common__search_models__Relationships:
+      properties:
+        total:
+          type: integer
+          title: The number of relationships the entity is linked with
+          default: 0
+        from_relationships:
+          title: The relationships where the given entity in on the from side
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__RelationshipCount'
+          nullable: true
+        to_relationships:
+          title: The relationships where the given entity in on the to side
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__RelationshipCount'
+          nullable: true
+      type: object
+      title: Relationships
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Address:
+      properties:
+        address:
+          type: string
+          title: Address
+        problematic:
+          type: boolean
+          title: Problematic
+          default: false
+        problem_region:
+          title: Problem Region
+          type: string
+          nullable: true
+      type: object
+      required:
+      - address
+      title: Address
+      description: Information about an Entity's Address.
+    GetEntityResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique Entity identifier.
+        name:
+          type: string
+          title: Name
+          description: The formal or recognized name of the entity.
+        description:
+          title: Description
+          description: Detailed information about the entity's purpose, background, or role.
+          type: string
+          nullable: true
+        primary_role:
+          title: Primary Role
+          description: The primary role of the entity (e.g., supplier, grower)
+          type: string
+          nullable: true
+        aliases:
+          title: Aliases
+          description: Alternative names and aliases
+          items:
+            type: string
+          type: array
+          nullable: true
+        url:
+          title: Url
+          description: The official website or online resource associated with the entity.
+          type: string
+          nullable: true
+        jurisdiction:
+          type: string
+          title: Entity Jurisdiction
+          description: ISO 3166 country code of the country where the entity operates or is governed.
+        addresses:
+          title: Addresses
+          description: The physical or registered addresses of the entity.
+          items:
+            type: string
+          type: array
+          nullable: true
+        monitor:
+          type: boolean
+          title: Monitor Entity
+          description: If 'true', system events impacting this Entity or any Entity in its supply chain (as defined by the parameters set in Entity.subscription) will generate Notifications. Notifications can be viewed and acknowledged at /notifications endpoints.
+          default: false
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Time record was created.
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+          description: Last time record was modified.
+        region:
+          title: Region
+          description: Region code for the Enttiy
+          type: string
+          nullable: true
+        affiliated_jurisdiction:
+          title: Affiliated Jurisdiction
+          description: Supplemental jurisdction information. For example, some Entities may be associate with super-governmental bodies like the United Nations.
+          type: string
+          nullable: true
+        tradeverifyd_score:
+          title: Tradeverifyd Score
+          description: Entity's Tradeverifyd score. Entities with higher risk for supply chain or compliance issues will have a lower Tradeverifyd score.
+          type: integer
+          nullable: true
+        references:
+          title: Entity References
+          description: Summary counts of flags, relationships, and other references associated with this entity. Not specific to query.
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__EntityReferences'
+          nullable: true
+        count_inferred_relationships:
+          title: Inferred Relationships Count
+          description: The number of inferred relationships in the graph.  Will not be present if the graph counts have not been calculated yet.
+          $ref: '#/components/schemas/EntityGraphCounts'
+          nullable: true
+        flagged:
+          type: boolean
+          title: Flagged
+          description: Whether the Entity has active Flags visible to the requesting organization.
+          default: false
+        has_positive_flags:
+          type: boolean
+          title: Has Positive Flags
+          description: Whether the Entity has any positive/compliant flags.
+          default: false
+        has_negative_flags:
+          type: boolean
+          title: Has Negative Flags
+          description: Whether the Entity has any negative/risk flags.
+          default: false
+        external_ids:
+          title: External Ids
+          description: External identifiers for the Entity.
+          items:
+            $ref: '#/components/schemas/ExternalEntityId'
+          type: array
+          nullable: true
+        hs_codes:
+          description: Harmonized System codes for products traded by this entity, organized by direction.
+          $ref: '#/components/schemas/EntityHsCodes'
+          nullable: true
+      type: object
+      required:
+      - id
+      - name
+      - jurisdiction
+      - created_at
+      - modified
+      title: GetEntityResponse
+      description: "Response model for entities.\n\n Attributes:\n\n    id: Unique entity identifier.\n\n    name: Entity name.\n\n    description: Detailed information about the entity, covering its purpose,\n    background, or role.\n\n    primary_role: The primary role an entity plays.\n\n    aliases: Additional aliases that are associated with the entity.\n\n    url: The official website or a relevant online resource associated with the\n    entity.\n\n    jurisdiction: The country the entity is associated with.\n\n    addresses: The physical or registered addresses of the entity.\n\n    monitor: A boolean indicating if this entity's events will generate notifications.\n\n    created_at: Time the entity record was created.\n\n    modified: Time the record was last modified.\n\n    region: Entity's region code.\n\n    affiliated_jurisdiction: Supplemental jurisdiction information.\n\n    tradeverifyd_score: Computed Tradeverifyd score for the entity.\n\n    references: Summary counts of direct entity relationships and flags.\n\n    count_inferred_relationships: Optional value for number of inferred relationships in the entity graph, if already calculated."
+    earthstream_services__services__entity__common__entity_dto__Flags:
+      properties:
+        total:
+          type: integer
+          title: The number of flags found on an entity.
+          default: 0
+      type: object
+      title: Flags
+    earthstream_services__services__entity__common__entity_dto__Relationships:
+      properties:
+        total:
+          type: integer
+          title: The number of relationships the entity is linked with
+          default: 0
+        from_relationships:
+          title: "\n            The relationships where the given entity is on the 'from' side.\n            These relationships are considered 'outbound' from the entity.\n        "
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__RelationshipCount'
+          nullable: true
+        to_relationships:
+          title: "\n            The relationships where the given entity is on the 'to' side.\n            These relationships are considered 'inbound' to the entity.\n        "
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__RelationshipCount'
+          nullable: true
+      type: object
+      title: Relationships
+    Coordinate:
+      properties:
+        lat:
+          type: number
+          title: Lat
+        lng:
+          type: number
+          title: Lng
+        type:
+          type: string
+          enum:
+          - headquarters
+          - legal
+          title: Type
+      type: object
+      required:
+      - lat
+      - lng
+      - type
+      title: Coordinate
+      description: Latitude and longitude associated with an Entity
+    PublicAbridgedGraph:
+      properties:
+        entrypoint:
+          $ref: '#/components/schemas/PublicEntity'
+          nullable: true
+        entities:
+          items:
+            $ref: '#/components/schemas/PublicEntity'
+          type: array
+          title: Entities
+        relationships:
+          items:
+            $ref: '#/components/schemas/PublicRelationship'
+          type: array
+          title: Relationships
+        page:
+          type: integer
+          title: Page
+          default: 0
+        page_size:
+          type: integer
+          title: Page Size
+          default: 0
+        records:
+          type: integer
+          title: Records
+          default: 0
+        total_records:
+          title: Total Records
+          type: integer
+          nullable: true
+        total_pages:
+          title: Total Pages
+          type: integer
+          nullable: true
+        entity_graph_counts:
+          title: Entity Graph Counts
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          nullable: true
+      type: object
+      required:
+      - entities
+      - relationships
+      title: PublicAbridgedGraph
+      description: Public abridged graph response model
+    mesur_data_access__tradeverifyd__datamodels__common__Identifier:
+      properties:
+        type:
+          type: string
+          title: Type
+        source:
+          type: string
+          title: Source
+        id:
+          type: string
+          title: Id
+      type: object
+      required:
+      - type
+      - source
+      - id
+      title: Identifier
+      description: External ID for an entity
+    EntitySearchResult:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: The Mesur Entity Id.
+        name:
+          type: string
+          title: Name
+          description: Entity name
+        aliases:
+          title: Aliases
+          description: Alternative names and aliases
+          items:
+            type: string
+          type: array
+          nullable: true
+        jurisdiction:
+          title: Jurisdiction
+          description: The country the entity is associated with.
+          type: string
+          nullable: true
+        addresses:
+          title: Addresses
+          description: Entity addresses.
+          items:
+            type: string
+          type: array
+          nullable: true
+        flagged:
+          type: boolean
+          title: Flagged
+          description: Whether or not the Entity has active Flags.
+        has_positive_flags:
+          type: boolean
+          title: Has Positive Flags
+          description: Whether the Entity has any positive/compliant flags.
+          default: false
+        has_negative_flags:
+          type: boolean
+          title: Has Negative Flags
+          description: Whether the Entity has any negative/risk flags.
+          default: false
+        description:
+          title: Entity Description
+          description: Detailed information about the entity's purpose, background, or role.
+          type: string
+          maxLength: 4096
+          nullable: true
+        primary_role:
+          title: Primary Role
+          description: The primary role of the entity (e.g., supplier, grower)
+          type: string
+          nullable: true
+        url:
+          title: Entity URL
+          description: The official website or online resource associated with the entity.
+          type: string
+          nullable: true
+        extended_data:
+          title: Extended Data
+          description: Additional data points about the entity, including status and links to documents
+          additionalProperties: true
+          type: object
+          nullable: true
+        auto_research:
+          title: Research Entity
+          description: Flag indicating if the entity should be researched automatically.
+          type: boolean
+          nullable: true
+        monitor:
+          title: Monitor Entity
+          description: Flag indicating if the entity should be continuously monitored for updates or changes.
+          type: boolean
+          nullable: true
+        callback_url:
+          title: Callback URL
+          description: Registered URL to call when Entity activiy occurs
+          type: string
+          nullable: true
+        references:
+          title: Entity References
+          description: flag, relationships, other references to this entity
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__search_models__EntityReferences'
+          nullable: true
+        count_inferred_relationships:
+          title: Inferred Relationships Count
+          description: The number of inferred relationships in the graph.  Will not be present if the graph counts have not been calculated yet.
+          $ref: '#/components/schemas/EntityGraphCounts'
+          nullable: true
+        external_ids:
+          title: External Identifiers
+          description: An optional list of external identifiers for an Entity.
+          items:
+            $ref: '#/components/schemas/ExternalEnttiyId'
+          type: array
+          nullable: true
+        modified_date:
+          title: Modified Date
+          description: Last time entity record was modified (timezone-aware UTC)
+          type: string
+          format: date-time
+          nullable: true
+        hs_codes:
+          title: HS Codes
+          description: Harmonized System codes for products traded by this entity, organized by direction
+          $ref: '#/components/schemas/HsCodes'
+          nullable: true
+      type: object
+      required:
+      - id
+      - name
+      - aliases
+      - jurisdiction
+      - addresses
+      - flagged
+      title: EntitySearchResult
+      description: Single Entity search result
+    VerificationFlag:
+      properties:
+        sources:
+          items:
+            type: string
+          type: array
+          title: Sources
+          default: []
+        type:
+          type: string
+          title: Type
+        subtype:
+          type: string
+          title: Subtype
+        flag_polarity:
+          title: Flag Polarity
+          type: integer
+          nullable: true
+      type: object
+      required:
+      - type
+      - subtype
+      title: VerificationFlag
+      description: Information about a Flag.
+    PublicEntity:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        jurisdiction:
+          type: string
+          title: Jurisdiction
+        flags:
+          title: Flags
+          items:
+            $ref: '#/components/schemas/PublicFlag'
+          type: array
+          nullable: true
+        coordinates:
+          items:
+            $ref: '#/components/schemas/Coordinate'
+          type: array
+          title: Coordinates
+          default: []
+        addresses:
+          items:
+            type: string
+          type: array
+          title: Addresses
+          default: []
+        aliases:
+          items:
+            type: string
+          type: array
+          title: Aliases
+          default: []
+        ids:
+          items:
+            $ref: '#/components/schemas/app__schemas__metadata__Identifier'
+          type: array
+          title: Ids
+          default: []
+      type: object
+      required:
+      - id
+      - name
+      - jurisdiction
+      title: PublicEntity
+      description: Public entity response model - only exposes what consumers need
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    earthstream_services__services__entity__common__entity_dto__EntityReferences:
+      properties:
+        flags:
+          title: Information about flags found for an entity
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__Flags'
+          nullable: true
+        relationships:
+          title: Information about relationships for an entity
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__Relationships'
+          nullable: true
+      type: object
+      title: EntityReferences
+    app__schemas__metadata__Identifier:
+      properties:
+        id:
+          type: string
+          title: Identifier
+          description: An identifer, e.g., a GTIN or CIN
+        active:
+          type: boolean
+          title: Active Status
+          description: A boolean field indicating if the object is active. Setting this to False acts as a soft delete.
+          default: true
+        created:
+          type: string
+          format: date-time
+          title: Date Added
+          description: The date and time when the object was added.
+        type:
+          type: string
+          title: Type
+          description: The type of identifier, e.g., a GTIN or CIN
+        source:
+          title: Source
+          description: A URL that can be dereferenced to provide more information about the id
+          type: string
+          nullable: true
+      type: object
+      required:
+      - id
+      - type
+      title: Identifier
+      description: "Represents an identifier that can be used for an entity, along with the\nidentifier type and a source URL.\n\nAttributes:\n    id: the value of the identifier.\n    type: the type of the identifier.\n    url: a URL source for the identifier."
+    EntityVerificationDetails:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        jurisdiction:
+          type: string
+          title: Jurisdiction
+        addresses:
+          items:
+            type: string
+          type: array
+          title: Addresses
+        text_summary:
+          type: string
+          title: Text Summary
+        problematic_entities:
+          items:
+            $ref: '#/components/schemas/ProblematicEntity'
+          type: array
+          title: Problematic Entities
+          default: []
+        tradeverifyd_score:
+          type: number
+          title: Tradeverifyd Score
+          default: 0.0
+        total_entity_ct:
+          type: integer
+          title: Total Entity Ct
+          default: 0
+        identifiers:
+          items:
+            $ref: '#/components/schemas/mesur_data_access__tradeverifyd__datamodels__common__Identifier'
+          type: array
+          title: Identifiers
+          default: []
+        incoming_products:
+          items:
+            type: string
+          type: array
+          title: Incoming Products
+          default: []
+        outgoing_products:
+          items:
+            type: string
+          type: array
+          title: Outgoing Products
+          default: []
+        top_supplier_connections:
+          items:
+            $ref: '#/components/schemas/TopSupplierConnection'
+          type: array
+          title: Top Supplier Connections
+          default: []
+        top_customer_connections:
+          items:
+            $ref: '#/components/schemas/TopSupplierConnection'
+          type: array
+          title: Top Customer Connections
+          default: []
+      type: object
+      required:
+      - id
+      - name
+      - jurisdiction
+      - addresses
+      - text_summary
+      title: EntityVerificationDetails
+      description: Summary of verification details for an Entity.
+    ProblematicEntity:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        flags:
+          items:
+            $ref: '#/components/schemas/VerificationFlag'
+          type: array
+          title: Flags
+          default: []
+        addresses:
+          items:
+            $ref: '#/components/schemas/Address'
+          type: array
+          title: Addresses
+          default: []
+        jurisdiction:
+          type: string
+          title: Jurisdiction
+        depth:
+          type: integer
+          title: Depth
+        tvpra_risks:
+          items:
+            $ref: '#/components/schemas/TVPRARisk'
+          type: array
+          title: Tvpra Risks
+          default: []
+        has_excessive_addresses:
+          type: boolean
+          title: Has Excessive Addresses
+          default: false
+      type: object
+      required:
+      - id
+      - name
+      - jurisdiction
+      - depth
+      title: ProblematicEntity
+      description: An Entity identified as problematic during verification.
+    earthstream_services__services__entity__common__entity_dto__RelationshipCount:
+      properties:
+        count:
+          type: integer
+          title: The number of relationships found on an entity.
+          default: 0
+      type: object
+      title: RelationshipCount
+    EntityHsCodes:
+      properties:
+        incoming:
+          items:
+            type: string
+          type: array
+          title: Incoming
+          description: HS codes for products received by this entity
+        outgoing:
+          items:
+            type: string
+          type: array
+          title: Outgoing
+          description: HS codes for products shipped by this entity
+      type: object
+      title: EntityHsCodes
+      description: HS codes organized by trade direction for an Entity
+    RiskEvents:
+      properties:
+        total:
+          type: integer
+          title: The number of risk events found on an entity.
+          default: 0
+      type: object
+      title: RiskEvents
+    earthstream_services__services__entity__common__search_models__EntityReferences:
+      properties:
+        flags:
+          title: Information about flags found for an entity
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__Flags'
+          nullable: true
+        relationships:
+          title: Information about relationships for an entity
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__search_models__Relationships'
+          nullable: true
+        risk_events:
+          title: Information about risk events for an entity
+          $ref: '#/components/schemas/RiskEvents'
+          nullable: true
+      type: object
+      title: EntityReferences
+    app__api__internal__schemas__reports__Pagination:
+      properties:
+        current_page:
+          type: integer
+          title: Current Page
+        page_size:
+          type: integer
+          title: Page Size
+        total_pages:
+          type: integer
+          title: Total Pages
+        total_records:
+          type: integer
+          title: Total Records
+      type: object
+      required:
+      - current_page
+      - page_size
+      - total_pages
+      - total_records
+      title: Pagination
+      description: 'Using to return paging information to the client
+
+        current_page: the current page of data
+
+        total_pages: the total number of pages
+
+        total_records: the number of records found
+
+        page_size: the current page size'
+    FlaggedRelationshipsResponse:
+      properties:
+        entities:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Entities
+          description: List of entities referenced in the paths
+          example:
+          - aliases:
+            - Company A Inc.
+            id: 645a550a992fba23b295e4e9
+            ids: []
+            location:
+              HeadquartersAddress:
+                addressLines:
+                - NO.36 EAST OF NORTH 3 ROAD
+                addressNumber: '36'
+                city: City A
+                coordinates:
+                  latitude: 0.0
+                  longitude: 0.0
+                country: Country A
+                language: en
+                region: Region A
+              LegalAddress:
+                addressLines:
+                - NO.36 EAST OF NORTH 3 ROAD
+                addressNumber: '36'
+                city: City A
+                coordinates:
+                  latitude: 0.0
+                  longitude: 0.0
+                country: Country A
+                language: en
+                region: Region A
+            modified: '2025-09-12T00:00:00Z'
+            name: Company A
+            uuid: bceaa087-7532-46b0-bc5d-b57d1a0573b7
+        relationships:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Relationships
+          description: List of relationships referenced in the paths
+          example:
+          - hs_codes: []
+            id: 64ac2a7172c173ba6f5aac89
+            modified: '2025-09-12T00:00:00Z'
+            relation_from: 64ac25c672c173ba6f399722
+            relation_to: 64ac25c872c173ba6f415635
+            source:
+            - https://search.gleif.org/#/record/AAAAAAAAAAAAAAAAAAAA/
+            - https://search.gleif.org/#/record/BBBBBBBBBBBBBBBBBBBB/
+            type: DIRECTLY_CONSOLIDATES
+        flags:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Flags
+          description: List of flags referenced in the paths
+          example:
+          - entity_id: 66b5aca01091cc1ae224b0dd
+            flag_polarity: 1
+            flag_subtype: Forced Labor Risk
+            flag_type: Compliant
+            id: 67ffefdc070a88cf066349fa
+            modified: '2025-09-12T00:00:00Z'
+            source:
+            - https://modernslaveryregister.gov.au/statements/
+            tags:
+            - COMPLIANT - Australia Modern Slavery Act 2018
+        pagination:
+          description: Pagination information for the response
+          example:
+            current_page: 1
+            page_size: 50
+            total_pages: 1
+            total_records: 1
+          $ref: '#/components/schemas/app__api__internal__schemas__reports__Pagination'
+          nullable: true
+        filters:
+          title: Filters
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type: object
+          nullable: true
+        sorting:
+          items:
+            type: string
+          type: array
+          title: Sorting
+      type: object
+      required:
+      - entities
+      - relationships
+      - flags
+      title: FlaggedRelationshipsResponse
+      description: 'Response model for flagged paths data.
+
+
+        Contains paths to flagged entities along with all related entities,
+
+        relationships, and flags. All ObjectIds are serialized as strings
+
+        for JSON compatibility.'
+    TopSupplierConnection:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        jurisdiction:
+          type: string
+          title: Jurisdiction
+      type: object
+      required:
+      - id
+      - name
+      - jurisdiction
+      title: TopSupplierConnection
+      description: Top supplier connection
+    PublicFlag:
+      properties:
+        id:
+          type: string
+          title: Id
+        entity_id:
+          type: string
+          title: Entity Id
+        entity_jurisdiction:
+          title: Entity Jurisdiction
+          type: string
+          nullable: true
+        type:
+          type: string
+          title: Type
+        subtype:
+          type: string
+          title: Subtype
+        flag_polarity:
+          title: Flag Polarity
+          type: integer
+          nullable: true
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+        source:
+          title: Source
+          items:
+            type: string
+          type: array
+          nullable: true
+        description:
+          title: Description
+          type: string
+          nullable: true
+        tags:
+          title: Tags
+          items:
+            type: string
+          type: array
+          nullable: true
+      type: object
+      required:
+      - id
+      - entity_id
+      - type
+      - subtype
+      - modified
+      title: PublicFlag
+      description: Public flag response model - only exposes what consumers need
+    HsCodes:
+      properties:
+        incoming:
+          items:
+            type: string
+          type: array
+          title: Incoming
+          description: HS codes for products received by this entity
+        outgoing:
+          items:
+            type: string
+          type: array
+          title: Outgoing
+          description: HS codes for products shipped by this entity
+      type: object
+      title: HsCodes
+      description: HS codes organized by direction (incoming/outgoing shipments)
+    PublicRelationship:
+      properties:
+        id:
+          type: string
+          title: Id
+        type:
+          type: string
+          title: Type
+          description: Describes the relationship between subject and object.
+        target:
+          type: string
+          title: Target
+          description: Entity at the destination of the relationship.
+        source:
+          type: string
+          title: Source
+          description: Entity at the origin of the relationship.
+        hs_codes:
+          title: Hs Codes
+          items:
+            type: string
+          type: array
+          nullable: true
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+        sources:
+          title: Sources
+          items:
+            type: string
+          type: array
+          nullable: true
+        aliases:
+          title: Aliases
+          items:
+            type: string
+          type: array
+          nullable: true
+      type: object
+      required:
+      - id
+      - type
+      - target
+      - source
+      - modified
+      title: PublicRelationship
+      description: Public relationship response model - only exposes what consumers need
+    TVPRARisk:
+      properties:
+        risk_type:
+          type: string
+          title: Risk Type
+        suspect_hs_codes:
+          items:
+            type: string
+          type: array
+          title: Suspect Hs Codes
+      type: object
+      required:
+      - risk_type
+      - suspect_hs_codes
+      title: TVPRARisk
+      description: Information about high-risk goods.
+    RiskEvent:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the Risk Event.
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Date and time when the Risk Event was detected
+        last_modified:
+          type: string
+          format: date-time
+          title: Last Modified
+          description: Last time Risk Event record was modified
+        countries:
+          title: Countries
+          description: Countries impacted by the Risk Event
+          items:
+            type: string
+          type: array
+          nullable: true
+        time_start:
+          title: Time Start
+          description: Start time of the event.
+          type: string
+          format: date-time
+          nullable: true
+        time_end:
+          title: Time End
+          description: End time of the event.
+          type: string
+          format: date-time
+          nullable: true
+        title:
+          type: string
+          title: Title
+          description: Brief, descriptive title of the Risk Event.
+        description:
+          type: string
+          title: Description
+          description: Detailed description of the Risk Event.
+        sources:
+          items:
+            type: string
+          type: array
+          title: Sources
+          description: Web resources that reference or describe the Risk Event.
+        type:
+          anyOf:
+          - type: string
+            enum:
+            - earthquake
+            - hurricane
+            - tsunami
+            - flood
+            - tornado
+            - cyclone
+            - volcanic_eruption
+            - wildfire
+            - drought
+            - landslide
+            - blizzard
+            - ice_storm
+            - heatwave
+            - sandstorm
+            - pandemic
+            - insect_infestation
+          - type: string
+            enum:
+            - economic_sanction
+            - trade_war
+            - political_unrest
+            - embargo
+            - military_conflict
+            - terrorist_attack
+          - type: string
+            enum:
+            - shipping_delay
+            - port_congestion
+            - transportation_strike
+            - fuel_shortage
+            - infrastructure_failure
+          - type: string
+            enum:
+            - raw_material_scarcity
+            - component_shortage
+            - semiconductor_shortage
+            - crop_disease
+          - type: string
+            enum:
+            - strike
+            - labor_shortage
+            - skilled_labor_shortage
+            - workforce_demographic_problem
+            - forced_labor
+            - child_labor
+          - type: string
+            enum:
+            - inflation
+            - recession
+            - economic_downturn
+            - currency_fluctuation
+            - interest_rate_change
+            - stock_market_volatility
+          - type: string
+            enum:
+            - environmental_regulation
+            - trade_regulation
+            - labor_law
+            - safety_regulation
+            - compliance_standard
+          - type: string
+            enum:
+            - cyber_attack
+            - data_breach
+            - system_failure
+            - technology_obsolete
+            - software_bug
+          - type: string
+            enum:
+            - oil_price_increase
+            - renewable_energy_outage
+            - energy_rationing
+            - nuclear_energy_incident
+          - type: string
+            enum:
+            - climate_change
+            - biodiversity_loss
+            - pollution
+            - sustainable_resource_management
+          - type: string
+            enum:
+            - consumer_trend_shift
+            - demand_surge
+            - demand_slump
+            - new_market_entrant
+          - type: string
+            enum:
+            - healthcare_system_overload
+          - type: string
+            enum:
+            - other
+          title: Type
+          description: Type of the event
+      type: object
+      required:
+      - id
+      - timestamp
+      - last_modified
+      - countries
+      - time_start
+      - time_end
+      - title
+      - description
+      - sources
+      - type
+      title: RiskEvent
+      description: "Represents an event, encapsulating key information for tracking or\nmonitoring purposes within various applications.\n\nAttributes:\n\n    id:  Database identifier.\n\n    timestamp: Time the event occurred or was recorded.\n\n    last_modified: Last time Risk Event record was modified.\n\n    countries: A list of countries impacted by the Risk Event.\n\n    time_start: Start time of the event, marking the beginning of its\n    occurrence.\n\n    time_end: End time of the event, indicating when it concluded.\n\n    title: Brief, descriptive title of the event.\n\n    description: Summary of the RiskEvent.\n\n    sources: Web URLs that reference or describe the event.\n\n    type: The type of Risk Event."
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: ocp-apim-subscription-key

@@ -1,0 +1,704 @@
+openapi: 3.1.0
+info:
+  title: Tradeverifyd Documents Risk Events API
+  description: '
+
+    The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
+
+
+    For more information visit [tradeverifyd.com](https://tradeverifyd.com).
+
+
+    If you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.
+
+
+    When making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.
+
+
+    For example:
+
+
+    ```bash
+
+    curl --silent --location -G ''https://.../v1/search/entities'' \
+
+    --data-urlencode ''name=Contoso Corporation'' \
+
+    --data-urlencode ''jurisdiction=US'' \
+
+    --header "ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY"
+
+    ```
+
+    '
+  termsOfService: https://tradeverifyd.com/terms-of-service
+  contact:
+    name: tradeverifyd.com
+    url: https://tradeverifyd.com/
+    email: support@tradeverifyd.com
+  license:
+    name: Proprietary License
+    url: https://tradeverifyd.com/terms-of-service
+  version: 0.2.0
+servers:
+- url: https://api.tradeverifyd.com
+  description: Production server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Risk Events
+  description: Manage and retrieve events related to entities. This includes real-time updates on critical incidents like supply chain disruptions, compliance issues, or significant changes affecting entities. Stay informed about vital events that could impact your business operations and decision-making processes.
+paths:
+  /v1/risk_events/{event_id}:
+    get:
+      tags:
+      - Risk Events
+      summary: Get Event
+      description: 'Retrieve a specific risk event by its ID.
+
+
+        This endpoint provides detailed information about a particular event in the
+
+        context of supply chain operations. It is useful for fetching specific
+
+        details about compliance, trade disruptions, or other significant events.'
+      operationId: get_event_risk_events__event_id__get
+      parameters:
+      - name: event_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique Risk Event identifier.
+          title: Event Id
+        description: Unique Risk Event identifier.
+      responses:
+        '200':
+          description: Risk event details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskEvent'
+              examples:
+                port_congestion:
+                  summary: Port congestion disruption event
+                  description: Example of a transportation disruption risk event affecting major ports
+                  value:
+                    id: 65f8a2b1c3d4e5f6a7b8c9d0
+                    timestamp: '2024-03-15T08:30:00Z'
+                    last_modified: '2024-03-15T10:45:00Z'
+                    countries:
+                    - US
+                    - CN
+                    time_start: '2024-03-14T00:00:00Z'
+                    time_end: '2024-03-20T23:59:59Z'
+                    title: Major Port Congestion at Los Angeles/Long Beach
+                    description: Severe congestion at the Los Angeles and Long Beach ports due to increased import volumes and labor shortages, causing significant delays in cargo processing and ship berthing.
+                    sources:
+                    - https://www.reuters.example/business/port-congestion-2024
+                    - https://www.bloomberg.example/news/la-port-delays
+                    type: port_congestion
+                semiconductor_shortage:
+                  summary: Global semiconductor shortage
+                  description: Example of a supply shortage risk event affecting technology supply chains
+                  value:
+                    id: 65f8a2b1c3d4e5f6a7b8c9d1
+                    timestamp: '2024-02-28T14:20:00Z'
+                    last_modified: '2024-03-01T09:15:00Z'
+                    countries:
+                    - TW
+                    - KR
+                    - JP
+                    time_start: '2024-02-15T00:00:00Z'
+                    title: Global Semiconductor Shortage Intensifies
+                    description: Ongoing semiconductor chip shortage affecting automotive and electronics industries, with Taiwan and South Korea production facilities operating at maximum capacity.
+                    sources:
+                    - https://www.ft.example/semiconductor-shortage-2024
+                    type: semiconductor_shortage
+                hurricane_disruption:
+                  summary: Hurricane supply chain impact
+                  description: Natural disaster affecting regional supply chains and logistics
+                  value:
+                    id: 65f8a2b1c3d4e5f6a7b8c9d2
+                    timestamp: '2024-09-10T16:00:00Z'
+                    last_modified: '2024-09-12T08:30:00Z'
+                    countries:
+                    - US
+                    - MX
+                    time_start: '2024-09-08T00:00:00Z'
+                    time_end: '2024-09-15T23:59:59Z'
+                    title: Hurricane Impacts Gulf Coast Supply Chains
+                    description: Category 4 hurricane disrupts oil refineries, chemical plants, and shipping routes along the Gulf Coast, affecting energy and petrochemical supply chains.
+                    sources:
+                    - https://www.noaa.gov/hurricane-tracker-2024
+                    - https://www.wsj.example/gulf-coast-supply-disruption
+                    type: hurricane
+        '404':
+          description: Risk event not found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  summary: Risk event does not exist
+                  value:
+                    detail: Risk Event '65f8a2b1c3d4e5f6a7b8c9d9' does not exist.
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/risk_events:
+    get:
+      tags:
+      - Risk Events
+      summary: Get Risk Events
+      description: 'Retrieve a paginated feed of Risk Events matching the specifed filters,
+
+        sorted by event creation time.'
+      operationId: get_risk_events_risk_events_get
+      parameters:
+      - name: event_types
+        in: query
+        required: false
+        schema:
+          description: If set, only Risk Events of the provided types will be included in the result set. If 'null', all types will be included in the result set.
+          title: Event Types
+          type: array
+          items:
+            anyOf:
+            - enum:
+              - earthquake
+              - hurricane
+              - tsunami
+              - flood
+              - tornado
+              - cyclone
+              - volcanic_eruption
+              - wildfire
+              - drought
+              - landslide
+              - blizzard
+              - ice_storm
+              - heatwave
+              - sandstorm
+              - pandemic
+              - insect_infestation
+              type: string
+            - enum:
+              - economic_sanction
+              - trade_war
+              - political_unrest
+              - embargo
+              - military_conflict
+              - terrorist_attack
+              type: string
+            - enum:
+              - shipping_delay
+              - port_congestion
+              - transportation_strike
+              - fuel_shortage
+              - infrastructure_failure
+              type: string
+            - enum:
+              - raw_material_scarcity
+              - component_shortage
+              - semiconductor_shortage
+              - crop_disease
+              type: string
+            - enum:
+              - strike
+              - labor_shortage
+              - skilled_labor_shortage
+              - workforce_demographic_problem
+              - forced_labor
+              - child_labor
+              type: string
+            - enum:
+              - inflation
+              - recession
+              - economic_downturn
+              - currency_fluctuation
+              - interest_rate_change
+              - stock_market_volatility
+              type: string
+            - enum:
+              - environmental_regulation
+              - trade_regulation
+              - labor_law
+              - safety_regulation
+              - compliance_standard
+              type: string
+            - enum:
+              - cyber_attack
+              - data_breach
+              - system_failure
+              - technology_obsolete
+              - software_bug
+              type: string
+            - enum:
+              - oil_price_increase
+              - renewable_energy_outage
+              - energy_rationing
+              - nuclear_energy_incident
+              type: string
+            - enum:
+              - climate_change
+              - biodiversity_loss
+              - pollution
+              - sustainable_resource_management
+              type: string
+            - enum:
+              - consumer_trend_shift
+              - demand_surge
+              - demand_slump
+              - new_market_entrant
+              type: string
+            - type: string
+              enum:
+              - healthcare_system_overload
+            - type: string
+              enum:
+              - other
+          nullable: true
+        description: If set, only Risk Events of the provided types will be included in the result set. If 'null', all types will be included in the result set.
+      - name: countries
+        in: query
+        required: false
+        schema:
+          description: If set, only Risk Events impacting the provided countries will be included in the result set. If 'null', all countries will be included in the result set.
+          title: Countries
+          type: array
+          items:
+            type: string
+          nullable: true
+        description: If set, only Risk Events impacting the provided countries will be included in the result set. If 'null', all countries will be included in the result set.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          description: Result page.
+          default: 1
+          title: Page
+        description: Result page.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          description: Number of results to return per-query.
+          default: 10
+          title: Per Page
+        description: Number of results to return per-query.
+      responses:
+        '200':
+          description: Paginated list of risk events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRiskEventsResponse'
+              examples:
+                multiple_events:
+                  summary: Multiple risk events with facets
+                  description: Paginated response showing various types of supply chain risk events with facet counts
+                  value:
+                    facets:
+                    - type: event_type
+                      value: port_congestion
+                      count: 15
+                    - type: event_type
+                      value: semiconductor_shortage
+                      count: 8
+                    - type: event_type
+                      value: hurricane
+                      count: 5
+                    - type: event_country
+                      value: US
+                      count: 12
+                    - type: event_country
+                      value: CN
+                      count: 10
+                    - type: event_country
+                      value: TW
+                      count: 6
+                    page_results:
+                    - id: 65f8a2b1c3d4e5f6a7b8c9d0
+                      timestamp: '2024-03-15T08:30:00Z'
+                      last_modified: '2024-03-15T10:45:00Z'
+                      countries:
+                      - US
+                      - CN
+                      time_start: '2024-03-14T00:00:00Z'
+                      time_end: '2024-03-20T23:59:59Z'
+                      title: Major Port Congestion at Los Angeles/Long Beach
+                      description: Severe congestion at the Los Angeles and Long Beach ports due to increased import volumes and labor shortages
+                      sources:
+                      - https://www.reuters.example/business/port-congestion-2024
+                      - https://www.bloomberg.example/news/la-port-delays
+                      type: port_congestion
+                    - id: 65f8a2b1c3d4e5f6a7b8c9d1
+                      timestamp: '2024-02-28T14:20:00Z'
+                      last_modified: '2024-03-01T09:15:00Z'
+                      countries:
+                      - TW
+                      - KR
+                      - JP
+                      time_start: '2024-02-15T00:00:00Z'
+                      title: Global Semiconductor Shortage Intensifies
+                      description: Ongoing semiconductor chip shortage affecting automotive and electronics industries worldwide
+                      sources:
+                      - https://www.ft.example/semiconductor-shortage-2024
+                      type: semiconductor_shortage
+                    - id: 65f8a2b1c3d4e5f6a7b8c9d2
+                      timestamp: '2024-01-10T12:00:00Z'
+                      last_modified: '2024-01-12T14:30:00Z'
+                      countries:
+                      - RU
+                      - UA
+                      time_start: '2024-01-10T00:00:00Z'
+                      title: Trade Route Disruption in Black Sea Region
+                      description: Ongoing military conflict affecting grain and energy exports through Black Sea shipping lanes
+                      sources:
+                      - https://www.bbc.example/news/black-sea-trade-2024
+                      - https://www.wsj.example/grain-exports-disrupted
+                      type: military_conflict
+                    current_page: 1
+                    total_results: 28
+                filtered_by_type:
+                  summary: Filtered by event type
+                  description: Results filtered to show only natural disaster events
+                  value:
+                    facets:
+                    - type: event_type
+                      value: hurricane
+                      count: 3
+                    - type: event_type
+                      value: earthquake
+                      count: 2
+                    - type: event_type
+                      value: flood
+                      count: 4
+                    - type: event_country
+                      value: US
+                      count: 5
+                    - type: event_country
+                      value: JP
+                      count: 2
+                    page_results:
+                    - id: 65f8a2b1c3d4e5f6a7b8c9d3
+                      timestamp: '2024-09-10T16:00:00Z'
+                      last_modified: '2024-09-12T08:30:00Z'
+                      countries:
+                      - US
+                      - MX
+                      time_start: '2024-09-08T00:00:00Z'
+                      time_end: '2024-09-15T23:59:59Z'
+                      title: Hurricane Impacts Gulf Coast Supply Chains
+                      description: Category 4 hurricane disrupts oil refineries and chemical plants
+                      sources:
+                      - https://www.noaa.gov/hurricane-tracker-2024
+                      type: hurricane
+                    - id: 65f8a2b1c3d4e5f6a7b8c9d4
+                      timestamp: '2024-08-22T03:45:00Z'
+                      last_modified: '2024-08-22T10:00:00Z'
+                      countries:
+                      - JP
+                      time_start: '2024-08-22T03:45:00Z'
+                      time_end: '2024-08-23T00:00:00Z'
+                      title: Major Earthquake Disrupts Japanese Manufacturing
+                      description: 7.2 magnitude earthquake affects automotive and electronics production facilities in central Japan
+                      sources:
+                      - https://www.jma.go.jp/earthquake-2024
+                      type: earthquake
+                    current_page: 1
+                    total_results: 9
+                empty_results:
+                  summary: No matching events
+                  description: Query returned no matching risk events
+                  value:
+                    facets: []
+                    page_results: []
+                    current_page: 1
+                    total_results: 0
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Facet:
+      properties:
+        type:
+          type: string
+          enum:
+          - event_type
+          - event_country
+          title: Type
+          description: Facet type.
+        value:
+          type: string
+          minLength: 1
+          title: Value
+          description: Distinct facet value.
+        count:
+          type: integer
+          minimum: 1.0
+          title: Count
+          description: Number of records in the entire (non-paginated) result set matching the distinct facet value.
+      type: object
+      required:
+      - type
+      - value
+      - count
+      title: Facet
+      description: Number of result values matching a distinct value for a given facet.
+    GetRiskEventsResponse:
+      properties:
+        facets:
+          items:
+            $ref: '#/components/schemas/Facet'
+          type: array
+          title: Facets
+          description: Per-facet metadata.
+        page_results:
+          items:
+            $ref: '#/components/schemas/RiskEvent'
+          type: array
+          title: Page Results
+          description: 1 page of queried Risk Event records.
+        current_page:
+          type: integer
+          minimum: 1.0
+          title: Current Page
+          description: Current page.
+        total_results:
+          type: integer
+          minimum: 0.0
+          title: Total Results
+          description: Total number of records that matched the query.
+      type: object
+      required:
+      - facets
+      - page_results
+      - current_page
+      - total_results
+      title: GetRiskEventsResponse
+      description: Response payload for GET RiskEvents query
+    RiskEvent:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the Risk Event.
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Date and time when the Risk Event was detected
+        last_modified:
+          type: string
+          format: date-time
+          title: Last Modified
+          description: Last time Risk Event record was modified
+        countries:
+          title: Countries
+          description: Countries impacted by the Risk Event
+          items:
+            type: string
+          type: array
+          nullable: true
+        time_start:
+          title: Time Start
+          description: Start time of the event.
+          type: string
+          format: date-time
+          nullable: true
+        time_end:
+          title: Time End
+          description: End time of the event.
+          type: string
+          format: date-time
+          nullable: true
+        title:
+          type: string
+          title: Title
+          description: Brief, descriptive title of the Risk Event.
+        description:
+          type: string
+          title: Description
+          description: Detailed description of the Risk Event.
+        sources:
+          items:
+            type: string
+          type: array
+          title: Sources
+          description: Web resources that reference or describe the Risk Event.
+        type:
+          anyOf:
+          - type: string
+            enum:
+            - earthquake
+            - hurricane
+            - tsunami
+            - flood
+            - tornado
+            - cyclone
+            - volcanic_eruption
+            - wildfire
+            - drought
+            - landslide
+            - blizzard
+            - ice_storm
+            - heatwave
+            - sandstorm
+            - pandemic
+            - insect_infestation
+          - type: string
+            enum:
+            - economic_sanction
+            - trade_war
+            - political_unrest
+            - embargo
+            - military_conflict
+            - terrorist_attack
+          - type: string
+            enum:
+            - shipping_delay
+            - port_congestion
+            - transportation_strike
+            - fuel_shortage
+            - infrastructure_failure
+          - type: string
+            enum:
+            - raw_material_scarcity
+            - component_shortage
+            - semiconductor_shortage
+            - crop_disease
+          - type: string
+            enum:
+            - strike
+            - labor_shortage
+            - skilled_labor_shortage
+            - workforce_demographic_problem
+            - forced_labor
+            - child_labor
+          - type: string
+            enum:
+            - inflation
+            - recession
+            - economic_downturn
+            - currency_fluctuation
+            - interest_rate_change
+            - stock_market_volatility
+          - type: string
+            enum:
+            - environmental_regulation
+            - trade_regulation
+            - labor_law
+            - safety_regulation
+            - compliance_standard
+          - type: string
+            enum:
+            - cyber_attack
+            - data_breach
+            - system_failure
+            - technology_obsolete
+            - software_bug
+          - type: string
+            enum:
+            - oil_price_increase
+            - renewable_energy_outage
+            - energy_rationing
+            - nuclear_energy_incident
+          - type: string
+            enum:
+            - climate_change
+            - biodiversity_loss
+            - pollution
+            - sustainable_resource_management
+          - type: string
+            enum:
+            - consumer_trend_shift
+            - demand_surge
+            - demand_slump
+            - new_market_entrant
+          - type: string
+            enum:
+            - healthcare_system_overload
+          - type: string
+            enum:
+            - other
+          title: Type
+          description: Type of the event
+      type: object
+      required:
+      - id
+      - timestamp
+      - last_modified
+      - countries
+      - time_start
+      - time_end
+      - title
+      - description
+      - sources
+      - type
+      title: RiskEvent
+      description: "Represents an event, encapsulating key information for tracking or\nmonitoring purposes within various applications.\n\nAttributes:\n\n    id:  Database identifier.\n\n    timestamp: Time the event occurred or was recorded.\n\n    last_modified: Last time Risk Event record was modified.\n\n    countries: A list of countries impacted by the Risk Event.\n\n    time_start: Start time of the event, marking the beginning of its\n    occurrence.\n\n    time_end: End time of the event, indicating when it concluded.\n\n    title: Brief, descriptive title of the event.\n\n    description: Summary of the RiskEvent.\n\n    sources: Web URLs that reference or describe the event.\n\n    type: The type of Risk Event."
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: ocp-apim-subscription-key

@@ -1,0 +1,1507 @@
+openapi: 3.1.0
+info:
+  title: Tradeverifyd Documents Reports API
+  description: '
+
+    The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
+
+
+    For more information visit [tradeverifyd.com](https://tradeverifyd.com).
+
+
+    If you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.
+
+
+    When making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.
+
+
+    For example:
+
+
+    ```bash
+
+    curl --silent --location -G ''https://.../v1/search/entities'' \
+
+    --data-urlencode ''name=Contoso Corporation'' \
+
+    --data-urlencode ''jurisdiction=US'' \
+
+    --header "ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY"
+
+    ```
+
+    '
+  termsOfService: https://tradeverifyd.com/terms-of-service
+  contact:
+    name: tradeverifyd.com
+    url: https://tradeverifyd.com/
+    email: support@tradeverifyd.com
+  license:
+    name: Proprietary License
+    url: https://tradeverifyd.com/terms-of-service
+  version: 0.2.0
+servers:
+- url: https://api.tradeverifyd.com
+  description: Production server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Reports
+  description: Access detailed Tradeverifyd reports. These comprehensive reports offer an in-depth analysis of suppliers, complete with compliance scoring to highlight potential trade-related issues. Utilize these reports for thorough assessments of supplier reliability, compliance status, and overall performance in the supply chain.
+paths:
+  /v1/reports/{report_id}/status:
+    get:
+      tags:
+      - Reports
+      summary: Get Report Status
+      description: Retrieve the status of a Tradeverifyd Report Request by id.
+      operationId: Get_Report_Status_reports__report_id__status_get
+      parameters:
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Report Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportStatusResponse'
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/reports:
+    post:
+      tags:
+      - Reports
+      summary: Create Report Request
+      description: Creates a request for generating Tradeverifyd compliance reports. TASA reports require entity_id, CPR/CGR reports require shipment_id. TASA reports can optionally include hs_code.Currently only TASA reports are fully implemented.
+      operationId: Create_Report_Request_reports_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReportRequest'
+            examples:
+              tasa_report:
+                summary: TASA Report Request
+                description: Tradeverifyd Advanced Supplier Assessment report for a specific entity. Provides comprehensive compliance scoring and risk analysis.
+                value:
+                  report_type: tasa
+                  report_name: ACME Corporation Supplier Assessment Q1 2024
+                  entity_id: 507f1f77bcf86cd799439011
+                  hs_code: '123456'
+              cpr_report:
+                summary: CPR Report Request
+                description: 'Compliance Package Report for a specific shipment. Note: Currently not implemented (returns 501).'
+                value:
+                  report_type: cpr
+                  report_name: Compliance Package - Shipment SH240315001
+                  shipment_id: 987fcdeb-51a2-4c7f-8e3b-1234567890ab
+              cgr_report:
+                summary: CGR Report Request
+                description: 'Compliance Gap Report identifying areas for improvement. Note: Currently not implemented (returns 501).'
+                value:
+                  report_type: cgr
+                  report_name: Compliance Gap Analysis - Electronics Import Q1 2024
+                  shipment_id: 456fcdeb-51a2-4c7f-8e3b-0987654321ba
+              minimal_tasa:
+                summary: Minimal TASA Request
+                description: TASA report with auto-generated name (report_name will be set automatically)
+                value:
+                  report_type: tasa
+                  entity_id: 507f1f77bcf86cd799439011
+        required: true
+      responses:
+        '200':
+          description: Report request created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateReportResponse'
+              examples:
+                tasa_success:
+                  summary: TASA Report Created
+                  description: Successful creation of a TASA (Tradeverifyd Advanced Supplier Assessment) report
+                  value:
+                    report_id: 123e4567-e89b-12d3-a456-426614174000
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                invalid_report_type:
+                  summary: Invalid Report Type
+                  value:
+                    detail: Invalid report type
+                missing_entity_id:
+                  summary: Missing Entity ID for TASA
+                  value:
+                    detail: Entity ID is required for TASA reports
+        '409':
+          description: Conflict - A matching report already exists
+          content:
+            application/json:
+              examples:
+                duplicate_tasa_report:
+                  summary: Duplicate TASA Report
+                  description: A TASA report for this entity is already in progress or exists
+                  value:
+                    detail: A report already exists for this request.
+                    report_id: 123e4567-e89b-12d3-a456-426614174000
+                    entity_id: 507f1f77bcf86cd799439011
+                    report_type: tasa
+                    status: processing
+                duplicate_cgr_report:
+                  summary: Duplicate CGR Report
+                  description: A CGR report for this fileset already exists
+                  value:
+                    detail: A report already exists for this request.
+                    report_id: 456e4567-e89b-12d3-a456-426614174111
+                    report_type: cgr
+                    status: complete
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/reports/{report_id}:
+    get:
+      tags:
+      - Reports
+      summary: Get Report Details
+      description: "Retrieve a Tradeverifyd Report Request Details by id.\n\nArgs:\n    report_id: UUID of the report.\n\nReturns:\n    ReportDetailResponse object:\n        id: UUID\n        requested_ts: datetime\n        completed_ts: Optional[datetime]\n        report_type: str\n        report_status: str\n        report_name: Optional[str]"
+      operationId: Get_Report_Details_reports__report_id__get
+      parameters:
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Report Id
+      responses:
+        '200':
+          description: Report details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportDetailResponse'
+              examples:
+                tasa_completed:
+                  summary: Completed TASA report
+                  description: Tradeverifyd Advanced Supplier Assessment report that has been completed
+                  value:
+                    id: f47ac10b-58cc-4372-a567-0e02b2c3d479
+                    requested_ts: '2024-03-15T10:30:00Z'
+                    completed_ts: '2024-03-15T12:45:00Z'
+                    report_type: tasa
+                    report_status: COMPLETED
+                    report_name: TASA Report - Apple Inc. Supplier Assessment
+                cpr_in_progress:
+                  summary: CPR report in progress
+                  description: Compliance Package Report currently being generated
+                  value:
+                    id: f47ac10b-58cc-4372-a567-0e02b2c3d480
+                    requested_ts: '2024-03-16T08:15:00Z'
+                    report_type: cpr
+                    report_status: IN_PROGRESS
+                    report_name: CPR - Tesla Battery Supply Chain Compliance
+                cgr_failed:
+                  summary: Failed CGR report
+                  description: Compliance Gap Report that failed during generation
+                  value:
+                    id: f47ac10b-58cc-4372-a567-0e02b2c3d481
+                    requested_ts: '2024-03-14T14:20:00Z'
+                    completed_ts: '2024-03-14T14:25:00Z'
+                    report_type: cgr
+                    report_status: FAILED
+                tasa_pending:
+                  summary: Pending TASA report
+                  description: TASA report queued for processing
+                  value:
+                    id: f47ac10b-58cc-4372-a567-0e02b2c3d482
+                    requested_ts: '2024-03-17T09:00:00Z'
+                    report_type: tasa
+                    report_status: PENDING
+                    report_name: TASA - Boeing 737 Supplier Compliance Review
+        '404':
+          description: Report not found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  summary: Report does not exist
+                  value:
+                    detail: Report not found
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/reports/{report_id}/content:
+    get:
+      tags:
+      - Reports
+      summary: Get Report Contents
+      description: "Retrieve the contents of a Tradeverifyd Report by report id.\n\nArgs:\n    \n\n    report_id: UUID of the report to retrieve content for.\n\n    report_supplement: Optional supplement name to retrieve. Currently only \"extended-graph\" is supported. Only available for CGR reports in JSON format.\n    If the report_supplement is provided, only the supplement is returned, otherwise the report is returned in the format specified by the accept header.\n\n    accept: Content format preference. Supported values: \"application/json\", \"application/pdf\". Defaults to \"application/json\".\n\n\nReturns:\n    \n\n    StreamingResponse: The report content as a streaming response with appropriate content type and filename headers.\n\nRaises:\n    \n\n    HTTPException: 404 if report not found, 403 if report not approved, 400 for invalid supplement requests."
+      operationId: Get_Report_Contents_reports__report_id__content_get
+      parameters:
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Report Id
+      - name: report_supplement
+        in: query
+        required: false
+        schema:
+          default: ''
+          title: Report Supplement
+          type: string
+          nullable: true
+      - name: accept
+        in: header
+        required: false
+        schema:
+          type: string
+          default: application/json
+          title: Accept
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/TASAContentsResponse'
+                - $ref: '#/components/schemas/CGRContentsResponse'
+                - $ref: '#/components/schemas/CPRContentsResponse'
+                - $ref: '#/components/schemas/WSCContentsResponse'
+                - $ref: '#/components/schemas/DSCContentsResponse'
+                title: Response Get Report Contents Reports  Report Id  Content Get
+            application/pdf: {}
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ExternalEnttiyId:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: The External Id
+        type:
+          type: string
+          title: Type
+          description: The type of the identifier
+        source:
+          type: string
+          title: Source
+          description: The source of the identifieer
+      type: object
+      required:
+      - id
+      - type
+      - source
+      title: ExternalEnttiyId
+      description: Class for information about external Entity Identifiers
+    CPRContentsResponse:
+      properties:
+        report_type:
+          type: string
+          title: Report Type
+          description: The type of report requested.
+        report_id:
+          type: string
+          format: uuid
+          title: Report Id
+          description: Unique ID (uuid) of the report.
+        summary:
+          type: string
+          title: Summary
+          description: Brief summary of the report.
+        products:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Products
+          description: List of products included in the report.
+        companies:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Companies
+          description: List of companies included in the report.
+        flags:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Flags
+          description: List of flags included in the report.
+        areas_of_concern:
+          additionalProperties: true
+          type: object
+          title: Areas Of Concern
+          description: Regions or entities the report raises as concerning.
+        relationships:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Relationships
+          description: List of relationships between entities for the given report.
+        entities:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Entities
+          description: List of entities involved in the report.
+        supplier_information_requests:
+          items: {}
+          type: array
+          title: Supplier Information Requests
+          default: Supplier information requests involved in the report.
+        entity_research_summary:
+          additionalProperties: true
+          type: object
+          title: Entity Research Summary
+          default: A brief summary of the entity research involved in this report.
+      type: object
+      required:
+      - report_type
+      - report_id
+      - summary
+      - products
+      - companies
+      - flags
+      - areas_of_concern
+      - relationships
+      - entities
+      title: CPRContentsResponse
+      description: Contents response for a CPR (DRR) report
+    ExtractionMetadata:
+      properties:
+        model_vendor:
+          type: string
+          minLength: 1
+          title: Model Vendor
+        model_id:
+          type: string
+          minLength: 1
+          title: Model Id
+        extraction_schema_name:
+          type: string
+          minLength: 1
+          title: Extraction Schema Name
+        extraction_schema_version:
+          type: integer
+          minimum: 1.0
+          title: Extraction Schema Version
+      type: object
+      required:
+      - model_vendor
+      - model_id
+      - extraction_schema_name
+      - extraction_schema_version
+      title: ExtractionMetadata
+      description: "Metadata describing models, techniques, schemas, etc. that were used to\nextract the Risk Event from plain text, and/or make decisions about the\nrelevance of the extracted content.\n\nAttributes:\n    model_vendor: Name of LLM vendor (e.g. Anthropic, OpenAI) used to extract Risk Event information\n\n    model_id: Specific LLM model id (e.g. \"claude-haiku-4-5\")\n\n    extraction_schema_name: Name of Pydantic ExtractionSchema class that\n    provided the JSON schema for Risk Event extraction.\n\n    extraction_schema_version: Version of Pydantic ExtractionSchema class\n    that provided the JSON schema for RiskEvent extraction. During\n    extraction, LLM decision-making is mainly guided by instructions\n    provided in the 'description' of each ExctractionSchema attribute. When\n    these instructions change, 'extraction_schema_version' is incremented to\n    track the change."
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AbridgedRelationship:
+      properties:
+        _id:
+          type: string
+          title: Id
+          default: None
+        type:
+          type: string
+          enum:
+          - DIRECTLY_CONSOLIDATES
+          - FEEDS_FROM
+          - FINANCES
+          - FUND_MANAGES
+          - IN_COLLABORATIVE_VENTURE_WITH
+          - IS_AFFILIATE_OF
+          - IS_AN_AGENT_OF
+          - IS_A_VENDOR_OF
+          - IS_BUSINESS_PARTNER_OF
+          - IS_MAJORITY_SHAREHOLDER_OF
+          - IS_MANUFACTURER_OF
+          - IS_MERGED_WITH
+          - IS_PARTNER_IN_JOINT_VENTURE
+          - IS_SUBISIDIARY_OF
+          - IS_SUPPLIER_OF
+          - IS_LIKELY_SUPPLIER_OF
+          - IS_THE_HOLDING_COMPANY_OF
+          - IS_THE_PARENT_COMPANY_OF
+          - IS_THE_TRADE_UNION_FOR
+          - IS_TRADEMARK_OF
+          - IS_TRAINING_PARTNER_OF
+          - OPERATES_INTERNATIONAL_BRANCH
+          - OWNS_COLLABORATIVE_VENTURE
+          - OWNS_FUND
+          - SHIPS_GOODS_TO
+          - SHIPS_VIA
+          - ULTIMATELY_CONSOLIDATES
+          - IS_OTHERWISE_LINKED_TO
+          - RELATED_TO
+          title: Type
+        relation_to:
+          type: string
+          title: Relation To
+        relation_from:
+          type: string
+          title: Relation From
+        normalized_products:
+          title: Normalized Products
+          items:
+            type: string
+          type: array
+          nullable: true
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+        source:
+          title: Source
+          items:
+            type: string
+          type: array
+          nullable: true
+        exclusion_id:
+          title: Exclusion Id
+          type: string
+          nullable: true
+      type: object
+      required:
+      - type
+      - relation_to
+      - relation_from
+      - modified
+      title: AbridgedRelationship
+      description: Minimum EntityRelationship data needed by Tradeverifyd Portal graphs
+    AbridgedGraphEntity:
+      properties:
+        _id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        jurisdiction:
+          type: string
+          title: Jurisdiction
+        mesur_type:
+          type: string
+          enum:
+          - Company
+          - Facility
+          - Farm
+          title: Mesur Type
+          default: Company
+        flags:
+          title: Flags
+          items:
+            $ref: '#/components/schemas/Flag'
+          type: array
+          nullable: true
+        risk_events:
+          title: Risk Events
+          items:
+            $ref: '#/components/schemas/BaseRiskEvent'
+          type: array
+          nullable: true
+        graph_relative_risk_score:
+          title: Graph Relative Risk Score
+          type: integer
+          nullable: true
+        tradeverifyd_risk_score:
+          title: Tradeverifyd Risk Score
+          type: integer
+          nullable: true
+        coordinates:
+          items:
+            $ref: '#/components/schemas/Coordinate'
+          type: array
+          title: Coordinates
+          default: []
+        addresses:
+          items:
+            type: string
+          type: array
+          title: Addresses
+          default: []
+        aliases:
+          title: Aliases
+          items:
+            type: string
+          type: array
+          nullable: true
+        ids:
+          title: Ids
+          items:
+            $ref: '#/components/schemas/mesur_data_access__tradeverifyd__datamodels__common__Identifier'
+          type: array
+          nullable: true
+        upstream_depth:
+          type: integer
+          title: Upstream Depth
+          default: -1
+        downstream_depth:
+          type: integer
+          title: Downstream Depth
+          default: -1
+        depth:
+          title: Depth
+          description: 'Shortest distance from graph query entrypoint. This field will only
+
+            return the UPSTREAM distance. If this Entity does not participate in the
+
+            upstream graph of the entrypoint Entity for the graph, ''depth'' will be
+
+            None.'
+          readOnly: true
+          type: integer
+          nullable: true
+        downstream_distance:
+          title: Downstream Distance
+          description: 'Shortest available distance from entrypoint Entity to this Entity if
+
+            traversing from this Entity to the entrypoint. This field will only
+
+            return the DOWNSTREAM distance.  If this Entity does not participate in
+
+            the downstream graph of the entrypoint Entity for the graph,
+
+            ''downstream_distance'' will be None.'
+          readOnly: true
+          type: integer
+          nullable: true
+      type: object
+      required:
+      - _id
+      - name
+      - jurisdiction
+      - depth
+      - downstream_distance
+      title: AbridgedGraphEntity
+      description: Minimum Entity data needed by Tradeverifyd Portal graphs
+    CGRContentsResponse:
+      properties:
+        report_type:
+          type: string
+          title: Report Type
+          description: The type of report requested.
+        report_id:
+          type: string
+          format: uuid
+          title: Report Id
+          description: Unique ID (uuid) of the report.
+        products:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Products
+          description: List of products included in the report.
+        companies:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Companies
+          description: List of companies included in the report.
+        supplier_information_requests:
+          items: {}
+          type: array
+          title: Supplier Information Requests
+          default: Supplier information requests involved in the report.
+        hs_code_map:
+          additionalProperties: true
+          type: object
+          title: Hs Code Map
+          default: A mapping of HS codes in the report to their descriptions.
+        ranked_supplier_contexts:
+          items: {}
+          type: array
+          title: Ranked Supplier Contexts
+          description: A sorted list of supplier information requests with the context that feeds into the ranking algorithm.
+        entity_research_summary:
+          additionalProperties: true
+          type: object
+          title: Entity Research Summary
+          default: A brief summary of the entity research involved in this report.
+      type: object
+      required:
+      - report_type
+      - report_id
+      - products
+      - companies
+      - ranked_supplier_contexts
+      title: CGRContentsResponse
+      description: Contents response for a CGR (DPR) report
+    ReportDetailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        requested_ts:
+          type: string
+          format: date-time
+          title: Requested Ts
+        completed_ts:
+          title: Completed Ts
+          type: string
+          format: date-time
+          nullable: true
+        report_type:
+          type: string
+          title: Report Type
+        report_status:
+          type: string
+          title: Report Status
+        report_name:
+          title: Report Name
+          type: string
+          nullable: true
+      type: object
+      required:
+      - id
+      - requested_ts
+      - completed_ts
+      - report_type
+      - report_status
+      - report_name
+      title: ReportDetailResponse
+      description: Report Detail Response
+    ReportStatusResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - status
+      title: ReportStatusResponse
+      description: Report Status Response
+    CreateReportRequest:
+      properties:
+        report_type:
+          type: string
+          enum:
+          - tasa
+          - cgr
+          - cpr
+          title: Report Type
+        report_name:
+          title: Report Name
+          type: string
+          maxLength: 255
+          nullable: true
+        shipment_id:
+          title: Shipment Id
+          type: string
+          format: uuid
+          nullable: true
+        entity_id:
+          title: Entity Id
+          type: string
+          nullable: true
+        hs_code:
+          title: Hs Code
+          type: string
+          nullable: true
+      type: object
+      required:
+      - report_type
+      title: CreateReportRequest
+      description: Create Report Request
+    EventArticleType:
+      type: string
+      enum:
+      - disruptive_event
+      - important_information
+      - educational_article
+      - report
+      - other
+      title: EventArticleType
+      description: Enum of event article types.
+    TASAContentsResponse:
+      properties:
+        importer_name:
+          type: string
+          title: Importer Name
+          description: The party requesting the report. This entity may be the importer of record but could also be another customer or stakeholder seeking visibility into the supplier.
+        entity_id:
+          type: string
+          title: Entity Id
+          description: The unique database identifier for the entity for which the report was run.
+        entity_identifiers:
+          items:
+            $ref: '#/components/schemas/ExternalEnttiyId'
+          type: array
+          title: Entity Identifiers
+          description: List of known external IDs for the entity.
+        entity_name:
+          type: string
+          title: Entity Name
+          description: The name of the entity for which the report was run.
+        summary:
+          type: string
+          title: Summary
+          description: Brief summary of the report.
+        supplier_names:
+          items:
+            type: string
+          type: array
+          title: Supplier Names
+          description: List of the names of suppliers in the report.
+        shipment_description:
+          type: string
+          title: Shipment Description
+          description: Brief description of the shipment.
+        score:
+          type: integer
+          title: Score
+          description: Tradeverifyd Score assigned to the entity in the report.
+        regulations_checked:
+          type: string
+          title: Regulations Checked
+          description: The regulations checked in the report.
+        flagged_entities:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Flagged Entities
+          description: List of entities that appear in the report and contain positive or negative flags.
+        relationships:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Relationships
+          description: List of relationships between entities for the given report.
+        entities:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Entities
+          description: List of entities involved in the report.
+        report_id:
+          type: string
+          format: uuid
+          title: Report Id
+          description: Unique ID (uuid) of the report.
+      type: object
+      required:
+      - importer_name
+      - entity_id
+      - entity_identifiers
+      - entity_name
+      - summary
+      - supplier_names
+      - shipment_description
+      - score
+      - regulations_checked
+      - flagged_entities
+      - relationships
+      - entities
+      - report_id
+      title: TASAContentsResponse
+      description: Contents response for a TASA (SVR) report
+    WSCContentsResponse:
+      properties:
+        report_id:
+          anyOf:
+          - type: string
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Report Id
+          description: Unique ID (uuid) of the report.
+        report_type:
+          type: string
+          const: wsc
+          title: Report Type
+          description: The type of report requested.
+        summary:
+          type: string
+          title: Summary
+          description: Brief summary of the report.
+        summary_bullets:
+          items:
+            type: string
+          type: array
+          title: Summary Bullets
+          description: Key points from the report's summary.
+        risk_events:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Risk Events
+          description: Risk events included in the report.
+        supply_chains:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Supply Chains
+          description: Supply chains included in the report.
+      type: object
+      required:
+      - report_id
+      - report_type
+      - summary
+      - summary_bullets
+      - risk_events
+      - supply_chains
+      title: WSCContentsResponse
+      description: Contents response for a WSC report
+    Coordinate:
+      properties:
+        lat:
+          type: number
+          title: Lat
+        lng:
+          type: number
+          title: Lng
+        type:
+          type: string
+          enum:
+          - headquarters
+          - legal
+          title: Type
+      type: object
+      required:
+      - lat
+      - lng
+      - type
+      title: Coordinate
+      description: Latitude and longitude associated with an Entity
+    mesur_data_access__tradeverifyd__datamodels__common__Identifier:
+      properties:
+        type:
+          type: string
+          title: Type
+        source:
+          type: string
+          title: Source
+        id:
+          type: string
+          title: Id
+      type: object
+      required:
+      - type
+      - source
+      - id
+      title: Identifier
+      description: External ID for an entity
+    Flag:
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+        batch:
+          title: Batch
+          type: string
+          nullable: true
+        _id:
+          type: string
+          title: Id
+          default: None
+        schema_version:
+          type: integer
+          title: Schema Version
+          default: 1
+        entity_id:
+          type: string
+          title: Entity Id
+        type:
+          type: string
+          title: Type
+        tags:
+          title: Tags
+          items:
+            type: string
+          type: array
+          nullable: true
+        source:
+          title: Source
+          items:
+            type: string
+          type: array
+          nullable: true
+        entity_jurisdiction:
+          title: Entity Jurisdiction
+          type: string
+          nullable: true
+        customer_managed:
+          type: boolean
+          title: Customer Managed
+          default: false
+        owner_email:
+          title: Owner Email
+          type: string
+          nullable: true
+        organization:
+          title: Organization
+          type: string
+          nullable: true
+        deleted:
+          type: boolean
+          title: Deleted
+          default: false
+        deleted_at:
+          title: Deleted At
+          type: string
+          format: date-time
+          nullable: true
+        deletion_source:
+          title: Deletion Source
+          type: string
+          nullable: true
+        confidence:
+          title: Confidence
+          type: integer
+          nullable: true
+        time_start:
+          title: Time Start
+          type: string
+          format: date-time
+          nullable: true
+        time_end:
+          title: Time End
+          type: string
+          format: date-time
+          nullable: true
+        description:
+          title: Description
+          type: string
+          nullable: true
+        score:
+          type: number
+          title: Score
+          default: 0.5
+        decay_factor:
+          title: Decay Factor
+          default: 1.0
+          type: number
+          nullable: true
+        decay_version:
+          type: integer
+          title: Decay Version
+          default: 1
+        penalties:
+          title: Penalties
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          type: array
+          nullable: true
+        url_sources:
+          title: Url Sources
+          description: 'Members of ''source'' field that are also well-formed URLs. If Flag.source
+
+            has 1 or more entries, but none are valid URLs, the value of this
+
+            computed field will be None.'
+          readOnly: true
+          items:
+            type: string
+          type: array
+          nullable: true
+      additionalProperties: true
+      type: object
+      required:
+      - entity_id
+      - type
+      - url_sources
+      title: Flag
+      description: "Represents a flag associated with a particular entity.\n\nA flag is positive if, for example, the entity it is associated with has\nbeen certified by an authoritative body to be in compliance with an accepted\nstandard. It is negative if the associated entity participates in or is\nassociated with a sanctioned, illegal, or otherwise undesirable activity.\n\nAttributes:\n    id: Database id of the record, corresponds to mongodb '_id'.\n\n    entity_id: Database id of the entity the flag is applied to, corresponds\n    to target entity '_id' in mongodb.\n\n    schema_version: Document schema.\n\n    type: Details about the nature of the flag. This may be the name of the\n    relevant certification or sanction, e.g. 'RSPO Certified' or 'ITAR\n    Debarred (DTC) - State Department', or a more general category, e.g.\n    'forced labor'. This should be an ObjectIdField stored in the 'flag_types'\n    collection - optionally a string allowed here for validation when the ObjectId\n    field needs to be looked up and displayed in the portal.\n\n    tags: A list of semi-arbitrary strings that provides additional\n    classifications or detail on the nature of the flag type. An example of\n    this might be a flag with type \"Forced Labor Risk\" with subtype\n    \"Operating in Uyghur Region\", \"Sourcing directly from Uyghur Region\", or\n    \"Accepted labor transfers outside Uyghur Region\".\n\n    source: List of ONE url to a page containing information that is\n    relevant to the flag, or the entity it applies to. For user-uploaded\n    flags, this field will be None.\n\n    entity_jurisdiction: ISO country code of the entity that the flag\n    applies to, if the jurisdiction is known.\n\n    customer_managed: This field is true if a customer has created this flag\n    directly, otherwise, it is false. A customer-managed flag MUST NOT be\n    visible outside of the organization of the user who created it.\n\n    owner_email: The email address of the user who created the\n    customer-managed flag. If 'customer_managed' is false, this field MUST\n    be None.\n\n    organization: The globally-unique name of the organization to which a\n    customer-managed flag belongs, which is currently the same as the\n    organization to which the flag's creator belongs. If 'customer_managed'\n    if false, this field MUST be None.\n\n    is_positive: A derived field not present on the underlying record. This\n    field controls whether the flag is displayed to users as a 'positive' or\n    'negative' flag.\n\n    deleted: Whether or not the flag is currently in-force.\n\n    deleted_at: If the flag is no longer in force for any reason, this field\n    is the time the flag ceased to be applicable to the target entity.\n\n    deletion_source: If 'deleted_at' is not null, this field explains why\n    the flag is no longer in effect. It may be a URL to a web source\n    offering further explanation.\n\n    confidence: For flag records generated by bots, this field indicates the\n    strength of our belief that the decision to assign a flag is correct.\n    100 is the most confident, 0 is the least. If a flag was not generated\n    by a bot, this field must be None.\n\n    time_start: Time at which flag took effect. Currently, this field is\n    only set on Flags uploaded via Earthstream API.\n\n    time_end: Time after which flag is no longer in effect. Currently, this\n    field is only set on Flags uploaded via Earthstream API.\n\n    description: Plain-text description for the flag. Currently, this field\n    is only set on Flags uploaded via Earthstream API.\n\n    # TODO: TV-10497 Remove this field, as the default is set to 0.5, which is being nullified\n    # in GraphEntity.entity_score. This might be important for risk events, but not for Flags.\n    score: The score of the flag.\n\n    decay_factor: The amount by which a flag decays, which is re-calculated daily according to\n    the flag's decay strategy and the flag's age. This gets factored into an entity's score\n    through the TradeverifydScoringService later on, through the regulatory flag strategy. The\n    decay_factor should always be a float between 0 and 1, but for soft deleted flags, it will\n    be set to 1.0 as to not impact the entity's score.\n\n    decay_version: The version of the decay strategy used to calculate the decay_factor.\n\n    penalties: A optional list of dictionaries, each containing the following keys:\n    - penalty_agency: The agency that issued the penalty\n    - penalty_usd: The amount of the penalty in USD\n    - penalty_date: The date of the penalty"
+    RiskEventSource:
+      properties:
+        type:
+          type: string
+          enum:
+          - webpage
+          title: Type
+          default: webpage
+        url:
+          type: string
+          minLength: 1
+          title: Url
+        publication_date:
+          title: Publication Date
+          type: string
+          format: date-time
+          nullable: true
+      type: object
+      required:
+      - url
+      title: RiskEventSource
+      description: "Reference to a webpage (usually a journalistic article) that reports and/or\ndescribes the RiskEvent.\n\nRiskEvents gleaned from (e.g.) uploaded text documents have a different\nsource type than RiskEvents found in web articles.\n\nAttributes:\n    type: The kind of source.\n\n    url: Web address of the source.\n\n    publication_date: Optional date when the source was published."
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AbridgedGraph:
+      properties:
+        entrypoint:
+          $ref: '#/components/schemas/AbridgedGraphEntity'
+          nullable: true
+        entities:
+          items:
+            $ref: '#/components/schemas/AbridgedGraphEntity'
+          type: array
+          title: Entities
+        relationships:
+          items:
+            $ref: '#/components/schemas/AbridgedRelationship'
+          type: array
+          title: Relationships
+        page:
+          type: integer
+          title: Page
+          default: 0
+        page_size:
+          type: integer
+          title: Page Size
+          default: 0
+        records:
+          type: integer
+          title: Records
+          default: 0
+        total_records:
+          title: Total Records
+          type: integer
+          nullable: true
+        total_pages:
+          title: Total Pages
+          type: integer
+          nullable: true
+        entity_graph_counts:
+          title: Entity Graph Counts
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          nullable: true
+      type: object
+      required:
+      - entities
+      - relationships
+      title: AbridgedGraph
+      description: 'Abridged graph response shape
+
+        entry is the root of the graph'
+    DSCContentsResponse:
+      properties:
+        report_id:
+          anyOf:
+          - type: string
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Report Id
+          description: Unique ID (uuid) of the report.
+        report_type:
+          type: string
+          const: dsc
+          title: Report Type
+          description: The type of report requested.
+        subscription_id:
+          type: string
+          title: Subscription Id
+          description: ID of the subscription in the report.
+        subscription_name:
+          type: string
+          title: Subscription Name
+          description: Name of the subscription i nthe report.
+        summary:
+          type: string
+          title: Summary
+          description: Brief summary of the report.
+        summary_bullets:
+          items:
+            type: string
+          type: array
+          title: Summary Bullets
+          description: Key points from the report's summary.
+        risk_events:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Risk Events
+          description: Risk events included in the report.
+        supply_graph:
+          $ref: '#/components/schemas/AbridgedGraph'
+        top_risk_suppliers:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Top Risk Suppliers
+          description: A list of the top risk suppliers in the report.
+      type: object
+      required:
+      - report_id
+      - report_type
+      - subscription_id
+      - subscription_name
+      - summary
+      - summary_bullets
+      - risk_events
+      - supply_graph
+      - top_risk_suppliers
+      title: DSCContentsResponse
+      description: Contents response for a DSC report
+    CreateReportResponse:
+      properties:
+        report_id:
+          type: string
+          format: uuid
+          title: Report Id
+      type: object
+      required:
+      - report_id
+      title: CreateReportResponse
+      description: Create Report Response
+    BaseRiskEvent:
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+        _id:
+          type: string
+          title: Id
+          default: None
+        title:
+          type: string
+          minLength: 1
+          title: Title
+        summary:
+          type: string
+          minLength: 1
+          title: Summary
+        sources:
+          items:
+            $ref: '#/components/schemas/RiskEventSource'
+          type: array
+          minItems: 1
+          title: Sources
+        expires:
+          type: string
+          format: date-time
+          title: Expires
+        type:
+          anyOf:
+          - type: string
+            enum:
+            - earthquake
+            - hurricane
+            - tsunami
+            - flood
+            - tornado
+            - cyclone
+            - volcanic_eruption
+            - wildfire
+            - drought
+            - landslide
+            - blizzard
+            - ice_storm
+            - heatwave
+            - sandstorm
+            - pandemic
+            - insect_infestation
+          - type: string
+            enum:
+            - economic_sanction
+            - trade_war
+            - political_unrest
+            - embargo
+            - military_conflict
+            - terrorist_attack
+          - type: string
+            enum:
+            - shipping_delay
+            - port_congestion
+            - transportation_strike
+            - fuel_shortage
+            - infrastructure_failure
+          - type: string
+            enum:
+            - raw_material_scarcity
+            - component_shortage
+            - semiconductor_shortage
+            - crop_disease
+          - type: string
+            enum:
+            - strike
+            - labor_shortage
+            - skilled_labor_shortage
+            - workforce_demographic_problem
+            - forced_labor
+            - child_labor
+          - type: string
+            enum:
+            - inflation
+            - recession
+            - economic_downturn
+            - currency_fluctuation
+            - interest_rate_change
+            - stock_market_volatility
+          - type: string
+            enum:
+            - environmental_regulation
+            - trade_regulation
+            - labor_law
+            - safety_regulation
+            - compliance_standard
+          - type: string
+            enum:
+            - cyber_attack
+            - data_breach
+            - system_failure
+            - technology_obsolete
+            - software_bug
+          - type: string
+            enum:
+            - oil_price_increase
+            - renewable_energy_outage
+            - energy_rationing
+            - nuclear_energy_incident
+          - type: string
+            enum:
+            - climate_change
+            - biodiversity_loss
+            - pollution
+            - sustainable_resource_management
+          - type: string
+            enum:
+            - consumer_trend_shift
+            - demand_surge
+            - demand_slump
+            - new_market_entrant
+          - type: string
+            enum:
+            - healthcare_system_overload
+          - type: string
+            enum:
+            - other
+          title: Type
+        start_date:
+          title: Start Date
+          type: string
+          format: date-time
+          nullable: true
+        end_date:
+          title: End Date
+          type: string
+          format: date-time
+          nullable: true
+        last_propagation:
+          title: Last Propagation
+          type: string
+          format: date-time
+          nullable: true
+        last_notification:
+          title: Last Notification
+          type: string
+          format: date-time
+          nullable: true
+        hidden:
+          type: boolean
+          title: Hidden
+          default: false
+        review_status:
+          type: string
+          enum:
+          - pending
+          - approved
+          - denied
+          - semi-approved
+          title: Review Status
+          default: pending
+        extraction_metadata:
+          $ref: '#/components/schemas/ExtractionMetadata'
+          nullable: true
+        force_expired:
+          type: boolean
+          title: Force Expired
+          default: false
+        original_expiry:
+          title: Original Expiry
+          type: string
+          format: date-time
+          nullable: true
+        article_type:
+          $ref: '#/components/schemas/EventArticleType'
+          nullable: true
+        article_impact:
+          title: Article Impact
+          type: integer
+          nullable: true
+        article_impact_type:
+          title: Article Impact Type
+          type: integer
+          nullable: true
+        article_impact_reasoning:
+          title: Article Impact Reasoning
+          type: string
+          nullable: true
+        affected_geographic_locations:
+          title: Affected Geographic Locations
+          items:
+            type: string
+          type: array
+          nullable: true
+        proposed_type:
+          title: Proposed Type
+          type: string
+          nullable: true
+        countries:
+          title: Countries
+          items:
+            type: string
+          type: array
+          minItems: 1
+          nullable: true
+        cities:
+          title: Cities
+          items:
+            type: string
+            minLength: 1
+          type: array
+          nullable: true
+        regions:
+          title: Regions
+          items:
+            type: string
+            minLength: 1
+          type: array
+          nullable: true
+        subscription_ids:
+          title: Subscription Ids
+          items:
+            type: string
+          type: array
+          nullable: true
+      type: object
+      required:
+      - title
+      - summary
+      - sources
+      - expires
+      - type
+      - start_date
+      - end_date
+      - last_propagation
+      - last_notification
+      title: BaseRiskEvent
+      description: "Represents an Event which happens in the real world that is likely to\ndisrupt economic activity for affected entities.\n\nAttributes:\n    id: Database id of the record, corresponds to MongoDB '_id'.\n\n    title: The title or a brief description of the event. This should\n    capture the essence of what the event is about.\n\n    summary: A more detailed summary or description of the event. This\n    provides additional context and information about the event.\n\n    sources: References that report and/or describe the event.\n\n    expires: Time after which the RiskEvent is no longer 'in-effect'.\n\n    type: Identifies the type of the event. The event type is the main\n    driver of event processing, e.g. when it expires, how it propagates to\n    entities, etc.\n\n    start_date: Time the event began\n\n    end_date: Time the event ended\n\n    last_propagation: Last time this event propagated to entities. Will be\n    'None' if it has never been propagated.\n\n    last_notification: Last time notifications for this event were\n    published. Will be 'None' if no notifications have been generated.\n\n    hidden: A 'hidden' RiskEvent has been un-propagated from all Entities so\n    that it is no longer affecting any scores, and should not be displayed\n    to any users. This field is temporary and will be displaced by\n    'review_status' once accompanying features for 'review_status' are\n    complete.\n\n    review_status: New RiskEvents are created in a 'pending' state. Pending\n    RiskEvents are invisible to end users, and have no impact on Entity\n    scores or other calculations. On human review, a RiskEvent may be\n    either 'approved' or 'denied'. If the RiskEvent is approved, it is\n    propagated to affected Entities, where it will impact Entity risk\n    scoring and other calculations. If denied, a corresponding\n    'RiskEventFeedback' record exists that explains why the RiskEvent is\n    irrelevant or inappropriate. RiskEvents are allowed to transition\n    between 'approved' and 'denied' any number of times, though such\n    transitions should be rare.\n\n    extraction_metadata: LLM vendor, model, and schema used to extract Risk\n    Event information from input text. This information can be used to\n    compare the performance of different prompts and models.\n\n    force_expired: If True, the expiration time set at creation has been\n    manually overridden to 'force' the record to expire.\n\n    original_expiry: If exists and is non-null, contains the expiration time\n    from before the document was force-expired."
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: ocp-apim-subscription-key

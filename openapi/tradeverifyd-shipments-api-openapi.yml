@@ -1,0 +1,2149 @@
+openapi: 3.1.0
+info:
+  title: Tradeverifyd Documents Shipments API
+  description: '
+
+    The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
+
+
+    For more information visit [tradeverifyd.com](https://tradeverifyd.com).
+
+
+    If you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.
+
+
+    When making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.
+
+
+    For example:
+
+
+    ```bash
+
+    curl --silent --location -G ''https://.../v1/search/entities'' \
+
+    --data-urlencode ''name=Contoso Corporation'' \
+
+    --data-urlencode ''jurisdiction=US'' \
+
+    --header "ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY"
+
+    ```
+
+    '
+  termsOfService: https://tradeverifyd.com/terms-of-service
+  contact:
+    name: tradeverifyd.com
+    url: https://tradeverifyd.com/
+    email: support@tradeverifyd.com
+  license:
+    name: Proprietary License
+    url: https://tradeverifyd.com/terms-of-service
+  version: 0.2.0
+servers:
+- url: https://api.tradeverifyd.com
+  description: Production server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Shipments
+  description: Operations involving shipments
+paths:
+  /v1/shipments:
+    get:
+      tags:
+      - Shipments
+      summary: Get Shipment List
+      description: Get a list of shipments.
+      operationId: get_shipments_shipments_get
+      parameters:
+      - name: shipment_name
+        in: query
+        required: false
+        schema:
+          default: []
+          title: Shipment Name
+          type: array
+          items:
+            type: string
+          nullable: true
+      - name: status
+        in: query
+        required: false
+        schema:
+          default: []
+          title: Status
+          type: array
+          items:
+            type: string
+          nullable: true
+      - name: page
+        in: query
+        required: false
+        schema:
+          default: 1
+          title: Page
+          type: integer
+          nullable: true
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          default: 25
+          title: Page Size
+          type: integer
+          nullable: true
+      - name: sorting
+        in: query
+        required: false
+        schema:
+          default: ''
+          title: Sorting
+          type: string
+          nullable: true
+      responses:
+        '200':
+          description: List of shipments with pagination
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipmentListingResponse'
+              examples:
+                multiple_shipments:
+                  summary: Multiple shipments across different industries
+                  description: Paginated list showing various shipment types and statuses across different organizational units
+                  value:
+                    shipments:
+                    - shipment_id: f47ac10b-58cc-4372-a567-0e02b2c3d479
+                      shipment_name: Cellphone Components - Q1 2024
+                      organization: ACME_CORP
+                      organizational_units:
+                      - Electronics Division
+                      - Mobile Devices
+                      status: In Transit
+                      active: true
+                    - shipment_id: f47ac10b-58cc-4372-a567-0e02b2c3d480
+                      shipment_name: Battery Modules - Shanghai to Fremont
+                      organization: ACME_CORP
+                      organizational_units:
+                      - Automotive Division
+                      status: Complete
+                      active: true
+                    - shipment_id: f47ac10b-58cc-4372-a567-0e02b2c3d481
+                      shipment_name: Medical Supplies - Emergency Procurement
+                      organization: ACME_CORP
+                      organizational_units:
+                      - Healthcare Division
+                      status: Detained
+                      active: true
+                    - shipment_id: f47ac10b-58cc-4372-a567-0e02b2c3d482
+                      shipment_name: Aerospace Components
+                      organization: ACME_CORP
+                      organizational_units:
+                      - Aerospace Division
+                      status: Created
+                      active: true
+                    pagination:
+                      current_page: 1
+                      page_size: 10
+                      total_pages: 3
+                      total_records: 25
+                    filters:
+                      shipment_name: []
+                      status: []
+                    sorting:
+                    - shipment_name:asc
+                filtered_shipments:
+                  summary: Filtered shipments by status
+                  description: Shipments filtered to show only those in transit
+                  value:
+                    shipments:
+                    - shipment_id: f47ac10b-58cc-4372-a567-0e02b2c3d483
+                      shipment_name: Smartphone Supply Chain - Asia Pacific
+                      organization: ACME_CORP
+                      organizational_units:
+                      - Electronics Division
+                      status: In Transit
+                      active: true
+                    - shipment_id: f47ac10b-58cc-4372-a567-0e02b2c3d484
+                      shipment_name: Vehicle Parts - Mexico to Detroit
+                      organization: ACME_CORP
+                      organizational_units:
+                      - Automotive Division
+                      status: In Transit
+                      active: true
+                    pagination:
+                      current_page: 1
+                      page_size: 10
+                      total_pages: 1
+                      total_records: 2
+                    filters:
+                      shipment_name: []
+                      status:
+                      - In Transit
+                    sorting:
+                    - departure_date:desc
+                empty_results:
+                  summary: No matching shipments
+                  description: Query returned no matching shipments
+                  value:
+                    shipments: []
+                    pagination:
+                      current_page: 1
+                      page_size: 10
+                      total_pages: 0
+                      total_records: 0
+                    filters:
+                      shipment_name:
+                      - Non-existent Shipment
+                      status: []
+                    sorting: []
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              examples:
+                no_organizational_units:
+                  summary: User lacks organizational units
+                  value:
+                    detail: User does not have any organizational units
+                invalid_paging:
+                  summary: Invalid paging parameters
+                  value:
+                    detail: Invalid Paging Parameters
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - Shipments
+      summary: Create Shipment
+      description: Creates a new shipment. To update an existing shipment, use PUT /shipments/{shipment_id} instead. Supports multiple organizational units per shipment for flexible organization structure management. Auto-creates LEI and ITI credentials if organization has AUTO_CREATE_SHIPMENT_CREDENTIALS enabled.
+      operationId: create_shipment_shipments_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateShipmentRequest'
+            examples:
+              create_electronics_shipment:
+                summary: Create New Electronics Shipment
+                description: Create new shipment for cellphone components
+                value:
+                  shipment_name: 2024-Q1-Phone-Components
+                  origin: Shenzhen, Guangdong, China
+                  destination: Cupertino, CA, USA
+                  departure_date: '2024-03-01T08:00:00Z'
+                  arrival_date: '2024-03-15T16:30:00Z'
+                  status: Created
+                  active: true
+                  organizational_units:
+                  - electronics
+                  - supply-chain
+              create_detained_shipment:
+                summary: Create Detained Shipment
+                description: Create medical supplies shipment with detention ID
+                value:
+                  shipment_name: Med-2024-PPE-Emergency
+                  origin: Hamburg, Germany
+                  destination: New York, NY, USA
+                  departure_date: '2024-03-05T06:00:00Z'
+                  arrival_date: '2024-03-20T12:00:00Z'
+                  status: Detained
+                  active: true
+                  organizational_units:
+                  - medical
+                  - emergency
+                  detention_id: CBP-DET-2024-001234
+              minimal_shipment:
+                summary: Minimal Required Fields
+                description: Shipment with only required fields
+                value:
+                  shipment_name: Basic-Shipment-2024
+                  status: Created
+                  organizational_units:
+                  - default
+      responses:
+        '200':
+          description: Shipment created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipmentDetailResponse'
+              examples:
+                created_electronics_shipment:
+                  summary: Created Electronics Shipment
+                  description: New shipment created for smartphone components from China
+                  value:
+                    shipment_id: f47ac10b-58cc-4372-a567-0e02b2c3d479
+                    shipment_name: 2024-Q1-Phone-Components
+                    organization: phones-inc
+                    organizational_unit:
+                    - electronics
+                    - supply-chain
+                    folder: 2024-Q1-Phone-Components
+                    origin: Shenzhen, Guangdong, China
+                    destination: Cupertino, CA, USA
+                    departure_date: '2024-03-01T08:00:00Z'
+                    arrival_date: '2024-03-15T16:30:00Z'
+                    status: Created
+                    active: true
+                created_medical_shipment:
+                  summary: Created Medical Shipment
+                  description: New medical supplies shipment created with detention status
+                  value:
+                    shipment_id: 550e8400-e29b-41d4-a716-446655440000
+                    shipment_name: 2024-PPE-Emergency
+                    organization: ppe-corp
+                    organizational_unit:
+                    - medical
+                    - emergency
+                    detention_id: CBP-DET-2024-001234
+                    folder: 2024-PPE-Emergency
+                    origin: Hamburg, Germany
+                    destination: New York, NY, USA
+                    departure_date: '2024-03-05T06:00:00Z'
+                    arrival_date: '2024-03-20T12:00:00Z'
+                    status: Detained
+                    active: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                duplicate_name:
+                  summary: Duplicate shipment name
+                  value:
+                    detail: Shipment name already exists and no id was provided - Not unique
+                invalid_status:
+                  summary: Invalid shipment status
+                  value:
+                    detail: Invalid shipment status
+                missing_org_units:
+                  summary: Missing organizational units
+                  value:
+                    detail: Organizational units are required
+        '422':
+          description: Unprocessable Entity - Invalid organizational unit
+          content:
+            application/json:
+              examples:
+                invalid_organizational_unit:
+                  summary: Invalid organizational unit
+                  value:
+                    detail:
+                      error: Invalid organizational_unit
+                      message: The organizational_unit 'ABC123' does not exist or you do not have permission to use it.
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              examples:
+                creation_error:
+                  summary: Shipment creation failed
+                  value:
+                    detail: An error occurred creating the shipment
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+  /v1/shipments/{shipment_id}:
+    get:
+      tags:
+      - Shipments
+      summary: Get Shipment
+      description: Get a shipment by ID.
+      operationId: get_shipment_by_id_shipments__shipment_id__get
+      parameters:
+      - name: shipment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Shipment Id
+      responses:
+        '200':
+          description: Shipment details retrieved successfully
+          content:
+            application/json:
+              schema:
+                title: Response Get Shipment By Id Shipments  Shipment Id  Get
+                $ref: '#/components/schemas/ShipmentDetailResponse'
+                nullable: true
+              examples:
+                electronics_shipment:
+                  summary: Electronics shipment in transit
+                  description: Phone components shipment from China to USA
+                  value:
+                    shipment_id: f47ac10b-58cc-4372-a567-0e02b2c3d479
+                    shipment_name: Smartphone Components - Q4 2024
+                    organization: ACME_CORP
+                    organizational_unit:
+                    - Electronics Division
+                    - Mobile Devices
+                    folder: electronics/smartphones
+                    origin: Shenzhen, China
+                    destination: Cupertino, CA, USA
+                    departure_date: '2024-03-15T08:00:00Z'
+                    arrival_date: '2024-03-25T14:30:00Z'
+                    status: In Transit
+                    active: true
+                detained_shipment:
+                  summary: Detained medical shipment
+                  description: Medical equipment shipment detained during customs inspection
+                  value:
+                    shipment_id: f47ac10b-58cc-4372-a567-0e02b2c3d480
+                    shipment_name: Medical Equipment - Emergency Supply
+                    organization: ACME_CORP
+                    organizational_unit:
+                    - Healthcare Division
+                    detention_id: DET-2024-0315-001
+                    folder: healthcare/medical_equipment
+                    origin: Frankfurt, Germany
+                    destination: New York, NY, USA
+                    departure_date: '2024-03-10T10:00:00Z'
+                    status: Detained
+                    active: true
+                completed_automotive:
+                  summary: Completed automotive shipment
+                  description: Electric vehicle battery modules successfully delivered
+                  value:
+                    shipment_id: f47ac10b-58cc-4372-a567-0e02b2c3d481
+                    shipment_name: EV Battery Modules - Shanghai to Fremont
+                    organization: ACME_CORP
+                    organizational_unit:
+                    - Automotive Division
+                    - EV Components
+                    folder: automotive/ev/battery_modules
+                    origin: Shanghai, China
+                    destination: Fremont, CA, USA
+                    departure_date: '2024-02-20T06:00:00Z'
+                    arrival_date: '2024-03-05T11:45:00Z'
+                    status: Complete
+                    active: true
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              examples:
+                invalid_request:
+                  summary: User lacks organizational units or invalid ID
+                  value:
+                    detail: User does not have any organizational units or shipment ID is invalid
+        '404':
+          description: Shipment not found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  summary: Shipment does not exist
+                  value:
+                    detail: Shipment not found
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - Shipments
+      summary: Update Shipment
+      description: Updates an existing shipment. The shipment ID is specified in the URL path. Supports multiple organizational units per shipment for flexible organization structure management.
+      operationId: update_shipment_shipments__shipment_id__put
+      parameters:
+      - name: shipment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Shipment Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateShipmentRequest'
+            examples:
+              update_electronics_shipment:
+                summary: Update Electronics Shipment
+                description: Update vehicle battery shipment with new arrival date
+                value:
+                  shipment_name: 2024-Model3-Batteries-Updated
+                  origin: Shanghai, China
+                  destination: Fremont, CA, USA
+                  departure_date: '2024-02-20T10:00:00Z'
+                  arrival_date: '2024-03-12T16:45:00Z'
+                  status: In Transit
+                  active: true
+                  organizational_units:
+                  - automotive
+                  - batteries
+              update_medical_shipment:
+                summary: Update Medical Shipment Status
+                description: Update medical supplies shipment status to Complete
+                value:
+                  shipment_name: 2024-PPE-Emergency
+                  origin: Hamburg, Germany
+                  destination: New York, NY, USA
+                  departure_date: '2024-03-05T06:00:00Z'
+                  arrival_date: '2024-03-18T14:30:00Z'
+                  status: Complete
+                  active: true
+                  organizational_units:
+                  - medical
+                  - emergency
+              minimal_update:
+                summary: Minimal Update Fields
+                description: Update with only required fields
+                value:
+                  shipment_name: Updated-Shipment-2024
+                  status: In Transit
+                  organizational_units:
+                  - default
+      responses:
+        '200':
+          description: Shipment updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipmentDetailResponse'
+              examples:
+                updated_electronics_shipment:
+                  summary: Updated Electronics Shipment
+                  description: Vehicle battery shipment updated with new arrival date
+                  value:
+                    shipment_id: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+                    shipment_name: 2024-Model3-Batteries-Updated
+                    organization: acme-motors
+                    organizational_unit:
+                    - automotive
+                    - batteries
+                    folder: 2024-Model3-Batteries
+                    origin: Shanghai, China
+                    destination: Fremont, CA, USA
+                    departure_date: '2024-02-20T10:00:00Z'
+                    arrival_date: '2024-03-12T16:45:00Z'
+                    status: In Transit
+                    active: true
+                updated_medical_shipment:
+                  summary: Updated Medical Shipment
+                  description: Medical supplies shipment status updated to Complete
+                  value:
+                    shipment_id: 550e8400-e29b-41d4-a716-446655440000
+                    shipment_name: 2024-PPE-Emergency
+                    organization: medical-corp
+                    organizational_unit:
+                    - medical
+                    - emergency
+                    folder: 2024-PPE-Emergency
+                    origin: Hamburg, Germany
+                    destination: New York, NY, USA
+                    departure_date: '2024-03-05T06:00:00Z'
+                    arrival_date: '2024-03-18T14:30:00Z'
+                    status: Complete
+                    active: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                invalid_org_units:
+                  summary: Invalid organizational units
+                  value:
+                    detail: User does not have access to the specified organizational units
+                missing_org_units:
+                  summary: Missing organizational units
+                  value:
+                    detail: Organizational units are required
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              examples:
+                shipment_not_found:
+                  summary: Shipment not found
+                  value:
+                    detail: Shipment not found
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              examples:
+                update_error:
+                  summary: Shipment update failed
+                  value:
+                    detail: An error occurred updating the shipment
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/shipment/{shipment_id}/sirs:
+    get:
+      tags:
+      - Shipments
+      summary: Get supplier information requests
+      description: Get shipment supplier information requests
+      operationId: get_shipment_sirs_shipment__shipment_id__sirs_get
+      parameters:
+      - name: shipment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Shipment Id
+      - name: supplier_name
+        in: query
+        required: false
+        schema:
+          default: []
+          title: Supplier Name
+          type: array
+          items:
+            type: string
+          nullable: true
+      - name: supplier_jurisdiction
+        in: query
+        required: false
+        schema:
+          default: []
+          title: Supplier Jurisdiction
+          type: array
+          items:
+            type: string
+          nullable: true
+      - name: tradeverifyd_score
+        in: query
+        required: false
+        schema:
+          default: []
+          title: Tradeverifyd Score
+          type: array
+          items:
+            type: string
+          nullable: true
+      - name: status
+        in: query
+        required: false
+        schema:
+          default: []
+          title: Status
+          type: array
+          items:
+            type: string
+          nullable: true
+      - name: page
+        in: query
+        required: false
+        schema:
+          default: 1
+          title: Page
+          type: integer
+          nullable: true
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          default: 25
+          title: Page Size
+          type: integer
+          nullable: true
+      - name: sorting
+        in: query
+        required: false
+        schema:
+          default: ''
+          title: Sorting
+          type: string
+          nullable: true
+      responses:
+        '200':
+          description: List of supplier information requests for the shipment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplierInformationRequestListing'
+              examples:
+                multiple_sirs:
+                  summary: Multiple SIRs with various statuses
+                  description: Comprehensive list of supplier information requests with different risk scores and statuses
+                  value:
+                    requests:
+                    - sir_id: f47ac10b-58cc-4372-a567-0e02b2c3d479
+                      supplier_name: ACME Corp
+                      supplier_jurisdiction: TW
+                      status: Documents Received
+                      tradeverifyd_score: 572.5
+                    - sir_id: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+                      supplier_name: Electric Company
+                      supplier_jurisdiction: KR
+                      status: Documents Requested
+                      tradeverifyd_score: 565.0
+                    - sir_id: 6ba7b811-9dad-11d1-80b4-00c04fd430c8
+                      supplier_name: Manufacturing Group
+                      supplier_jurisdiction: TW
+                      status: Not Contacted
+                      tradeverifyd_score: 558.3
+                    - sir_id: 6ba7b812-9dad-11d1-80b4-00c04fd430c8
+                      supplier_name: Wonka Industries
+                      supplier_jurisdiction: KR
+                      status: Eliminated
+                      tradeverifyd_score: 545.2
+                    pagination:
+                      current_page: 1
+                      page_size: 20
+                      total_pages: 1
+                      total_records: 4
+                    sorting:
+                    - supplier_name:asc
+                    filters:
+                      supplier_name: []
+                      supplier_jurisdiction: []
+                      status: []
+                      tradeverifyd_score: []
+                filtered_by_status:
+                  summary: SIRs filtered by status
+                  description: Only showing SIRs with 'Documents Requested' status
+                  value:
+                    requests:
+                    - sir_id: 550e8400-e29b-41d4-a716-446655440000
+                      supplier_name: ACME Corp.
+                      supplier_jurisdiction: CN
+                      status: Documents Requested
+                      tradeverifyd_score: 578.9
+                    - sir_id: 550e8400-e29b-41d4-a716-446655440001
+                      supplier_name: Technology Ltd.
+                      supplier_jurisdiction: CN
+                      status: Documents Requested
+                      tradeverifyd_score: 582.1
+                    pagination:
+                      current_page: 1
+                      page_size: 20
+                      total_pages: 1
+                      total_records: 2
+                    sorting:
+                    - tradeverifyd_score:desc
+                    filters:
+                      supplier_name: []
+                      supplier_jurisdiction: []
+                      status:
+                      - Documents Requested
+                      tradeverifyd_score: []
+                empty_results:
+                  summary: No SIRs found
+                  description: Empty result when no supplier information requests exist for the shipment
+                  value:
+                    requests: []
+                    pagination:
+                      current_page: 1
+                      page_size: 20
+                      total_pages: 0
+                      total_records: 0
+                    sorting: []
+                    filters:
+                      supplier_name: []
+                      supplier_jurisdiction: []
+                      status: []
+                      tradeverifyd_score: []
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                no_org_units:
+                  summary: No organizational units
+                  value:
+                    detail: User does not have any organizational units
+                invalid_paging:
+                  summary: Invalid paging parameters
+                  value:
+                    detail: Invalid Paging Parameters
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/shipment/sirs/{sir_id}:
+    get:
+      tags:
+      - Shipments
+      summary: Get supplier information request
+      description: Get a shipment SIR by ID
+      operationId: get_shipment_sir_shipment_sirs__sir_id__get
+      parameters:
+      - name: sir_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sir Id
+      responses:
+        '200':
+          description: Detailed supplier information request
+          content:
+            application/json:
+              schema:
+                title: Response Get Shipment Sir Shipment Sirs  Sir Id  Get
+                $ref: '#/components/schemas/SupplierInformationRequestDetailResponse'
+                nullable: true
+              examples:
+                complete_sir:
+                  summary: Complete SIR with all details
+                  description: Fully populated supplier information request with parent company and reports
+                  value:
+                    sir_id: f47ac10b-58cc-4372-a567-0e02b2c3d479
+                    shipment_id: 123e4567-e89b-12d3-a456-426614174000
+                    supplier_name: ACME CORP.
+                    supplier_jurisdiction: US
+                    supplier_parent_name: Wile E. Coyote Industries
+                    supplier_parent_jurisdiction: TW
+                    supplier_domain: acme.com
+                    supplier_address: No. 1, Main Street Fairfield, New Jersey
+                    status: Documents Received
+                    tradeverifyd_score: 572.5
+                    supplier_hs_codes: 8471,8473,8517,8542
+                    related_parts: Cellphone displays, circuit boards, battery modules
+                    product: Consumer Electronics Components
+                    timeframe_start: '2024-01-01'
+                    timeframe_stop: '2024-12-31'
+                    reports:
+                    - TASA_2024_Q1_ACME
+                    - CPR_2024_ACME
+                    entity_id: 507f1f77bcf86cd799439011
+                minimal_sir:
+                  summary: Minimal SIR - Not Contacted
+                  description: SIR with only required fields, supplier not yet contacted
+                  value:
+                    sir_id: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+                    shipment_id: 550e8400-e29b-41d4-a716-446655440000
+                    supplier_name: Electronics Co., Ltd.
+                    supplier_jurisdiction: KR
+                    status: Not Contacted
+                documents_requested:
+                  summary: SIR with Documents Requested
+                  description: Supplier contacted, awaiting documentation
+                  value:
+                    sir_id: 6ba7b811-9dad-11d1-80b4-00c04fd430c8
+                    shipment_id: 550e8400-e29b-41d4-a716-446655440001
+                    supplier_name: Company Limited
+                    supplier_jurisdiction: CN
+                    supplier_parent_name: Manufacturing Co
+                    supplier_parent_jurisdiction: CN
+                    supplier_domain: company.example
+                    supplier_address: No.3009, BYD Road, Pingshan, Shenzhen, 518118, P.R.China
+                    status: Documents Requested
+                    tradeverifyd_score: 550
+                    supplier_hs_codes: 8507,8708,8703
+                    related_parts: EV batteries, battery management systems
+                    product: Electric Vehicle Components
+                    timeframe_start: '2024-03-01'
+                    timeframe_stop: '2024-09-30'
+                    entity_id: 507f191e810c19729de860ea
+                eliminated_supplier:
+                  summary: Eliminated Supplier
+                  description: Supplier eliminated from supply chain
+                  value:
+                    sir_id: 6ba7b812-9dad-11d1-80b4-00c04fd430c8
+                    shipment_id: 550e8400-e29b-41d4-a716-446655440002
+                    supplier_name: Technologies Co., Ltd.
+                    supplier_jurisdiction: CN
+                    supplier_domain: tech.example
+                    supplier_address: Huawei Base, Bantian, Longgang District, Shenzhen 518129, China
+                    status: Eliminated
+                    tradeverifyd_score: 500
+                    supplier_hs_codes: 8517,8471
+                    related_parts: 5G network equipment
+                    product: Telecommunications Equipment
+                    timeframe_start: '2024-01-01'
+                    timeframe_stop: '2024-01-31'
+                    reports:
+                    - RISK_ASSESSMENT_TECH_2024
+                    entity_id: 507f191e810c19729de860eb
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  summary: SIR not found
+                  value:
+                    detail: Supplier Information Request not found
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/shipment/sirs/{sir_id}/suggested_contact_info:
+    get:
+      tags:
+      - Shipments
+      summary: Get supplier point of contact
+      description: Look up suggested contact info for a SIR
+      operationId: get_shipment_sir_contact_info_shipment_sirs__sir_id__suggested_contact_info_get
+      parameters:
+      - name: sir_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sir Id
+      responses:
+        '200':
+          description: Suggested contact information for the supplier
+          content:
+            application/json:
+              schema:
+                title: Response Get Shipment Sir Contact Info Shipment Sirs  Sir Id  Suggested Contact Info Get
+                $ref: '#/components/schemas/SupplierInformationSuggestedContactResponse'
+                nullable: true
+              examples:
+                complete_contact:
+                  summary: Complete contact information
+                  description: Full contact details with address and multiple citations
+                  value:
+                    info_type: Headquarters
+                    name: ACME CORP.
+                    website: https://www.acme.example
+                    contactPhone: +111-1-111-1111
+                    address:
+                      streetAddress: No. 66, Zhongshan Road
+                      addressLine2: Building A, 5th Floor
+                      city: Tucheng District
+                      stateOrProvince: New Taipei City
+                      postalCode: '236'
+                      country: Taiwan
+                    citations:
+                    - source: Bloomberg Company Profile
+                      url: https://www.bloomberg.example/profile/company/2317:TT
+                    - source: Official Company Website
+                      url: https://www.acme.example/en-us/contact
+                minimal_contact:
+                  summary: Minimal contact information
+                  description: Basic contact details without address
+                  value:
+                    info_type: Sales Office
+                    name: ACME CORP.
+                    website: https://www.acme.example/us/business
+                    contactPhone: +1-111-111-1111
+                    citations:
+                    - source: ACME Business Portal
+                      url: https://www.acme.example/us/business/contact
+                regional_office:
+                  summary: Regional office contact
+                  description: Regional office with partial address information
+                  value:
+                    info_type: Regional Office - ACME
+                    name: ACME CORP. - South
+                    website: https://www.acme.example
+                    contactPhone: +11-111-1111-1111
+                    address:
+                      streetAddress: No.3009, Acme Road
+                      city: Fairfield
+                      stateOrProvince: New Jersey
+                      postalCode: '07004'
+                      country: United States
+                    citations:
+                    - source: ACME Corporate Directory
+                      url: https://www.acme.example/en/contact.html
+                no_contact_found:
+                  summary: No contact information available
+                  description: Empty response when no contact info is found
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              examples:
+                sir_not_found:
+                  summary: SIR not found
+                  value:
+                    detail: Supplier Information Request not found
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/shipment/sirs/{sir_id}/status:
+    post:
+      tags:
+      - Shipments
+      summary: Update supplier information request status
+      description: Update the status of a shipment SIR by ID
+      operationId: update_shipment_sir_status_shipment_sirs__sir_id__status_post
+      parameters:
+      - name: sir_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sir Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_update_shipment_sir_status_shipment_sirs__sir_id__status_post'
+            examples:
+              not_contacted:
+                summary: Set status to Not Contacted
+                value:
+                  status: Not Contacted
+              documents_requested:
+                summary: Set status to Documents Requested
+                value:
+                  status: Documents Requested
+              documents_received:
+                summary: Set status to Documents Received
+                value:
+                  status: Documents Received
+              eliminated:
+                summary: Set status to Eliminated
+                value:
+                  status: Eliminated
+      responses:
+        '200':
+          description: Successfully updated SIR status
+          content:
+            application/json:
+              schema:
+                title: Response Update Shipment Sir Status Shipment Sirs  Sir Id  Status Post
+                $ref: '#/components/schemas/SupplierInformationRequestDetailResponse'
+                nullable: true
+              examples:
+                status_to_documents_requested:
+                  summary: Status updated to Documents Requested
+                  description: SIR status changed from Not Contacted to Documents Requested
+                  value:
+                    sir_id: f47ac10b-58cc-4372-a567-0e02b2c3d479
+                    shipment_id: 123e4567-e89b-12d3-a456-426614174000
+                    supplier_name: ACME CORP.
+                    supplier_jurisdiction: US
+                    supplier_parent_name: Wile E. Coyote, Ltd.
+                    supplier_parent_jurisdiction: US
+                    supplier_domain: acme.example
+                    supplier_address: No. 1, Main Street, Fairfield, New Jersey
+                    status: Documents Requested
+                    tradeverifyd_score: 550
+                    supplier_hs_codes: 8471,8473,8517,8542
+                    related_parts: Cellphone displays, circuit boards, battery modules
+                    product: Consumer Electronics Components
+                    timeframe_start: '2024-01-01'
+                    timeframe_stop: '2024-12-31'
+                    entity_id: 507f1f77bcf86cd799439011
+                status_to_documents_received:
+                  summary: Status updated to Documents Received
+                  description: SIR status changed from Documents Requested to Documents Received
+                  value:
+                    sir_id: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+                    shipment_id: 550e8400-e29b-41d4-a716-446655440000
+                    supplier_name: ACME CORP.
+                    supplier_jurisdiction: US
+                    supplier_parent_name: Wile E. Coyote, Ltd.
+                    supplier_parent_jurisdiction: US
+                    supplier_domain: acme.example
+                    supplier_address: No. 1, Main Street, Fairfield, New Jersey
+                    status: Documents Received
+                    tradeverifyd_score: 650
+                    supplier_hs_codes: 8542,8473,8517
+                    related_parts: Memory chips, display panels, processors
+                    product: Semiconductor Components
+                    timeframe_start: '2024-02-01'
+                    timeframe_stop: '2024-11-30'
+                    reports:
+                    - TASA_2024_Q2_ACME
+                    entity_id: 507f191e810c19729de860ea
+                status_to_eliminated:
+                  summary: Status updated to Eliminated
+                  description: SIR status changed to Eliminated due to high risk score
+                  value:
+                    sir_id: 6ba7b811-9dad-11d1-80b4-00c04fd430c8
+                    shipment_id: 550e8400-e29b-41d4-a716-446655440001
+                    supplier_name: Wile E. Coyote, Ltd.
+                    supplier_jurisdiction: US
+                    supplier_domain: wile.example
+                    supplier_address: 1234 San Antonio St., Austin 78705, Texas
+                    status: Eliminated
+                    tradeverifyd_score: 250
+                    supplier_hs_codes: 8517,8471
+                    related_parts: 5G network equipment
+                    product: Telecommunications Equipment
+                    timeframe_start: '2024-01-01'
+                    timeframe_stop: '2024-01-31'
+                    reports:
+                    - RISK_ASSESSMENT_WILE_2024
+                    entity_id: 507f191e810c19729de860eb
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                invalid_status:
+                  summary: Invalid status value
+                  value:
+                    detail: Invalid status value
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              examples:
+                sir_not_found:
+                  summary: SIR not found
+                  value:
+                    detail: Supplier Information Request not found
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/shipment/{shipment_id}/upload:
+    post:
+      tags:
+      - Shipments
+      summary: Upload a document to a shipment
+      description: Upload a single file to a shipment folder in cloud storage. Only single file uploads are supported. Files can be organized into subdirectories using the path parameter.
+      operationId: upload_shipment_file_shipment__shipment_id__upload_post
+      parameters:
+      - name: shipment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Shipment Id
+      - name: path
+        in: query
+        required: false
+        schema:
+          description: Path to upload the file to within the shipment folder for example 'Products/1234'
+          title: Path
+          type: string
+          nullable: true
+        description: Path to upload the file to within the shipment folder for example 'Products/1234'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_shipment_file_shipment__shipment_id__upload_post'
+      responses:
+        '200':
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                title: Response Upload Shipment File Shipment  Shipment Id  Upload Post
+                $ref: '#/components/schemas/ShipmentUploadResponse'
+                nullable: true
+              examples:
+                pdf_invoice_upload:
+                  summary: PDF Invoice Upload
+                  description: Successfully uploaded commercial invoice PDF to shipment
+                  value:
+                    success: true
+                    shipment_id: f47ac10b-58cc-4372-a567-0e02b2c3d479
+                    url: Not downloadable
+                    file_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                excel_packing_list:
+                  summary: Excel Packing List Upload
+                  description: Successfully uploaded packing list to Documents subfolder
+                  value:
+                    success: true
+                    shipment_id: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+                    url: Not downloadable
+                    file_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                certificate_upload:
+                  summary: Certificate Upload
+                  description: Successfully uploaded certificate of origin to Certificates folder
+                  value:
+                    success: true
+                    shipment_id: 550e8400-e29b-41d4-a716-446655440000
+                    url: Not downloadable
+                    file_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                multiple_files:
+                  summary: Multiple files not supported
+                  value:
+                    detail: Multiple file uploads are not supported.
+                no_filename:
+                  summary: Missing filename
+                  value:
+                    detail: No filename specified.
+                invalid_session:
+                  summary: Invalid session
+                  value:
+                    detail: Invalid session.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                no_organization:
+                  summary: No organization for user
+                  value:
+                    detail: No organization for user.
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              examples:
+                shipment_not_found:
+                  summary: Shipment not found
+                  value:
+                    detail: Shipment not found.
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/shipments/{shipment_id}/cbps:
+    get:
+      tags:
+      - Shipments
+      summary: Get CBP Requests for Shipment
+      description: Get a list of CBP requests for a shipment.
+      operationId: get_cbp_requests_for_shipment_shipments__shipment_id__cbps_get
+      parameters:
+      - name: shipment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Shipment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CBPRequestListing'
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/shipments/{shipment_id}/cbps/{vc_id}:
+    get:
+      tags:
+      - Shipments
+      summary: Get CBP Requests for Shipment and VC
+      description: Get a list of CBP requests for a specific VC in a shipment.
+      operationId: get_cbp_requests_for_shipment_and_vc_shipments__shipment_id__cbps__vc_id__get
+      parameters:
+      - name: shipment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Shipment Id
+      - name: vc_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Vc Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CBPRequestListing'
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    SupplierInformationSuggestedContactResponse:
+      properties:
+        info_type:
+          title: Info Type
+          description: Describes the type of contact information found.
+          type: string
+          nullable: true
+        name:
+          title: Name
+          description: Name of the supplier.
+          type: string
+          nullable: true
+        website:
+          title: Website
+          description: The supplier's website.
+          type: string
+          nullable: true
+        contactPhone:
+          title: Contactphone
+          description: The contact phone number for the supplier.
+          type: string
+          nullable: true
+        address:
+          $ref: '#/components/schemas/SuggestedContactAddress'
+          nullable: true
+        citations:
+          title: Citations
+          description: References for the suggested supplier contacts.
+          default: []
+          items:
+            $ref: '#/components/schemas/SuggestedContactCitation'
+          type: array
+          nullable: true
+      type: object
+      required:
+      - address
+      title: SupplierInformationSuggestedContactResponse
+      description: Response model for suggested contact information for a supplier
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SupplierInformationRequestFilter:
+      properties:
+        supplier_name:
+          items:
+            type: string
+          type: array
+          title: Supplier Name
+          description: Supplier name(s) used to filter responses.
+        supplier_jurisdiction:
+          items:
+            type: string
+          type: array
+          title: Supplier Jurisdiction
+          description: Supplier jurisdiction(s) used to filter responses.
+        status:
+          items:
+            type: string
+          type: array
+          title: Status
+          description: Status used to filter responses.
+        tradeverifyd_score:
+          items: {}
+          type: array
+          title: Tradeverifyd Score
+          description: Tradeverifyd Score used to filter responses.
+      type: object
+      required:
+      - supplier_name
+      - supplier_jurisdiction
+      - status
+      - tradeverifyd_score
+      title: SupplierInformationRequestFilter
+      description: Wrapper for SIR filters
+    ShipmentResponse:
+      properties:
+        shipment_id:
+          type: string
+          format: uuid
+          title: Shipment Id
+          description: Shipment identifier.
+        shipment_name:
+          type: string
+          title: Shipment Name
+          description: Name of shipment.
+        organization:
+          type: string
+          title: Organization
+          description: Organization to which the shipment belongs.
+        organizational_units:
+          title: Organizational Units
+          description: Optional field for subunits of the organization.
+          items:
+            type: string
+          type: array
+          nullable: true
+        status:
+          $ref: '#/components/schemas/ShipmentStatus'
+        active:
+          type: boolean
+          title: Active
+          description: Boolean signifying if the shipment is active or inactive.
+        created:
+          title: Created
+          description: Date when the shipment record was created.
+          type: string
+          format: date-time
+          nullable: true
+        last_modified:
+          title: Last Modified
+          description: Date when the shipment record was last modified.
+          type: string
+          format: date-time
+          nullable: true
+      type: object
+      required:
+      - shipment_id
+      - shipment_name
+      - organization
+      - organizational_units
+      - status
+      - active
+      title: ShipmentResponse
+      description: Response model for a shipment.
+    SupplierInformationRequestDetailResponse:
+      properties:
+        sir_id:
+          type: string
+          format: uuid
+          title: Sir Id
+          description: Database ID of supplier information request record.
+        shipment_id:
+          type: string
+          format: uuid
+          title: Shipment Id
+          description: ID of shipment.
+        supplier_name:
+          type: string
+          title: Supplier Name
+          description: Name of the supplier.
+        supplier_jurisdiction:
+          type: string
+          title: Supplier Jurisdiction
+          description: Jurisdiction of the supplier.
+        supplier_parent_name:
+          title: Supplier Parent Name
+          description: Name of the supplier parent.
+          type: string
+          nullable: true
+        supplier_parent_jurisdiction:
+          title: Supplier Parent Jurisdiction
+          description: Jurisdiction of the supplier parent.
+          type: string
+          nullable: true
+        supplier_domain:
+          title: Supplier Domain
+          description: URL domain of the supplier.
+          type: string
+          nullable: true
+        supplier_address:
+          title: Supplier Address
+          description: Address of the supplier.
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/SupplierInformationRequestStatus'
+        tradeverifyd_score:
+          title: Tradeverifyd Score
+          description: Tradeverifyd Score associated with the supplier.
+          type: number
+          nullable: true
+        supplier_hs_codes:
+          title: Supplier Hs Codes
+          description: List of HS codes associated with the supplier.
+          type: string
+          nullable: true
+        related_parts:
+          title: Related Parts
+          description: Brief description of the parts related to the SIR.
+          type: string
+          nullable: true
+        product:
+          title: Product
+          description: Product associated with the SIR.
+          type: string
+          nullable: true
+        timeframe_start:
+          title: Timeframe Start
+          description: Start date of the SIR.
+          type: string
+          format: date
+          nullable: true
+        timeframe_stop:
+          title: Timeframe Stop
+          description: End date of the SIR.
+          type: string
+          format: date
+          nullable: true
+        reports:
+          title: Reports
+          description: Reports associated with the SIR.
+          items:
+            type: string
+          type: array
+          nullable: true
+        entity_id:
+          title: Entity Id
+          description: ID of the entity associated with the SIR.
+          type: string
+          nullable: true
+      type: object
+      required:
+      - sir_id
+      - shipment_id
+      - supplier_name
+      - supplier_jurisdiction
+      - status
+      title: SupplierInformationRequestDetailResponse
+      description: Supplier information request detail response.
+    ShipmentUploadResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+          description: Boolean indicating if file upload was successful.
+        shipment_id:
+          type: string
+          format: uuid
+          title: Shipment Id
+          description: Identifier for shipment.
+        url:
+          type: string
+          title: Url
+          description: URL for file, if applicable.
+        file_id:
+          title: File Id
+          description: Unique identifier for file.
+          type: string
+          format: uuid
+          nullable: true
+      type: object
+      required:
+      - success
+      - shipment_id
+      - url
+      title: ShipmentUploadResponse
+      description: Response for a shipment upload.
+    ShipmentDetailResponse:
+      properties:
+        shipment_id:
+          type: string
+          format: uuid
+          title: Shipment Id
+          description: Identifier for the shipment.
+        shipment_name:
+          type: string
+          title: Shipment Name
+          description: Name of the shipment
+        organization:
+          type: string
+          title: Organization
+          description: Organization to which the shipment belongs.
+        organizational_unit:
+          items:
+            type: string
+          type: array
+          title: Organizational Unit
+          description: Subunit(s) of the organization.
+        detention_id:
+          title: Detention Id
+          description: Identifier of the detention for the shipment, if applicable.
+          type: string
+          nullable: true
+        folder:
+          type: string
+          title: Folder
+          description: Folder location for the shipment.
+        origin:
+          title: Origin
+          description: Location of the shipment's origin.
+          type: string
+          nullable: true
+        destination:
+          title: Destination
+          description: Location of the shipment's destination.
+          type: string
+          nullable: true
+        departure_date:
+          title: Departure Date
+          description: Date of the shipment's departure.
+          type: string
+          format: date-time
+          nullable: true
+        arrival_date:
+          title: Arrival Date
+          description: Date of the shipment's arrival.
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          $ref: '#/components/schemas/ShipmentStatus'
+        active:
+          type: boolean
+          title: Active
+          description: Boolean signifying if the shipment is active or inactive.
+          default: true
+        created:
+          title: Created
+          description: Date when the shipment record was created.
+          type: string
+          format: date-time
+          nullable: true
+        last_modified:
+          title: Last Modified
+          description: Date when the shipment record was last modified.
+          type: string
+          format: date-time
+          nullable: true
+      type: object
+      required:
+      - shipment_id
+      - shipment_name
+      - organization
+      - organizational_unit
+      - folder
+      - status
+      title: ShipmentDetailResponse
+      description: Response model for a shipment response.
+    earthstream_services__services__shipment__common__models__Pagination:
+      properties:
+        current_page:
+          type: integer
+          title: Current Page
+          description: Current page of results.
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of shipments on current page.
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages in API response.
+        total_records:
+          type: integer
+          title: Total Records
+          description: Total number of records in API response.
+      type: object
+      required:
+      - current_page
+      - page_size
+      - total_pages
+      - total_records
+      title: Pagination
+      description: 'Using to return paging information to the client.
+
+
+        current_page: the current page of data
+
+
+        total_pages: the total number of pages
+
+
+        total_records: the number of records found
+
+
+        page_size: the current page size'
+    Body_upload_shipment_file_shipment__shipment_id__upload_post:
+      properties:
+        file:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: File
+          description: Only single file uploads are allowed
+      type: object
+      required:
+      - file
+      title: Body_upload_shipment_file_shipment__shipment_id__upload_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SuggestedContactAddress:
+      properties:
+        streetAddress:
+          title: Streetaddress
+          description: Street address for the suggested supplier contact.
+          type: string
+          nullable: true
+        addressLine2:
+          title: Addressline2
+          description: Continued address for the suggested supplier contact.
+          type: string
+          nullable: true
+        city:
+          title: City
+          description: City for the suggested supplier contact.
+          type: string
+          nullable: true
+        stateOrProvince:
+          title: Stateorprovince
+          description: State or providence for the suggested supplier contact.
+          type: string
+          nullable: true
+        postalCode:
+          title: Postalcode
+          description: Postal code for the suggested supplier contact.
+          type: string
+          nullable: true
+        country:
+          title: Country
+          description: Country for the suggested supplier contact.
+          type: string
+          nullable: true
+      type: object
+      title: SuggestedContactAddress
+      description: Response model for a street address of a suggested supplier contact
+    ShipmentListingResponse:
+      properties:
+        shipments:
+          items:
+            $ref: '#/components/schemas/ShipmentResponse'
+          type: array
+          title: Shipments
+          description: List of shipments that belong to user's organization and match search parameters.
+        pagination:
+          description: Details of the API's paginated response.
+          $ref: '#/components/schemas/earthstream_services__services__shipment__common__models__Pagination'
+          nullable: true
+        filters:
+          title: Filters
+          description: Details of the API's filters, if applicable.
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type: object
+          nullable: true
+        sorting:
+          items:
+            type: string
+          type: array
+          title: Sorting
+          description: Describes sorting method for the response, if applicable.
+      type: object
+      required:
+      - shipments
+      - pagination
+      - filters
+      - sorting
+      title: ShipmentListingResponse
+      description: Response model for a list of shipments
+    SuggestedContactCitation:
+      properties:
+        source:
+          title: Source
+          description: Name of the suggested supplier contact reference.
+          type: string
+          nullable: true
+        url:
+          title: Url
+          description: URL for the suggested supplier contact reference.
+          type: string
+          nullable: true
+      type: object
+      title: SuggestedContactCitation
+      description: Citation information for suggested supplier contact references.
+    UpdateShipmentRequest:
+      properties:
+        shipment_name:
+          type: string
+          title: Shipment Name
+          description: Name of shipment.
+        origin:
+          title: Origin
+          description: Location of the shipment's origin.
+          type: string
+          nullable: true
+        destination:
+          title: Destination
+          description: Location of the shipment's destination.
+          type: string
+          nullable: true
+        departure_date:
+          title: Departure Date
+          description: Date of the shipment's departure.
+          type: string
+          format: date-time
+          nullable: true
+        arrival_date:
+          title: Arrival Date
+          description: Date of the shipment's arrival.
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          $ref: '#/components/schemas/ShipmentStatus'
+        active:
+          type: boolean
+          title: Active
+          description: Boolean signifying if the shipment is active or inactive.
+          default: true
+        organizational_units:
+          items:
+            type: string
+          type: array
+          title: Organizational Units
+          description: Subunit(s) of the organization.
+        detention_id:
+          title: Detention Id
+          description: Databaes ID of the detention for the shipment, if applicable.
+          type: string
+          nullable: true
+      type: object
+      required:
+      - shipment_name
+      - status
+      - organizational_units
+      title: UpdateShipmentRequest
+      description: Model for updating a shipment.
+    SupplierInformationRequestListing:
+      properties:
+        requests:
+          items:
+            $ref: '#/components/schemas/SupplierInformationRequestResponse'
+          type: array
+          title: Requests
+          description: List of supplier information requests.
+        pagination:
+          description: Details of the API's paginated response.
+          $ref: '#/components/schemas/earthstream_services__services__shipment__common__models__Pagination'
+          nullable: true
+        sorting:
+          items:
+            type: string
+          type: array
+          title: Sorting
+          description: Describes sorting method for the response, if applicable.
+        filters:
+          description: Details of the API's filters, if applicable.
+          $ref: '#/components/schemas/SupplierInformationRequestFilter'
+          nullable: true
+      type: object
+      required:
+      - requests
+      - pagination
+      - sorting
+      - filters
+      title: SupplierInformationRequestListing
+      description: Wrapper for SIR responses
+    CBPRequestListing:
+      properties:
+        requests:
+          items:
+            $ref: '#/components/schemas/app__schemas__shipments__CBPRequest'
+          type: array
+          title: Requests
+          description: A listing of CBP Requests
+      type: object
+      required:
+      - requests
+      title: CBPRequestListing
+      description: List of CBP Requests (shared schema for both public and internal APIs)
+    SupplierInformationRequestResponse:
+      properties:
+        sir_id:
+          type: string
+          format: uuid
+          title: Sir Id
+          description: Identifier of supplier information request record.
+        supplier_name:
+          type: string
+          title: Supplier Name
+          description: Name of the supplier.
+        supplier_jurisdiction:
+          type: string
+          title: Supplier Jurisdiction
+          description: Jurisdiction of the supplier.
+        status:
+          $ref: '#/components/schemas/SupplierInformationRequestStatus'
+        tradeverifyd_score:
+          title: Tradeverifyd Score
+          description: Tradeverifyd Score associated with the supplier.
+          type: number
+          nullable: true
+      type: object
+      required:
+      - sir_id
+      - supplier_name
+      - supplier_jurisdiction
+      - status
+      title: SupplierInformationRequestResponse
+      description: Response model for a supplier information request.
+    ShipmentStatus:
+      type: string
+      enum:
+      - Created
+      - In Transit
+      - Detained
+      - Complete
+      title: ShipmentStatus
+      description: Enum for shipment status.
+    Body_update_shipment_sir_status_shipment_sirs__sir_id__status_post:
+      properties:
+        status:
+          $ref: '#/components/schemas/SupplierInformationRequestStatus'
+      type: object
+      required:
+      - status
+      title: Body_update_shipment_sir_status_shipment_sirs__sir_id__status_post
+    SupplierInformationRequestStatus:
+      type: string
+      enum:
+      - Not Contacted
+      - Documents Requested
+      - Documents Received
+      - Eliminated
+      title: SupplierInformationRequestStatus
+      description: Enum for supplier information request status.
+    app__schemas__shipments__CBPRequest:
+      properties:
+        id:
+          title: Id
+          description: The identifier for the CBP Request
+          type: string
+          format: uuid
+          nullable: true
+        created:
+          title: Created
+          description: The timestamp of when the CBP was created
+          type: string
+          format: date-time
+          nullable: true
+        last_modified:
+          title: Last Modified
+          description: The timestamp of the last modification to the CBP
+          type: string
+          format: date-time
+          nullable: true
+        shipment_id:
+          type: string
+          format: uuid
+          title: Shipment Id
+          description: The ID of the Shipment to which the CBP belongs
+        vc_ids:
+          title: Vc Ids
+          description: A list of related VC ids
+          items:
+            type: string
+          type: array
+          nullable: true
+        presentation:
+          title: Presentation
+          description: The raw data of the Presentation submitted to CBP.
+          type: string
+          nullable: true
+        presentation_id:
+          title: Presentation Id
+          description: The CBP may be related to a presentation
+          type: string
+          nullable: true
+        submitted_date:
+          type: string
+          format: date-time
+          title: Submitted Date
+          description: The timestamp of when the request was submitted to CBP
+        cbp_response_code:
+          title: Cbp Response Code
+          description: The response code, if any, from CBP
+          type: string
+          nullable: true
+      type: object
+      required:
+      - id
+      - created
+      - last_modified
+      - shipment_id
+      - vc_ids
+      - presentation
+      - presentation_id
+      - submitted_date
+      - cbp_response_code
+      title: CBPRequest
+      description: CBP Request information (shared schema for both public and internal APIs)
+    CreateShipmentRequest:
+      properties:
+        shipment_id:
+          title: Shipment Id
+          description: ID of shipment. Only supplied for updating existing shipments.
+          type: string
+          format: uuid
+          nullable: true
+        shipment_name:
+          type: string
+          title: Shipment Name
+          description: Name of the shipment.
+        origin:
+          title: Origin
+          description: Location of the shipment's origin.
+          type: string
+          nullable: true
+        destination:
+          title: Destination
+          description: Location of the shipment's destination.
+          type: string
+          nullable: true
+        departure_date:
+          title: Departure Date
+          description: Date of the shipment's departure.
+          type: string
+          format: date-time
+          nullable: true
+        arrival_date:
+          title: Arrival Date
+          description: Date of the shipment's arrival.
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          $ref: '#/components/schemas/ShipmentStatus'
+        active:
+          type: boolean
+          title: Active
+          description: Boolean signifying if the shipment is active or inactive.
+          default: true
+        organizational_units:
+          items:
+            type: string
+          type: array
+          title: Organizational Units
+          description: Subunit(s) of the organization.
+        detention_id:
+          title: Detention Id
+          description: Database ID of the detention for the shipment, if applicable.
+          type: string
+          nullable: true
+      type: object
+      required:
+      - shipment_name
+      - status
+      - organizational_units
+      title: CreateShipmentRequest
+      description: Request model for creating a shipment.
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: ocp-apim-subscription-key

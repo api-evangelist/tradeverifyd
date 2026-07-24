@@ -1,0 +1,1029 @@
+openapi: 3.1.0
+info:
+  title: Tradeverifyd Documents Flags API
+  description: '
+
+    The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
+
+
+    For more information visit [tradeverifyd.com](https://tradeverifyd.com).
+
+
+    If you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.
+
+
+    When making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.
+
+
+    For example:
+
+
+    ```bash
+
+    curl --silent --location -G ''https://.../v1/search/entities'' \
+
+    --data-urlencode ''name=Contoso Corporation'' \
+
+    --data-urlencode ''jurisdiction=US'' \
+
+    --header "ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY"
+
+    ```
+
+    '
+  termsOfService: https://tradeverifyd.com/terms-of-service
+  contact:
+    name: tradeverifyd.com
+    url: https://tradeverifyd.com/
+    email: support@tradeverifyd.com
+  license:
+    name: Proprietary License
+    url: https://tradeverifyd.com/terms-of-service
+  version: 0.2.0
+servers:
+- url: https://api.tradeverifyd.com
+  description: Production server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Flags
+  description: Flags impacting an entity
+paths:
+  /v1/flags/upload:
+    post:
+      tags:
+      - Flags
+      summary: Upload Flags
+      description: 'Upload flags for processing. Expected time to process and be available in the
+
+        system is approximately 5-10 minutes.
+
+
+        This endpoint allows uploading flags for entities. Each flag must be associated with an entity
+
+        and contain information about potential risks or issues.
+
+
+        **This information is private to your organization only and will not be shared with any other organization.**
+
+
+        **Required Fields:**
+
+        - `entity_id`: Unique identifier for the entity associated with the flag
+
+        - `flag_type`: The primary category of the flag (e.g., "Sanctions & Restricted Entities Risk",
+
+        "Worker & Consumer Safety Risk", "Environmental Violations Risk")
+
+        - `flag_subtype`: A more specific classification within the flag type (e.g.,
+
+        "Financial Crimes & Violations", "International Sanctions", "Terrorism Financing")
+
+        - `source_location`: The URL or location where the flag information was found
+
+        (e.g., "https://example.example/news/article")
+
+        - `description`: Detailed explanation of the flag and its significance
+
+
+        Note: `flag_type` and `flag_subtype` must fall into one of the existing flag types defined in the system.
+
+
+        **Optional Fields:**
+
+        - `tags`: Single word identifier for categorizing flags by subcategories
+
+        - `time_start`: Start date/time when the flag becomes valid
+
+        - `time_end`: End date/time when the flag expires
+
+
+        **Response:**
+
+        Returns a summary of the processing results including the total number of flags submitted
+
+        and how many were successfully inserted into the system.'
+      operationId: upload_bulk_staged_flags_external_flags_upload_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                $ref: '#/components/schemas/ExternalBulkFlagItem'
+              type: array
+              title: Bulk Flags
+            examples:
+              ofac_sanctions_flag:
+                summary: OFAC Sanctions Flag
+                description: Flag indicating entity appears on OFAC sanctions list. Uses entity_id for identification.
+                value:
+                - entity_id: 507f1f77bcf86cd799439011
+                  flag_type: Sanctions & Restricted Entities Risk
+                  flag_subtype: International Sanctions
+                  description: Entity appears on OFAC Specially Designated Nationals List for involvement in illicit activities
+                  tags: financial_crimes
+                  source_location: https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345
+                  time_start: '2024-01-15T00:00:00Z'
+              adverse_media_flag:
+                summary: Adverse Media Flag
+                description: Flag for negative media coverage. Uses entity name and jurisdiction for identification.
+                value:
+                - entity_id: 497f1f77bef96cd799439012
+                  flag_type: Worker & Consumer Safety Risk
+                  flag_subtype: Workplace & Labor Violations
+                  description: Media reports indicate potential labor rights violations at manufacturing facilities
+                  tags: labor_violations
+                  source_location: https://news.example/reports/labor-violations-china-2024
+                  time_start: '2024-08-01T10:30:00Z'
+              regulatory_compliance_flag:
+                summary: Regulatory Compliance Flag
+                description: Flag for regulatory violations with time-bound validity period.
+                value:
+                - entity_id: 507f1f77bcf86cd799439012
+                  flag_type: Worker & Consumer Safety Risk
+                  flag_subtype: Workplace & Labor Violations
+                  description: Operating without required environmental compliance certifications
+                  tags: environmental
+                  source_location: https://epa.example/enforcement/case-567890
+                  time_start: '2024-06-01T00:00:00Z'
+                  time_end: '2025-06-01T00:00:00Z'
+              multiple_flags_bulk:
+                summary: Multiple Flags Upload
+                description: Example of uploading multiple flags in a single request with different flag types and entity identification methods.
+                value:
+                - entity_id: 507f1f77bcf86cd799439013
+                  flag_type: Sanctions & Restricted Entities Risk
+                  flag_subtype: Legal Violations
+                  description: Entity listed on UN Security Council sanctions list
+                  tags: terrorism
+                  source_location: https://www.un.example/securitycouncil/sanctions/1267/aq_list
+                  time_start: '2024-03-01T00:00:00Z'
+                - entity_id: 492f1f66bcf86cd784439012
+                  flag_type: Sanctions & Restricted Entities Risk
+                  flag_subtype: Financial Crimes & Violations
+                  description: Reports of accounting irregularities and potential fraud
+                  tags: financial_fraud
+                  source_location: https://sec.example/news/press-release/2024-56
+                  time_start: '2024-07-15T09:00:00Z'
+        required: true
+      responses:
+        '202':
+          description: Flags processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalBulkFlagResponse'
+              examples:
+                successful_processing:
+                  summary: Successful flag processing
+                  description: All flags were successfully processed and inserted
+                  value:
+                    message: Flags processed successfully
+                    flag_count: 3
+                    inserted_count: 3
+                    status: completed
+                partial_success:
+                  summary: Partial processing success
+                  description: Some flags were processed successfully, others failed validation
+                  value:
+                    message: Flags processed successfully
+                    flag_count: 5
+                    inserted_count: 3
+                    status: completed
+        '400':
+          description: Bad Request - Validation errors
+          content:
+            application/json:
+              examples:
+                invalid_payload:
+                  summary: Invalid flags payload
+                  value:
+                    detail: 'Validation error: Invalid flags payload.'
+                payload_validation_failed:
+                  summary: Payload validation failed
+                  value:
+                    detail: Flags payload failed validation
+        '422':
+          description: Missing entity_id
+          content:
+            application/json:
+              examples:
+                missing_entity_id:
+                  summary: Invalid upload
+                  description: entity_id is missing from the provided flag(s)
+                  value:
+                    detail:
+                    - type: missing
+                      loc:
+                      - body
+                      - 0
+                      - entity_id
+                      msg: Field required
+                      input:
+                        flag_type: Sanctions & Restricted Entities Risk
+                        flag_subtype: International Sanctions
+                        description: Entity appears on OFAC Specially Designated Nationals List for involvement in illicit activities
+                        tags: financial_crimes
+                        source_location: https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345
+                        time_start: '2024-01-15T00:00:00Z'
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+  /v1/flags/update/{flag_id}:
+    put:
+      tags:
+      - Flags
+      summary: Update a flag
+      description: "Update an existing Flag.\nUsers can only update Flags that belong to their organization.\nThe provided information will override existing information. It is not a merge.\n\n**Required Fields**:\n- `flag_id`: ID for Flag undergoing update.\n- Flag information for update.\n\n**Returns**:\n- The Flag object representing the updated flag.\n\n**Example Usage**:\n- Requesting `PUT /v1/flags/update/{flag_id}` with a valid `flag_id` that belongs to the user's organization\n    will update the specified flag."
+      operationId: update_flag_flags_update__flag_id__put
+      parameters:
+      - name: flag_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Flag Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlagUpdateItem'
+            examples:
+              update_sanctions_flag:
+                summary: Update OFAC sanctions flag
+                description: Update an existing OFAC sanctions flag with additional context, new sources, and updated validity period.
+                value:
+                  entity_jurisdiction: US
+                  description: Updated OFAC sanctions flag with additional context from compliance review
+                  tags:
+                  - sanctions
+                  - financial_crimes
+                  - OFAC
+                  source:
+                  - https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345
+                  time_start: '2024-01-15T00:00:00Z'
+                  time_end: '2025-01-15T00:00:00Z'
+                  owner_email: compliance@company.example
+                  deleted: false
+              update_adverse_media_flag:
+                summary: Update adverse media flag
+                description: Update an adverse media flag with new information, jurisdiction change, and expiration date.
+                value:
+                  entity_jurisdiction: CN
+                  description: Updated media reports regarding labor concerns with additional investigation results
+                  tags:
+                  - labor_concerns
+                  - adverse_media
+                  source:
+                  - https://news.example/labor-investigation-update-2024
+                  time_start: '2024-08-01T14:20:00Z'
+                  time_end: '2025-02-01T00:00:00Z'
+                  owner_email: risk@company.example
+                  deleted: false
+              mark_flag_deleted:
+                summary: Mark flag as deleted
+                description: Mark an existing flag as deleted with deletion metadata.
+                value:
+                  deleted: true
+                  deleted_at: '2024-08-26T15:30:00Z'
+                  deletion_source: Manual review - flag no longer applicable
+              minimal_update:
+                summary: Minimal flag update
+                description: Update only the description field while keeping other values unchanged.
+                value:
+                  description: Updated flag description with latest compliance findings
+      responses:
+        '200':
+          description: Flag successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateFlagResponse'
+              examples:
+                sanctions_flag_updated:
+                  summary: Updated OFAC sanctions flag
+                  description: Successfully updated OFAC sanctions flag with additional context and sources.
+                  value:
+                    id: 507f1f77bcf86cd799439023
+                    entity_id: 507f1f77bcf86cd799439024
+                    created_at: '2024-01-15T10:30:00Z'
+                    time_start: '2024-01-15T00:00:00Z'
+                    time_end: '2025-01-15T00:00:00Z'
+                    type: 507f1f77bcf86cd799439025
+                    description: Updated OFAC sanctions flag with additional context from compliance review
+                    sources:
+                    - url: https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345
+                      title: News on OFAC Sanctions
+                adverse_media_flag_updated:
+                  summary: Updated adverse media flag
+                  description: Updated adverse media flag with new jurisdiction and expiration date.
+                  value:
+                    id: 507f1f77bcf86cd799439026
+                    entity_id: 507f1f77bcf86cd799439027
+                    created_at: '2024-08-01T14:20:00Z'
+                    time_start: '2024-08-01T14:20:00Z'
+                    time_end: '2025-02-01T00:00:00Z'
+                    type: 507f1f77bcf86cd799439028
+                    description: Updated media reports regarding labor concerns with additional investigation results
+                    sources:
+                    - url: https://news.example/labor-investigation-update-2024
+                      title: Results of Labor Investigation 2024
+        '404':
+          description: Flag not found
+          content:
+            application/json:
+              examples:
+                flag_not_found:
+                  summary: Flag either doesn't exist or the user does not have permissions to update it.
+                  value:
+                    detail: Flag does not exist or you do not have access.
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/flags/types:
+    get:
+      tags:
+      - Flags
+      summary: Get Flags Types
+      description: 'This endpoint is designed to provide a list of all possible flags types and
+
+        subtypes.'
+      operationId: get_flags_types_flags_types_get
+      responses:
+        '200':
+          description: Example of a flag type returned by the Get Flags Types endpoint
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/FlagTypeResponse'
+                type: array
+                title: Response Get Flags Types Flags Types Get
+              examples:
+                flag_type:
+                  summary: Example Flag Type
+                  value:
+                  - id: 67db089a68f5abb001405784
+                    flag_type_description: Highlights entities mishandling, illegally disposing of, or improperly labeling toxic chemicals and hazardous materials.
+                    flag_type: Environmental Violations Risk
+                    flag_subtype: Chemical & Hazardous Substances Violation
+                    flag_polarity: -1
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+  /v1/flags:
+    get:
+      tags:
+      - Flags
+      summary: Get Flags
+      description: 'Retrieve flags related to a specific entity.
+
+
+        This endpoint is designed to provide a list of flags associated with an
+
+        entity. Flags represent important markers or alerts related to the entity,
+
+        such as compliance issues, risk indicators, or other significant
+
+        annotations.
+
+
+        Flags can be invalidated by external evidence, or no longer apply for time
+
+        reasons to a specific entity.
+
+
+        ## Note:
+
+        - `entity_id` MUST be provided.
+
+        - If interested in viewing flagged affiliates, please use the `Get Entity Graph
+
+        Flagged Relationships` endpoint at
+
+        `/entities/{entity_id}/graph/flagged_relationships`'
+      operationId: get_flags_flags_get
+      parameters:
+      - name: entity_id
+        in: query
+        required: true
+        schema:
+          type: string
+          description: The unique identifier of the entity for which flags are being requested. This parameter is required.
+          title: Entity Id
+        description: The unique identifier of the entity for which flags are being requested. This parameter is required.
+      responses:
+        '200':
+          description: Successfully retrieved flags for the specified entity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DisplayFlagResponse'
+                title: Response Get Flags Flags Get
+              examples:
+                entity_flags:
+                  summary: Entity flags
+                  description: Multiple flags for Example Contoso Inc.
+                  value:
+                  - id: 507f1f77bcf86cd799439011
+                    entity_id: 507f1f77bcf86cd799439012
+                    entity_name: Example Contoso Inc.
+                    entity_jurisdiction: US
+                    created_at: '2024-01-15T10:30:00Z'
+                    time_start: '2024-01-15T00:00:00Z'
+                    time_end: '2025-01-15T00:00:00Z'
+                    type: 507f1f77bcf86cd799439013
+                    flag_type: regulatory
+                    flag_subtype: export_compliance
+                    description: Export compliance review required for technology transfers to restricted jurisdictions
+                    sources:
+                    - id: ' 5d4964ad-81b6-41f8-9d56-bcdb30a08bfc '
+                      url: https://bis.doc.example/index.php/policy-guidance/entity-list
+                      title: Export Compliance Review 2024
+                  - id: 507f1f77bcf86cd799439014
+                    entity_id: 507f1f77bcf86cd799439015
+                    entity_name: ACME CORP.
+                    entity_jurisdiction: TW
+                    created_at: '2024-08-01T14:20:00Z'
+                    time_start: '2024-08-01T14:20:00Z'
+                    type: 507f1f77bcf86cd799439016
+                    flag_type: adverse_media
+                    flag_subtype: labor_concerns
+                    description: Reports of worker safety violations and excessive overtime at manufacturing facilities
+                    sources:
+                    - url: https://news.example/acme-labor-violations-2024
+                sanctions_flags:
+                  summary: OFAC sanctions flags
+                  description: Multiple sanctions flags for entities appearing on various government watch lists with different severity levels.
+                  value:
+                  - id: 507f1f77bcf86cd799439017
+                    entity_id: 507f1f77bcf86cd799439018
+                    entity_name: Example Contoso Inc.
+                    entity_jurisdiction: RU
+                    created_at: '2024-03-01T09:00:00Z'
+                    time_start: '2024-03-01T00:00:00Z'
+                    type: 507f1f77bcf86cd799439019
+                    flag_type: sanctions
+                    flag_subtype: OFAC
+                    description: Entity appears on OFAC Specially Designated Nationals List for involvement in activities contrary to US national security
+                    sources:
+                    - url: https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345
+                  - id: 507f1f77bcf86cd799439020
+                    entity_id: 507f1f77bcf86cd799439021
+                    entity_name: ACME CORP.
+                    entity_jurisdiction: IR
+                    created_at: '2024-06-15T11:45:00Z'
+                    time_start: '2024-06-15T11:45:00Z'
+                    time_end: '2025-06-15T11:45:00Z'
+                    type: 507f1f77bcf86cd799439022
+                    flag_type: sanctions
+                    flag_subtype: UN_Security_Council
+                    description: Listed on UN Security Council sanctions list for nuclear proliferation activities
+                    sources:
+                    - url: https://www.un.example/securitycouncil/sanctions/1737/materials
+                no_flags_found:
+                  summary: No flags found for entity
+                  description: Empty response when no flags are found for the specified entity.
+                  value: []
+        '404':
+          description: Entity not found
+          content:
+            application/json:
+              examples:
+                entity_not_found:
+                  summary: Entity not found by id
+                  value:
+                    detail: Entity not found.
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              examples:
+                entity_id_missing:
+                  summary: Missing entity_id
+                  value:
+                    detail:
+                    - type: missing
+                      loc:
+                      - query
+                      - entity_id
+                      msg: Field required
+                      input: ''
+                invalid_entity_id:
+                  summary: Invalid entity_id
+                  value:
+                    detail:
+                    - type: is_instance_of
+                      loc:
+                      - query
+                      - entity_id
+                      - is-instance[ObjectId]
+                      msg: Input should be an instance of ObjectId
+                      input: '12345'
+                      ctx:
+                        class: ObjectId
+                    - type: value_error
+                      loc:
+                      - query
+                      - entity_id
+                      - chain[str,function-plain[validate()]]
+                      msg: 'Value error, Invalid bson.ObjectId: 12345'
+                      input: '12345'
+                      ctx:
+                        error: {}
+        '500':
+          description: Internal server error - contact support
+          content:
+            application/json:
+              examples:
+                internal_error:
+                  summary: Internal server error
+                  value:
+                    detail: Internal server error
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    FlagTypeResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the flag type.
+        flag_type_description:
+          type: string
+          title: Flag Type Description
+          description: Brief description of the flag's meaning.
+        flag_type:
+          type: string
+          title: Flag Type
+          description: Primary type of the flag.
+        flag_subtype:
+          type: string
+          title: Flag Subtype
+          description: Subtype of the flag.
+        flag_polarity:
+          type: integer
+          title: Flag Polarity
+          description: Positive (+1) indicates compliance/certification, negative (-1) indicates violations/sanctions.
+      type: object
+      required:
+      - id
+      - flag_type_description
+      - flag_type
+      - flag_subtype
+      - flag_polarity
+      title: FlagTypeResponse
+      description: "Response model for flag types without the score field.\n\nAttributes:\n\n    id: ID of the flag type.\n    flag_type_description: Description of the flag type.\n    flag_type: Type of the flag.\n    flag_subtype: Subtype of the flag.\n    flag_polarity: Polarity of the flag."
+    FlagUpdateItem:
+      properties:
+        entity_jurisdiction:
+          title: Entity Jurisdiction
+          description: Jurisdiction of the entity
+          type: string
+          nullable: true
+        description:
+          title: Description
+          description: Detailed description of the flag
+          type: string
+          nullable: true
+        tags:
+          title: Tags
+          description: Single word identifier for flag by subcategories
+          items:
+            type: string
+          type: array
+          nullable: true
+        source:
+          title: Source
+          description: Source of Flag Information such as a URL
+          items:
+            type: string
+          type: array
+          nullable: true
+        time_start:
+          title: Time Start
+          description: Start time of the flag's validity
+          type: string
+          format: date-time
+          nullable: true
+        time_end:
+          title: Time End
+          description: End time of flag's validity
+          type: string
+          format: date-time
+          nullable: true
+        owner_email:
+          title: Owner Email
+          description: Email of flag owner
+          type: string
+          nullable: true
+        deleted:
+          type: boolean
+          title: Deleted
+          description: Boolean marking deleted flags
+          default: false
+        deleted_at:
+          title: Deleted At
+          description: Time flag was deleted
+          type: string
+          format: date-time
+          nullable: true
+        deletion_source:
+          title: Deletion Source
+          description: Source of deletion
+          type: string
+          nullable: true
+      type: object
+      title: FlagUpdateItem
+      description: 'Individual flag item for update flag endpoint.
+
+        Attributes listed here represent those that users can update.'
+    Translation:
+      properties:
+        translated_text:
+          type: string
+          title: Translated Text
+          description: The full translated text
+        source_lang:
+          type: string
+          maxLength: 2
+          title: Source Language
+          description: The ISO 639 code for the language of the source text
+        result_lang:
+          type: string
+          maxLength: 2
+          title: Result Language
+          description: The ISO 639 code for the language to which the source text has been translated
+        timestamp:
+          type: string
+          format: date-time
+          title: Translation Time
+          description: The date and time the translation was made
+        model:
+          title: Model
+          description: The model used to perform the translation
+          type: string
+          nullable: true
+      type: object
+      required:
+      - translated_text
+      - source_lang
+      - result_lang
+      - timestamp
+      title: Translation
+      description: "Represents a translation of a text.\n\nAttributes:\n    translated_text: the full text of the translation.\n    source_lang: the language of the source text.\n    result_lang: the language of the resulting translation.\n    timestamp: the date and time the translation was made.\n    model: the model used to perfom the translation."
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ExternalBulkFlagResponse:
+      properties:
+        message:
+          type: string
+          title: Message
+          description: Status message
+        flag_count:
+          type: integer
+          title: Flag Count
+          description: Total number of flags in the request
+        inserted_count:
+          type: integer
+          title: Inserted Count
+          description: Number of flags successfully inserted
+        status:
+          type: string
+          title: Status
+          description: Processing status
+      type: object
+      required:
+      - message
+      - flag_count
+      - inserted_count
+      - status
+      title: ExternalBulkFlagResponse
+      description: Response model for external bulk flag operations.
+    Source:
+      properties:
+        id:
+          title: Source Identifier
+          description: Unique identifier for the source.
+          type: string
+          maxLength: 128
+          nullable: true
+        url:
+          title: Source URL
+          description: Web address where the source is located.
+          type: string
+          nullable: true
+        title:
+          title: Source Title
+          description: Title of the web resource.
+          type: string
+          maxLength: 512
+          nullable: true
+        full_text:
+          title: Source Full Text
+          description: Complete textual content of the resource.
+          type: string
+          maxLength: 10000
+          nullable: true
+        signature:
+          title: Source Signature
+          description: Digital signature associated with the source for verification purposes.
+          additionalProperties:
+            type: string
+          type: object
+          nullable: true
+        translations:
+          title: Translations
+          description: Any translations made of the source text
+          items:
+            $ref: '#/components/schemas/Translation'
+          type: array
+          nullable: true
+      type: object
+      required:
+      - url
+      title: Source
+      description: "Represents a web-based resource or document, providing key identification\nand content details.\n\nAttributes:\n    id: A unique identifier for the source, useful in tracking\n        or referencing.\n    url: The web address where the source can be accessed,\n        providing direct linkage.\n    title: The title of the web resource, summarizing its content\n        or purpose.\n    full_text: The complete textual content of the resource,\n        useful for analysis or reference.\n    signature: A digital signature associated with the source,\n        serving as a means of verification or authenticity.\n    translations: Any translations of the source\n\nNote:\n    This model is adaptable for inclusion of additional metadata\n    fields to enrich the description and context of the source."
+    DataStatus:
+      properties:
+        state:
+          type: string
+          enum:
+          - invalid
+          - suspected
+          - confirmed
+          title: State
+          description: The level of confirmation for the data provided in the flag record.
+          default: suspected
+        confidence:
+          title: Confidence
+          description: Level of confidence in the information contained in the flag record.
+          type: string
+          enum:
+          - almost no chance
+          - very unlikely
+          - unlikely
+          - roughly even chance
+          - likely
+          - very likely
+          - almost certain
+          nullable: true
+        sources:
+          title: Sources
+          description: A list of sources supporting the state and confidence level.
+          items:
+            $ref: '#/components/schemas/Source'
+          type: array
+          nullable: true
+      type: object
+      title: DataStatus
+      description: "Supoorts enhancing a class with status information.\n\nAttributes:\n    state: the state value: invalid, suspected, or confirmed. Defaults to\n    suspected.\n    confidence: the level of confidence in the state: almost no chance, very unlikely,\n    unlikely, roughly even chance, likely, very likely, almost certain.\n    sources: a list of sources supporting the state and confidence level."
+    ExternalBulkFlagItem:
+      properties:
+        entity_id:
+          type: string
+          title: Entity Id
+          description: ID of the associated staged entity
+        flag_type:
+          type: string
+          title: Flag Type
+          description: Type of flag
+        flag_subtype:
+          type: string
+          title: Flag Subtype
+          description: Subtype of flag
+        description:
+          type: string
+          title: Description
+          description: Detailed description of the flag
+        tags:
+          title: Tags
+          description: Single word identifier for flag by subcategories
+          type: string
+          nullable: true
+        source_location:
+          type: string
+          title: Source Location
+          description: Source of Flag Information such as a URL
+        time_start:
+          title: Time Start
+          description: Start time of the flag's validity
+          type: string
+          nullable: true
+        time_end:
+          title: Time End
+          description: End time of the flag's validity
+          type: string
+          nullable: true
+      type: object
+      required:
+      - entity_id
+      - flag_type
+      - flag_subtype
+      - description
+      - source_location
+      title: ExternalBulkFlagItem
+      description: Individual flag item for bulk flag API
+    DisplayFlagResponse:
+      properties:
+        id:
+          type: string
+          title: Flag Identifier
+          description: Unique identifier for the flag, useful for reference and tracking.
+        entity_id:
+          type: string
+          title: Entity Id
+          description: ID of the Entity that this Flag is associated with
+        created_at:
+          type: string
+          format: date-time
+          title: Flag Timestamp
+          description: Timestamp indicating when the flag was created or recorded.
+        time_start:
+          title: Flag Start Time
+          description: Beginning time when the flag becomes relevant or active.
+          type: string
+          format: date-time
+          nullable: true
+        time_end:
+          title: Flag End Time
+          description: Ending time after which the flag is no longer considered relevant.
+          type: string
+          format: date-time
+          nullable: true
+        type:
+          type: string
+          title: Flag Type
+          description: Describes the _id of corresponding flag type in Mongo.
+        description:
+          title: Flag Description
+          description: Optional field for describing the flag's purpose and significance.
+          type: string
+          maxLength: 4096
+          nullable: true
+        sources:
+          title: Flag Sources
+          description: Optional list of sources or references that provide information or evidence related to the flag.
+          items:
+            $ref: '#/components/schemas/Source'
+          type: array
+          nullable: true
+        status:
+          title: Status
+          description: The status of the flag, with a confidence level and source data.
+          $ref: '#/components/schemas/DataStatus'
+          nullable: true
+        entity_name:
+          title: Entity Name
+          description: The name of the entity associated with the flag.
+          type: string
+          nullable: true
+        entity_jurisdiction:
+          title: Entity Jurisdiction
+          description: The jurisdiction of the entity associated with the flag.
+          type: string
+          nullable: true
+        flag_type:
+          title: Flag Type
+          description: The human-readable type of the flag.
+          type: string
+          nullable: true
+        flag_subtype:
+          title: Flag Subtype
+          description: The human-readable subtype of the flag.
+          type: string
+          nullable: true
+        flag_polarity:
+          title: Flag Polarity
+          description: Indicates whether a flag is positive or negative. A flag is positive if the entity it is associated with has been certified by an authoritative body to be in compliance with an accepted standard. It is negative if the associated entity participates in or is associated with a sanctioned, illegal, or otherwise undesirable activity.
+          type: integer
+          nullable: true
+      type: object
+      required:
+      - id
+      - entity_id
+      - created_at
+      - type
+      title: DisplayFlagResponse
+      description: 'Response model for flag display information.
+
+
+        Extends the internal flag model to provide comprehensive flag details
+
+        including entity context and relationship depth information.'
+    UpdateFlagResponse:
+      properties:
+        id:
+          type: string
+          title: Flag Identifier
+          description: Unique identifier for the flag.
+        entity_id:
+          type: string
+          title: Entity Id
+          description: ID of the Entity that this Flag is associated with
+        created_at:
+          type: string
+          format: date-time
+          title: Flag Timestamp
+          description: Timestamp indicating when the flag was created or recorded.
+        time_start:
+          title: Flag Start Time
+          description: Beginning time when the flag becomes relevant or active.
+          type: string
+          format: date-time
+          nullable: true
+        time_end:
+          title: Flag End Time
+          description: Ending time after which the flag is no longer considered relevant.
+          type: string
+          format: date-time
+          nullable: true
+        type:
+          type: string
+          title: Flag Type
+          description: Describes the _id of corresponding flag type in Mongo.
+        description:
+          title: Flag Description
+          description: Optional field for describing the flag's purpose and significance.
+          type: string
+          maxLength: 4096
+          nullable: true
+        sources:
+          title: Flag Sources
+          description: Optional list of sources or references that provide information or evidence related to the flag.
+          items:
+            $ref: '#/components/schemas/Source'
+          type: array
+          nullable: true
+        status:
+          title: Status
+          description: The status of the flag, with a confidence level and source data.
+          $ref: '#/components/schemas/DataStatus'
+          nullable: true
+      type: object
+      required:
+      - id
+      - entity_id
+      - created_at
+      - type
+      title: UpdateFlagResponse
+      description: Response model for updated flags
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: ocp-apim-subscription-key
