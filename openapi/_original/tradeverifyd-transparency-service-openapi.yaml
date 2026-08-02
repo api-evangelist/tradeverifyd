@@ -1,0 +1,597 @@
+openapi: 3.0.3
+info:
+  title: SCITT Transparency Service API
+  description: |
+    Secure statements regarding supply chain artifacts in an append only transparency log.
+    Obtain offline verifiable proof that an artifact was recorded in the log.
+    Query the log for statements about artifacts to build verifiable value chains.
+  version: 1.0.0
+  contact:
+    name: Tradeverifyd
+    url: https://github.com/tradeverifyd/transparency-service
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+servers:
+  - url: http://127.0.0.1:56177
+    description: Local
+
+tags:
+  - name: SCITT Reference APIs
+    description: SCRAPI related http resources
+  - name: Transparency Log
+    description: Auxillary resources for securing and analyzing supply chain artifacts
+
+paths:
+  /.well-known/scitt-configuration:
+    get:
+      summary: Service Configuration
+      description: |
+        Get the SCITT service configuration including supported algorithms,
+        registration policies, and service metadata (per SCRAPI specification).
+      tags:
+        - SCITT Reference APIs
+      responses:
+        '200':
+          description: Service configuration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuer:
+                    type: string
+                    description: Service issuer URL
+                    example: "https://transparency.example"
+                  supported_algorithms:
+                    type: array
+                    items:
+                      type: string
+                    description: Supported signing algorithms
+                    example: ["ES256"]
+                  supported_hash_algorithms:
+                    type: array
+                    items:
+                      type: string
+                    description: Supported hash algorithms
+                    example: ["SHA-256"]
+                  registration_policy:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        description: Registration policy type
+                        example: "open"
+                  tile_height:
+                    type: integer
+                    description: |
+                      Height of tiles in the Merkle tree. A tile represents the entire subtree
+                      of this height with its hashes as the leaves. The Merkle Tree levels between
+                      those expressed by the tile hashes are reconstructed by hashing the leaves.
+                    example: 8
+              example:
+                issuer: "http://127.0.0.1:56177"
+                registration_policy:
+                  type: "open"
+                supported_algorithms:
+                  - "ES256"
+                supported_hash_algorithms:
+                  - "SHA-256"
+                tile_height: 8
+
+  /.well-known/scitt-keys:
+    get:
+      summary: Service Verification Keys
+      description: |
+        Get the service's verification keys as a COSE Key Set in CBOR format
+        (per SCRAPI specification and RFC 9052 Section 7).
+      tags:
+        - SCITT Reference APIs
+      responses:
+        '200':
+          description: COSE Key Set
+          content:
+            application/cbor:
+              schema:
+                type: string
+                format: binary
+                description: |
+                  CBOR-encoded array of COSE_Key structures.
+                  Each key includes the COSE key thumbprint (RFC 9679) as the key ID.
+        '500':
+          description: Failed to generate key set
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /checkpoint:
+    get:
+      summary: Get Checkpoint Receipt
+      description: |
+        Get a scitt receipt for the last entry in the transparency log.
+      tags:
+        - Transparency Log
+      responses:
+        '200':
+          description: Checkpoint receipt retrieved successfully
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "public, max-age=60"
+          content:
+            application/scitt-receipt+cose:
+              schema:
+                type: string
+                format: binary
+                description: CBOR-encoded COSE Sign1 receipt for the last entry
+        '500':
+          description: Failed to get checkpoint (log may be empty)
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /tile/{level}/{index}:
+    get:
+      summary: Get Merkle Tree Tile
+      description: |
+        Get a Merkle tree tile from the transparency log.
+        Supports C2SP tlog-tiles format with nested indices.
+      tags:
+        - Transparency Log
+      parameters:
+        - name: level
+          in: path
+          required: true
+          description: Merkle tree level (0-63)
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 63
+        - name: index
+          in: path
+          required: true
+          description: Tile index (nested format like x001/x234/067)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tile retrieved successfully
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "public, max-age=31536000, immutable"
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+                description: Raw tile data (256 hashes × 32 bytes for full tiles)
+        '404':
+          description: Tile not found
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /tile/entries/{index}:
+    get:
+      summary: Get Entry Tile
+      description: |
+        Get an entry tile (bundle) from the transparency log.
+        Contains raw entry hashes for the specified tile index.
+      tags:
+        - Transparency Log
+      parameters:
+        - name: index
+          in: path
+          required: true
+          description: Entry tile index (nested format like x001/x234/067)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Entry tile retrieved successfully
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "public, max-age=31536000, immutable"
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+                description: Raw entry tile data (up to 256 hashes × 32 bytes)
+        '404':
+          description: Entry tile not found
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /statements:
+    get:
+      summary: Query Statements
+      description: |
+        Query statement metadata with optional filters.
+        Returns JSON array of statement metadata.
+      tags:
+        - Transparency Log
+      parameters:
+        - name: iss
+          in: query
+          description: Filter by issuer URL
+          schema:
+            type: string
+            example: "https://issuer.example.com"
+        - name: sub
+          in: query
+          description: Filter by subject
+          schema:
+            type: string
+        - name: cty
+          in: query
+          description: Filter by content type
+          schema:
+            type: string
+            example: "application/json"
+        - name: typ
+          in: query
+          description: Filter by type
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Maximum number of results (default 100, max 1000)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+        - name: offset
+          in: query
+          description: Pagination offset
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: Statements retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statements:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/StatementMetadata'
+                  limit:
+                    type: integer
+                    example: 100
+                  offset:
+                    type: integer
+                    example: 0
+                  total:
+                    type: integer
+                    example: 42
+              example:
+                statements:
+                  - entry_id: 86
+                    leaf_hash: "49bc8c5a970039e2ff0a015d8ed3a6a7db802352826d39c777d6dbe387b1a3df"
+                    iss: "urn:supply-chain:quantum-chip-design"
+                    sub: "urn:supply-chain:quantum-chip-design"
+                    cty: "application/json"
+                    payload_hash_alg: -16
+                    payload_hash: "6824c806d0ed25c150522992e0e5e982ed91e977e027c4c2c8078035d333e835"
+                    payload_location: "https://quantum-chip-design.example/documents/memory-008.json"
+                    registered_at: "2025-10-19T15:34:56Z"
+                  - entry_id: 85
+                    leaf_hash: "775e591b66740ed8fbf69952cee0b3334f7acfd7d4e9ebf4e5c86c97bd4e516a"
+                    iss: "urn:supply-chain:quantum-chip-design"
+                    sub: "urn:supply-chain:quantum-chip-design"
+                    cty: "application/json"
+                    payload_hash_alg: -16
+                    payload_hash: "2109d7c92c98ab3a73cfcff16b28477736e753883233bc5970657b28e438da3e"
+                    payload_location: "https://quantum-chip-design.example/documents/memory-007.json"
+                    registered_at: "2025-10-19T15:34:56Z"
+                limit: 100
+                offset: 0
+                total: 86
+        '500':
+          description: Failed to query statements
+          content:
+            text/plain:
+              schema:
+                type: string
+
+    post:
+      summary: Register Statement (Alternative)
+      description: |
+        Register a new COSE Sign1 statement in the transparency log.
+        Alternative endpoint to POST /entries with the same behavior.
+
+        Supports both application/cose and application/scitt-statement+cose content types.
+      tags:
+        - Transparency Log
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/cose:
+            schema:
+              type: string
+              format: binary
+              description: CBOR-encoded COSE Sign1 structure
+          application/scitt-statement+cose:
+            schema:
+              type: string
+              format: binary
+              description: CBOR-encoded COSE Sign1 SCITT statement
+      responses:
+        '201':
+          description: Statement registered successfully - returns COSE Sign1 receipt
+          content:
+            application/scitt-receipt+cose:
+              schema:
+                type: string
+                format: binary
+                description: CBOR-encoded COSE Sign1 receipt with Merkle inclusion proof
+        '400':
+          description: Invalid request (malformed COSE Sign1 or validation failure)
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized (missing or invalid API key)
+          content:
+            text/plain:
+              schema:
+                type: string
+        '415':
+          description: Unsupported Media Type
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /statements/{entry_id}/receipt:
+    get:
+      summary: Get Receipt (Alternative)
+      description: |
+        Retrieve a transparency receipt for a registered statement.
+        Alternative endpoint to GET /entries/{entry_id} with the same behavior.
+      tags:
+        - Transparency Log
+      parameters:
+        - name: entry_id
+          in: path
+          required: true
+          description: Entry ID of the registered statement
+          schema:
+            type: integer
+            format: int64
+            example: 42
+      responses:
+        '200':
+          description: Receipt retrieved successfully
+          content:
+            application/scitt-receipt+cose:
+              schema:
+                type: string
+                format: binary
+                description: CBOR-encoded COSE Sign1 receipt with Merkle inclusion proof
+        '404':
+          description: Statement not found
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: Invalid entry ID format
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /entries:
+    post:
+      summary: Register Statement
+      description: |
+        Register a new COSE Sign1 statement in the transparency log.
+        The statement will be assigned an entry ID and included in the Merkle tree.
+
+        Supports both application/cose and application/scitt-statement+cose content types.
+      tags:
+        - SCITT Reference APIs
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/cose:
+            schema:
+              type: string
+              format: binary
+              description: CBOR-encoded COSE Sign1 structure
+          application/scitt-statement+cose:
+            schema:
+              type: string
+              format: binary
+              description: CBOR-encoded COSE Sign1 SCITT statement
+      responses:
+        '201':
+          description: Statement registered successfully - returns COSE Sign1 receipt
+          content:
+            application/scitt-receipt+cose:
+              schema:
+                type: string
+                format: binary
+                description: CBOR-encoded COSE Sign1 receipt with Merkle inclusion proof
+        '400':
+          description: Invalid request (malformed COSE Sign1 or validation failure)
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized (missing or invalid API key)
+          content:
+            text/plain:
+              schema:
+                type: string
+        '415':
+          description: Unsupported Media Type
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /entries/{entry_id}:
+    get:
+      summary: Get Receipt
+      description: |
+        Retrieve a transparency receipt for a registered statement.
+        The receipt contains a Merkle inclusion proof and signed checkpoint.
+      tags:
+        - SCITT Reference APIs
+      parameters:
+        - name: entry_id
+          in: path
+          required: true
+          description: Entry ID of the registered statement
+          schema:
+            type: integer
+            format: int64
+            example: 42
+      responses:
+        '200':
+          description: Receipt retrieved successfully
+          content:
+            application/scitt-receipt+cose:
+              schema:
+                type: string
+                format: binary
+                description: CBOR-encoded COSE Sign1 receipt with Merkle inclusion proof
+        '404':
+          description: Statement not found
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: Invalid entry ID format
+          content:
+            text/plain:
+              schema:
+                type: string
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key authentication using Bearer token
+
+  schemas:
+    StatementMetadata:
+      type: object
+      properties:
+        entry_id:
+          type: integer
+          format: int64
+          description: Unique entry ID in the log
+          example: 42
+        leaf_hash:
+          type: string
+          description: Hex-encoded leaf hash stored in the tile
+          example: "a1b2c3d4..."
+        iss:
+          type: string
+          description: Issuer URL
+          example: "https://issuer.example.com"
+        sub:
+          type: string
+          description: Subject (optional)
+          example: "artifact-123"
+        cty:
+          type: string
+          description: Content type (optional)
+          example: "application/json"
+        typ:
+          type: string
+          description: Type (optional)
+          example: "application/example"
+        payload_hash_alg:
+          type: integer
+          description: Hash algorithm identifier
+          example: -16
+        payload_hash:
+          type: string
+          description: Hex-encoded payload hash
+          example: "9f8e7d6c..."
+        payload_location:
+          type: string
+          description: Payload location (optional)
+          example: "https://example.com/payload"
+        registered_at:
+          type: string
+          format: date-time
+          description: Registration timestamp (ISO 8601)
+          example: "2023-10-18T12:00:00Z"
+
+    RegisterStatementResponse:
+      type: object
+      properties:
+        entry_id:
+          type: integer
+          format: int64
+          description: Unique identifier for the registered statement
+        statement_hash:
+          type: string
+          description: SHA-256 hash of the statement (hex-encoded)
+
+    ServiceConfiguration:
+      type: object
+      properties:
+        issuer:
+          type: string
+          description: Service issuer URL
+        supported_algorithms:
+          type: array
+          items:
+            type: string
+          description: Supported signing algorithms
+        supported_hash_algorithms:
+          type: array
+          items:
+            type: string
+          description: Supported hash algorithms
+        registration_policy:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Registration policy type
+        tile_height:
+          type: integer
+          description: |
+            Height of tiles in the Merkle tree. A tile represents the entire subtree
+            of this height with its hashes as the leaves. The Merkle Tree levels between
+            those expressed by the tile hashes are reconstructed by hashing the leaves.
+
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        issuer:
+          type: string

@@ -1,0 +1,465 @@
+{
+	"info": {
+		"_postman_id": "e67e8eec-15ac-4e76-8ae1-430cff536b43",
+		"name": "Tradeverifyd Shipments <> CBP",
+		"description": "Full API collection for Shipments -> VCs -> CBP workflow for Tradeverifyd",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45618928",
+		"_collection_link": "https://nolan-722461.postman.co/workspace/Nolan's-Workspace~02994535-0705-43c0-88e6-8c9fc3d431f9/collection/45618928-e67e8eec-15ac-4e76-8ae1-430cff536b43?action=share&source=collection_link&creator=45618928"
+	},
+	"item": [
+		{
+			"name": "Organizations",
+			"item": [
+				{
+					"name": "Get All Organization Units",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api-root-v1}}/organizations/organizational-units",
+							"host": [
+								"{{api-root-v1}}"
+							],
+							"path": [
+								"organizations",
+								"organizational-units"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "API endpoints where the primary resource is Organizations"
+		},
+		{
+			"name": "Shipments",
+			"item": [
+				{
+					"name": "Create Shipment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"current_shipment_id\", response.shipment_id)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"shipment_name\": \"Deacero Test Shipment 1\",\n    \"status\": \"Created\",\n    \"organizational_units\": [\n        \"deacero\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api-root-v1}}/shipments",
+							"host": [
+								"{{api-root-v1}}"
+							],
+							"path": [
+								"shipments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Shipments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api-root-v1}}/shipments",
+							"host": [
+								"{{api-root-v1}}"
+							],
+							"path": [
+								"shipments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Shipment",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api-root-v1}}/shipments/{{current_shipment_id}}",
+							"host": [
+								"{{api-root-v1}}"
+							],
+							"path": [
+								"shipments",
+								"{{current_shipment_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Document to Shipment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "postman-cloud:///1f0880df-9c4c-44e0-b168-33c2b8023368"
+								},
+								{
+									"key": "path",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api-root-v1}}/shipment/{{current_shipment_id}}/upload",
+							"host": [
+								"{{api-root-v1}}"
+							],
+							"path": [
+								"shipment",
+								"{{current_shipment_id}}",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "API endpoints where the primary resource is Shipments"
+		},
+		{
+			"name": "Verifiable Credentials",
+			"item": [
+				{
+					"name": "Get All VCs for Shipment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"vcs_to_submit_to_cbp\", response.map(vc => vc.id));",
+									"console.log(\"vcs count\", response.length);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api-root-v1}}/credentials/list/shipment/{{current_shipment_id}}",
+							"host": [
+								"{{api-root-v1}}"
+							],
+							"path": [
+								"credentials",
+								"list",
+								"shipment",
+								"{{current_shipment_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get VC Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api-root-v1}}/credentials/details/{{current_vc_id}}",
+							"host": [
+								"{{api-root-v1}}"
+							],
+							"path": [
+								"credentials",
+								"details",
+								"{{current_vc_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get VC Details as PDF",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api-root-v1}}/credentials/details/{{current_vc_id}}/pdf",
+							"host": [
+								"{{api-root-v1}}"
+							],
+							"path": [
+								"credentials",
+								"details",
+								"{{current_vc_id}}",
+								"pdf"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "API endpoints where the primary resource is Verifiable Credentials"
+		},
+		{
+			"name": "CBP",
+			"item": [
+				{
+					"name": "Get CBP Statuses for VC",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"console.log(\"cbp requests count\", response.requests.length);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api-root-v1}}/shipments/{{current_shipment_id}}/cbps/{{current_vc_id}}",
+							"host": [
+								"{{api-root-v1}}"
+							],
+							"path": [
+								"shipments",
+								"{{current_shipment_id}}",
+								"cbps",
+								"{{current_vc_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All CBP Statuses for Shipment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"console.log(\"cbp requests count\", response.requests.length);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api-root-v1}}/shipments/{{current_shipment_id}}/cbps",
+							"host": [
+								"{{api-root-v1}}"
+							],
+							"path": [
+								"shipments",
+								"{{current_shipment_id}}",
+								"cbps"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Submit VCs to CBP",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Convert comma-separated vcs string to array",
+									"const vcIds = pm.collectionVariables.get(\"vcs_to_submit_to_cbp\") || [];",
+									"const vcIdsArray = typeof vcIds === \"string\" ? vcIds.split(\",\").map(id => id.trim()) : vcIds;",
+									"const stringifiedArray = JSON.stringify(vcIdsArray);",
+									"pm.variables.set(\"vcs_to_submit_to_cbp_array\", stringifiedArray);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"shipment_id\": \"{{current_shipment_id}}\",\n    \"credential_ids\": {{vcs_to_submit_to_cbp_array}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api-root-v1}}/us_customs/submit_presentation",
+							"host": [
+								"{{api-root-v1}}"
+							],
+							"path": [
+								"us_customs",
+								"submit_presentation"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "API endpoints where the primary resource is CBP"
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "in",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "{{api-key}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "ocp-apim-subscription-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "current_shipment_id",
+			"value": ""
+		},
+		{
+			"key": "current_vc_id",
+			"value": ""
+		},
+		{
+			"key": "vcs_to_submit_to_cbp",
+			"value": ""
+		}
+	]
+}

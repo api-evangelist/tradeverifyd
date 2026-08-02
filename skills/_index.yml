@@ -1,0 +1,25 @@
+generated: '2026-07-21'
+method: generated
+skills:
+- file: tradeverifyd-screen-supplier-risk.md
+  name: Screen a supplier for supply chain risk
+  api: openapi/tradeverifyd-openapi-original.json
+  operations: [search_entities_search_entities_get, get_entity_entities__entity_id__get,
+    get_entity_verification_details_entities__entity_id__verification_get,
+    get_entity_risk_events_entities__entity_id__risk_events_get]
+- file: tradeverifyd-map-supplier-graph.md
+  name: Map a multi-tier supplier graph and its flagged relationships
+  api: openapi/tradeverifyd-openapi-original.json
+  operations: [resolve_entity_resolve_entity_get,
+    get_entity_graph_entities__entity_id__graph_get,
+    get_entity_graph_flagged_relationships_entities__entity_id__graph_flagged_relationships_get,
+    get_relationship_types_detailed_relationship_types_get]
+- file: tradeverifyd-shipment-cbp-credentials.md
+  name: Create a shipment, issue verifiable credentials, and submit to US CBP
+  api: openapi/tradeverifyd-openapi-original.json
+  operations: [create_shipment_shipments_post,
+    upload_shipment_file_shipment__shipment_id__upload_post,
+    issue_vc_credentials_issue_post,
+    get_shipment_verifiable_credentials_credentials_list_shipment__shipment_id__get,
+    submit_verifiable_presentation_us_customs_submit_presentation_post,
+    get_cbp_requests_for_shipment_shipments__shipment_id__cbps_get]

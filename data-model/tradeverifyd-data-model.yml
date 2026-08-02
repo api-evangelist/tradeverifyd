@@ -1,0 +1,47 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/tradeverifyd-openapi-original.json
+description: >-
+  Entity-relationship graph derived from the Tradeverifyd OpenAPI schemas and
+  path structure (95 component schemas).
+entities:
+- name: Entity
+  description: Supply chain entity (supplier/company); core object with addresses, identifiers, HS codes, flags, relationships
+  schemas: [GetEntityResponse, EntitySearchResult, PublicEntity, ExternalEntityId]
+- name: Relationship
+  description: Typed edge between entities (ownership, supply, affiliation), grouped into categories
+  schemas: [PublicRelationship, RelationshipTypeResponse, RelationshipTypeCategory, AbridgedRelationship]
+- name: Graph
+  description: Multi-tier supplier graph for an entity, with depth and flagged-relationship views
+  schemas: [AbridgedGraph, PublicAbridgedGraph, EntityGraphCounts, DepthInfo]
+- name: Flag
+  description: Risk flag applied to an entity or relationship (typed; supports external bulk upload)
+  schemas: [Flag, PublicFlag, DisplayFlagResponse, FlagTypeResponse, ExternalBulkFlagItem, VerificationFlag]
+- name: RiskEvent
+  description: Monitored global event (geopolitical, environmental, regulatory) linked to entities
+  schemas: [RiskEvent, BaseRiskEvent, RiskEvents, RiskEventSource, EventArticleType]
+- name: Report
+  description: Asynchronously generated supplier report (status -> content lifecycle)
+  schemas: [CreateReportRequest, ReportStatusResponse, ReportDetailResponse]
+- name: Shipment
+  description: Shipment record with uploaded documents, SIRs, and CBP requests
+  schemas: [ShipmentResponse, ShipmentDetailResponse, CreateShipmentRequest, ShipmentStatus]
+- name: SupplierInformationRequest
+  description: SIR sent to a supplier for a shipment, with status and suggested contacts
+  schemas: [SupplierInformationRequestResponse, SupplierInformationRequestStatus, SupplierInformationSuggestedContactResponse]
+- name: CBPRequest
+  description: US Customs & Border Protection request tied to a shipment / verifiable credential
+  schemas: [CBPRequestListing]
+- name: VerifiableCredential
+  description: W3C Verifiable Credential issued against a shipment/supplier; validated against registered schemas
+  schemas: [IssuedVerifiableCredentialResponse, CredentialListItem, CredentialSchema]
+relationships:
+- {from: Entity, to: Relationship, kind: has_many, via: '/v1/entities/{entity_id}/graph'}
+- {from: Entity, to: RiskEvent, kind: has_many, via: '/v1/entities/{entity_id}/risk_events'}
+- {from: Entity, to: Flag, kind: has_many, via: 'flag_type_id / include_flags'}
+- {from: Entity, to: Graph, kind: has_one, via: '/v1/entities/{entity_id}/graph'}
+- {from: Report, to: Entity, kind: belongs_to, via: 'CreateReportRequest supplier fields'}
+- {from: Shipment, to: SupplierInformationRequest, kind: has_many, via: '/v1/shipment/{shipment_id}/sirs'}
+- {from: Shipment, to: CBPRequest, kind: has_many, via: '/v1/shipments/{shipment_id}/cbps'}
+- {from: Shipment, to: VerifiableCredential, kind: has_many, via: '/v1/credentials/list/shipment/{shipment_id}'}
+- {from: VerifiableCredential, to: CredentialSchema, kind: belongs_to, via: '/v1/credentials/schemas/{schema_name}'}

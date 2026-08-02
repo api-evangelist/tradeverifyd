@@ -1,0 +1,17 @@
+generated: '2026-07-21'
+method: searched
+source: https://status.tradeverifyd.com/
+versioning:
+  scheme: uri-path
+  current: v1
+  evidence: All operations in openapi/tradeverifyd-openapi-original.json are rooted at /v1/
+  api_info_version: 0.2.0
+deprecation:
+  policy_url: null
+  sunset_header: false
+  notes: No published deprecation policy or Sunset/Deprecation (RFC 8594) header support found.
+sla:
+  url: null
+status_page: https://status.tradeverifyd.com/
+status_page_platform: Atlassian Statuspage (email + Slack incident subscriptions)
+deprecated_operations: []

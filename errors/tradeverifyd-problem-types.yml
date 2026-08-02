@@ -1,0 +1,39 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/tradeverifyd-openapi-original.json
+format: fastapi-detail
+envelope: >-
+  FastAPI-style error envelope. Validation failures return HTTP 422 with an
+  HTTPValidationError body ({detail: [{loc, msg, type}]}); other errors return
+  a JSON body with a detail message. application/problem+json (RFC 9457) is
+  not used.
+problems:
+- status: 400
+  title: Bad request
+  occurrences: 13
+  notes: Invalid query/body parameters (e.g. malformed search or flag payloads).
+- status: 401
+  title: Unauthorized
+  occurrences: 1
+  notes: Missing or invalid ocp-apim-subscription-key header.
+- status: 404
+  title: Not found
+  occurrences: 17
+  notes: Entity, report, shipment, SIR, flag, credential, or schema not found.
+- status: 409
+  title: Conflict
+  occurrences: 1
+  notes: Conflicting resource state (report request).
+- status: 422
+  title: Validation error
+  occurrences: 38
+  schema: HTTPValidationError
+  notes: FastAPI request validation failure; body lists field locations and messages.
+- status: 500
+  title: Internal server error
+  occurrences: 45
+  notes: Declared on nearly every operation.
+- status: 503
+  title: Service unavailable
+  occurrences: 2
+  notes: Declared on report generation endpoints.

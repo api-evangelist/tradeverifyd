@@ -1,0 +1,38 @@
+{
+  "provider": "tradeverifyd",
+  "sources": [
+    "tradeverifyd-documents-api-openapi.yml",
+    "tradeverifyd-entity-api-openapi.yml",
+    "tradeverifyd-flags-api-openapi.yml",
+    "tradeverifyd-organizations-api-openapi.yml",
+    "tradeverifyd-relationships-api-openapi.yml",
+    "tradeverifyd-reports-api-openapi.yml",
+    "tradeverifyd-risk-events-api-openapi.yml",
+    "tradeverifyd-scitt-reference-apis-api-openapi.yml",
+    "tradeverifyd-shipments-api-openapi.yml",
+    "tradeverifyd-system-api-openapi.yml",
+    "tradeverifyd-transparency-log-api-openapi.yml",
+    "tradeverifyd-us-customs-api-openapi.yml",
+    "tradeverifyd-verifiable-credentials-api-openapi.yml"
+  ],
+  "outputs": [
+    "tradeverifyd-documents-api-openapi.yml",
+    "tradeverifyd-entity-api-openapi.yml",
+    "tradeverifyd-flags-api-openapi.yml",
+    "tradeverifyd-organizations-api-openapi.yml",
+    "tradeverifyd-relationships-api-openapi.yml",
+    "tradeverifyd-reports-api-openapi.yml",
+    "tradeverifyd-risk-events-api-openapi.yml",
+    "tradeverifyd-scitt-reference-apis-api-openapi.yml",
+    "tradeverifyd-shipments-api-openapi.yml",
+    "tradeverifyd-system-api-openapi.yml",
+    "tradeverifyd-transparency-log-api-openapi.yml",
+    "tradeverifyd-us-customs-api-openapi.yml",
+    "tradeverifyd-verifiable-credentials-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

@@ -1,8 +1,30 @@
 aid: tradeverifyd
 name: Tradeverifyd
-description: Tradeverifyd is a company surfaced as a portfolio company of techstars and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Tradeverifyd is a supply chain intelligence platform, formed by the
+  combination of Transmute and mesur.io and backed by Techstars, that screens
+  suppliers against 200+ global data sources, maps multi-tier supplier
+  relationship graphs, monitors global risk events, and issues W3C Verifiable
+  Credentials that can be presented to US Customs (CBP). Its coverage spans
+  UFLPA, EU CSDDD, UK Modern Slavery Act, OFAC, EU/UN sanctions, NDAA, and
+  EUDR. The v1 REST API exposes entity search and resolution, relationship
+  graphs, flags, risk events, reports, shipments, supplier information
+  requests, and verifiable-credential issuance, authenticated with an
+  ocp-apim-subscription-key header.
 url: https://raw.githubusercontent.com/api-evangelist/tradeverifyd/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://app.tradeverifyd.com/tradeverifyd_logo.svg
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
@@ -10,11 +32,188 @@ x-backed-by:
 x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 22
+  pass: local-v1
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
-- Company
-apis: []
+- Supply Chain
+- Trade Compliance
+- Risk Management
+- Verifiable Credentials
+- Customs
+- Entity Resolution
+- Logistics
+apis:
+- aid: tradeverifyd:tradeverifyd-documents-api
+  name: Tradeverifyd Documents API
+  description: Operations involving documents
+  humanURL: https://api.tradeverifyd.com/v1/docs
+  baseURL: https://api.tradeverifyd.com
+  tags:
+  - Documents
+  properties:
+  - type: OpenAPI
+    url: openapi/tradeverifyd-documents-api-openapi.yml
+  - type: Documentation
+    url: https://api.tradeverifyd.com/v1/docs
+- aid: tradeverifyd:tradeverifyd-entity-api
+  name: Tradeverifyd Entity API
+  description: >-
+    Operations involving entities. Entities encompass a range of organizations and individuals, primarily
+    focusing on companies. This section provides functionalities to manage and interact with information
+    about various entities, including their details, activities, and roles in the supply chain.
+  humanURL: https://api.tradeverifyd.com/v1/docs
+  baseURL: https://api.tradeverifyd.com
+  tags:
+  - Entity
+  properties:
+  - type: OpenAPI
+    url: openapi/tradeverifyd-entity-api-openapi.yml
+  - type: Documentation
+    url: https://api.tradeverifyd.com/v1/docs
+- aid: tradeverifyd:tradeverifyd-flags-api
+  name: Tradeverifyd Flags API
+  description: Flags impacting an entity
+  humanURL: https://api.tradeverifyd.com/v1/docs
+  baseURL: https://api.tradeverifyd.com
+  tags:
+  - Flags
+  properties:
+  - type: OpenAPI
+    url: openapi/tradeverifyd-flags-api-openapi.yml
+  - type: Documentation
+    url: https://api.tradeverifyd.com/v1/docs
+- aid: tradeverifyd:tradeverifyd-organizations-api
+  name: Tradeverifyd Organizations API
+  description: The Organizations API from Tradeverifyd — 1 operation(s) for organizations.
+  humanURL: https://api.tradeverifyd.com/v1/docs
+  baseURL: https://api.tradeverifyd.com
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/tradeverifyd-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://api.tradeverifyd.com/v1/docs
+- aid: tradeverifyd:tradeverifyd-relationships-api
+  name: Tradeverifyd Relationships API
+  description: Relationships between entities
+  humanURL: https://api.tradeverifyd.com/v1/docs
+  baseURL: https://api.tradeverifyd.com
+  tags:
+  - Relationships
+  properties:
+  - type: OpenAPI
+    url: openapi/tradeverifyd-relationships-api-openapi.yml
+  - type: Documentation
+    url: https://api.tradeverifyd.com/v1/docs
+- aid: tradeverifyd:tradeverifyd-reports-api
+  name: Tradeverifyd Reports API
+  description: >-
+    Access detailed Tradeverifyd reports. These comprehensive reports offer an in-depth analysis of suppliers,
+    complete with compliance scoring to highlight potential trade-related issues. Utilize these reports
+    for thorough assessments of supplier reliability, compliance status, and overall performance in the
+    supply chain.
+  humanURL: https://api.tradeverifyd.com/v1/docs
+  baseURL: https://api.tradeverifyd.com
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/tradeverifyd-reports-api-openapi.yml
+  - type: Documentation
+    url: https://api.tradeverifyd.com/v1/docs
+- aid: tradeverifyd:tradeverifyd-risk-events-api
+  name: Tradeverifyd Risk Events API
+  description: >-
+    Manage and retrieve events related to entities. This includes real-time updates on critical incidents
+    like supply chain disruptions, compliance issues, or significant changes affecting entities. Stay
+    informed about vital events that could impact your business operations and decision-making processes.
+  humanURL: https://api.tradeverifyd.com/v1/docs
+  baseURL: https://api.tradeverifyd.com
+  tags:
+  - Risk Events
+  properties:
+  - type: OpenAPI
+    url: openapi/tradeverifyd-risk-events-api-openapi.yml
+  - type: Documentation
+    url: https://api.tradeverifyd.com/v1/docs
+- aid: tradeverifyd:tradeverifyd-scitt-reference-apis-api
+  name: Tradeverifyd SCITT Reference APIs API
+  description: SCRAPI related http resources
+  humanURL: https://api.tradeverifyd.com/v1/docs
+  baseURL: https://api.tradeverifyd.com
+  tags:
+  - SCITT Reference APIs
+  properties:
+  - type: OpenAPI
+    url: openapi/tradeverifyd-scitt-reference-apis-api-openapi.yml
+  - type: Documentation
+    url: https://api.tradeverifyd.com/v1/docs
+- aid: tradeverifyd:tradeverifyd-shipments-api
+  name: Tradeverifyd Shipments API
+  description: Operations involving shipments
+  humanURL: https://api.tradeverifyd.com/v1/docs
+  baseURL: https://api.tradeverifyd.com
+  tags:
+  - Shipments
+  properties:
+  - type: OpenAPI
+    url: openapi/tradeverifyd-shipments-api-openapi.yml
+  - type: Documentation
+    url: https://api.tradeverifyd.com/v1/docs
+- aid: tradeverifyd:tradeverifyd-system-api
+  name: Tradeverifyd System API
+  description: System operations and monitoring
+  humanURL: https://api.tradeverifyd.com/v1/docs
+  baseURL: https://api.tradeverifyd.com
+  tags:
+  - System
+  properties:
+  - type: OpenAPI
+    url: openapi/tradeverifyd-system-api-openapi.yml
+  - type: Documentation
+    url: https://api.tradeverifyd.com/v1/docs
+- aid: tradeverifyd:tradeverifyd-transparency-log-api
+  name: Tradeverifyd Transparency Log API
+  description: Auxillary resources for securing and analyzing supply chain artifacts
+  humanURL: https://api.tradeverifyd.com/v1/docs
+  baseURL: https://api.tradeverifyd.com
+  tags:
+  - Transparency Log
+  properties:
+  - type: OpenAPI
+    url: openapi/tradeverifyd-transparency-log-api-openapi.yml
+  - type: Documentation
+    url: https://api.tradeverifyd.com/v1/docs
+- aid: tradeverifyd:tradeverifyd-us-customs-api
+  name: Tradeverifyd US Customs API
+  description: The US Customs API from Tradeverifyd — 1 operation(s) for us customs.
+  humanURL: https://api.tradeverifyd.com/v1/docs
+  baseURL: https://api.tradeverifyd.com
+  tags:
+  - US Customs
+  properties:
+  - type: OpenAPI
+    url: openapi/tradeverifyd-us-customs-api-openapi.yml
+  - type: Documentation
+    url: https://api.tradeverifyd.com/v1/docs
+- aid: tradeverifyd:tradeverifyd-verifiable-credentials-api
+  name: Tradeverifyd Verifiable Credentials API
+  description: Operations involving verifiable credentials
+  humanURL: https://api.tradeverifyd.com/v1/docs
+  baseURL: https://api.tradeverifyd.com
+  tags:
+  - Verifiable Credentials
+  properties:
+  - type: OpenAPI
+    url: openapi/tradeverifyd-verifiable-credentials-api-openapi.yml
+  - type: Documentation
+    url: https://api.tradeverifyd.com/v1/docs
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -23,3 +222,56 @@ maintainers:
 common:
 - type: Website
   url: https://tradeverifyd.com/
+- type: Documentation
+  url: https://api.tradeverifyd.com/v1/docs
+- type: APIReference
+  url: https://api.tradeverifyd.com/v1/docs
+- type: GettingStarted
+  url: https://github.com/tradeverifyd/docs_examples
+- type: Support
+  url: mailto:support@tradeverifyd.com
+- type: Blog
+  url: https://tradeverifyd.com/resources/
+- type: GitHubOrganization
+  url: https://github.com/tradeverifyd
+- type: StatusPage
+  url: https://status.tradeverifyd.com/
+- type: Login
+  url: https://app.tradeverifyd.com/
+- type: TermsOfService
+  url: https://tradeverifyd.com/terms-of-service/
+- type: PrivacyPolicy
+  url: https://tradeverifyd.com/privacy-policy/
+- type: Postman
+  url: postman/tradeverifyd-shipments-cbp-postman-collection.json
+- type: Examples
+  url: examples/tradeverifyd-entities-by-flag-type-guide.md
+- type: Authentication
+  url: authentication/tradeverifyd-authentication.yml
+- type: DomainSecurity
+  url: security/tradeverifyd-domain-security.yml
+- type: TrustCenter
+  url: security/tradeverifyd-trust-center.yml
+- type: AgenticAccess
+  url: agentic-access/tradeverifyd-agentic-access.yml
+- type: Lifecycle
+  url: lifecycle/tradeverifyd-lifecycle.yml
+- type: Conventions
+  url: conventions/tradeverifyd-conventions.yml
+- type: ErrorCatalog
+  url: errors/tradeverifyd-problem-types.yml
+- type: Conformance
+  url: conformance/tradeverifyd-conformance.yml
+- type: DataModel
+  url: data-model/tradeverifyd-data-model.yml
+- type: MCPServer
+  url: mcp/tradeverifyd-mcp.yml
+- type: LLMsTxt
+  url: llms/tradeverifyd-llms.txt
+- type: WellKnown
+  url: well-known/tradeverifyd-well-known.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: OpenAPI
+  name: SCITT Transparency Service (reference implementation, self-hosted)
+  url: openapi/tradeverifyd-transparency-service-openapi.yaml

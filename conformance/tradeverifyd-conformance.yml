@@ -1,0 +1,46 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/tradeverifyd-openapi-original.json
+standards:
+- id: openapi-3.1
+  conforms: true
+  evidence: Published spec at https://api.tradeverifyd.com/v1/docs/openapi.json declares openapi 3.1.0
+- id: oauth2
+  conforms: false
+  evidence: Only apiKey securityScheme (ocp-apim-subscription-key header); no oauth2 flows
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returns 404 on tradeverifyd.com
+- id: w3c-verifiable-credentials
+  conforms: true
+  evidence: >-
+    /v1/credentials/issue, /v1/credentials/validation/{id}, credential schema
+    registry (/v1/credentials/schemas), and verifiable presentation submission
+    to US CBP (/v1/us_customs/submit_presentation); heritage of Transmute
+    (transmute-industries GitHub org, "The Verifiable Data Platform")
+- id: ietf-scitt
+  conforms: true
+  evidence: >-
+    github.com/tradeverifyd/transparency-service implements a SCITT
+    transparency service with a published OpenAPI (scitt-golang/spec/openapi.yaml,
+    "SCITT Reference APIs" / SCRAPI tags)
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Errors use FastAPI detail envelope, not application/problem+json
+- id: pagination
+  conforms: true
+  evidence: page/page_size/per_page/size parameters across listing operations
+- id: idempotency
+  conforms: false
+  evidence: No Idempotency-Key header documented
+- id: json-api
+  conforms: false
+- id: odata
+  conforms: false
+- id: scim
+  conforms: false
+regulatory_coverage:
+  notes: >-
+    Product-level regulatory screening coverage claimed on tradeverifyd.com
+    (not certifications of the company itself): UFLPA, EU CSDDD, UK Modern
+    Slavery Act, OFAC, EU/UN sanctions, NDAA, EUDR.

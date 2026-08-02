@@ -1,0 +1,544 @@
+generated: '2026-07-21'
+method: generated
+source: openapi/tradeverifyd-openapi-original.json
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 46
+  by_action_class:
+    connected: 36
+    acting: 10
+  by_consequence:
+    read: 36
+    write: 6
+    physical: 4
+  human_in_the_loop_required: 0
+operations:
+- path: /v1/search/entities
+  method: get
+  operationId: search_entities_search_entities_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/resolve/entity
+  method: get
+  operationId: resolve_entity_resolve_entity_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/entities/by-flag-type/{flag_type_id}
+  method: get
+  operationId: get_entities_by_flag_type_entities_by_flag_type__flag_type_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/entities/{entity_id}
+  method: get
+  operationId: get_entity_entities__entity_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/entities/{entity_id}/risk_events
+  method: get
+  operationId: get_entity_risk_events_entities__entity_id__risk_events_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/entities/{entity_id}/verification
+  method: get
+  operationId: get_entity_verification_details_entities__entity_id__verification_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/entities/{identifier_type}/{identifier_value}/verification
+  method: get
+  operationId: get_entity_verification_details_by_identifier_entities__identifier_type___identifier_value__verification_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/entities/{entity_id}/graph
+  method: get
+  operationId: get_entity_graph_entities__entity_id__graph_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/entities/{entity_id}/graph/flagged_relationships
+  method: get
+  operationId: get_entity_graph_flagged_relationships_entities__entity_id__graph_flagged_relationships_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/relationship-types
+  method: get
+  operationId: get_relationship_types_detailed_relationship_types_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/relationship-type-categories
+  method: get
+  operationId: get_relationship_type_categories_relationship_type_categories_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/relationships/types
+  method: get
+  operationId: get_relationship_types_relationships_types_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/risk_events/{event_id}
+  method: get
+  operationId: get_event_risk_events__event_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/risk_events
+  method: get
+  operationId: get_risk_events_risk_events_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/reports/{report_id}/status
+  method: get
+  operationId: Get_Report_Status_reports__report_id__status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/reports
+  method: post
+  operationId: Create_Report_Request_reports_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/reports/{report_id}
+  method: get
+  operationId: Get_Report_Details_reports__report_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/reports/{report_id}/content
+  method: get
+  operationId: Get_Report_Contents_reports__report_id__content_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/flags/upload
+  method: post
+  operationId: upload_bulk_staged_flags_external_flags_upload_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/flags/update/{flag_id}
+  method: put
+  operationId: update_flag_flags_update__flag_id__put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/flags/types
+  method: get
+  operationId: get_flags_types_flags_types_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/flags
+  method: get
+  operationId: get_flags_flags_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/organizations/organizational-units
+  method: get
+  operationId: get_organizational_units_organizations_organizational_units_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/shipments
+  method: get
+  operationId: get_shipments_shipments_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/shipments
+  method: post
+  operationId: create_shipment_shipments_post
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/shipments/{shipment_id}
+  method: get
+  operationId: get_shipment_by_id_shipments__shipment_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/shipments/{shipment_id}
+  method: put
+  operationId: update_shipment_shipments__shipment_id__put
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/shipment/{shipment_id}/sirs
+  method: get
+  operationId: get_shipment_sirs_shipment__shipment_id__sirs_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/shipment/sirs/{sir_id}
+  method: get
+  operationId: get_shipment_sir_shipment_sirs__sir_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/shipment/sirs/{sir_id}/suggested_contact_info
+  method: get
+  operationId: get_shipment_sir_contact_info_shipment_sirs__sir_id__suggested_contact_info_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/shipment/sirs/{sir_id}/status
+  method: post
+  operationId: update_shipment_sir_status_shipment_sirs__sir_id__status_post
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/shipment/{shipment_id}/upload
+  method: post
+  operationId: upload_shipment_file_shipment__shipment_id__upload_post
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/shipments/{shipment_id}/cbps
+  method: get
+  operationId: get_cbp_requests_for_shipment_shipments__shipment_id__cbps_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/shipments/{shipment_id}/cbps/{vc_id}
+  method: get
+  operationId: get_cbp_requests_for_shipment_and_vc_shipments__shipment_id__cbps__vc_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/file/upload
+  method: post
+  operationId: upload_file_file_upload_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/us_customs/submit_presentation
+  method: post
+  operationId: submit_verifiable_presentation_us_customs_submit_presentation_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/credentials/issue
+  method: post
+  operationId: issue_vc_credentials_issue_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/credentials/list
+  method: get
+  operationId: get_organization_verifiable_credentials_credentials_list_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/credentials/list/shipment/{shipment_id}
+  method: get
+  operationId: get_shipment_verifiable_credentials_credentials_list_shipment__shipment_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/credentials/details/{verifiable_credential_id}
+  method: get
+  operationId: get_organization_verifiable_credential_details_credentials_details__verifiable_credential_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/credentials/details/{verifiable_credential_id}/pdf
+  method: get
+  operationId: get_organization_verifiable_credential_details_pdf_credentials_details__verifiable_credential_id__pdf_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/credentials/validation/{verifiable_credential_id}
+  method: get
+  operationId: get_vc_validation_credentials_validation__verifiable_credential_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/credentials/document/validation/{document_path}
+  method: get
+  operationId: get_document_validation_credentials_document_validation__document_path__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/credentials/schemas
+  method: get
+  operationId: get_schemas_credentials_schemas_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/credentials/schemas/{schema_name}
+  method: get
+  operationId: get_schema_by_name_credentials_schemas__schema_name__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/openapi.json
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none

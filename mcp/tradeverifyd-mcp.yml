@@ -1,0 +1,58 @@
+generated: '2026-07-21'
+method: derived
+status: candidate
+source: openapi/tradeverifyd-openapi-original.json
+description: >-
+  No official hosted MCP server was found for Tradeverifyd (no docs mention,
+  no @modelcontextprotocol or registry entry, nothing in the tradeverifyd
+  GitHub org). This is a candidate tool list derived from the published
+  OpenAPI operations for the marquee flows.
+server:
+  name: tradeverifyd
+  transport: http
+tools:
+- name: search_entities
+  description: Search supply chain entities by name, address, jurisdiction, or HS code
+  source_operation: openapi/tradeverifyd-openapi-original.json#search_entities_search_entities_get
+- name: resolve_entity
+  description: Resolve an external identifier to a Tradeverifyd entity
+  source_operation: openapi/tradeverifyd-openapi-original.json#resolve_entity_resolve_entity_get
+- name: get_entity
+  description: Retrieve a supply chain entity's profile
+  source_operation: openapi/tradeverifyd-openapi-original.json#get_entity_entities__entity_id__get
+- name: get_entity_graph
+  description: Retrieve an entity's multi-tier supplier relationship graph
+  source_operation: openapi/tradeverifyd-openapi-original.json#get_entity_graph_entities__entity_id__graph_get
+- name: get_entity_flagged_relationships
+  description: Retrieve flagged (risk-bearing) relationships in an entity's graph
+  source_operation: openapi/tradeverifyd-openapi-original.json#get_entity_graph_flagged_relationships_entities__entity_id__graph_flagged_relationships_get
+- name: get_entity_verification
+  description: Retrieve supplier verification / assessment details for an entity
+  source_operation: openapi/tradeverifyd-openapi-original.json#get_entity_verification_details_entities__entity_id__verification_get
+- name: get_risk_events
+  description: List monitored global risk events
+  source_operation: openapi/tradeverifyd-openapi-original.json#get_risk_events_risk_events_get
+- name: get_entity_risk_events
+  description: List risk events affecting a specific entity
+  source_operation: openapi/tradeverifyd-openapi-original.json#get_entity_risk_events_entities__entity_id__risk_events_get
+- name: create_report
+  description: Request an asynchronous supplier report
+  source_operation: openapi/tradeverifyd-openapi-original.json#Create_Report_Request_reports_post
+- name: get_report_status
+  description: Poll report generation status
+  source_operation: openapi/tradeverifyd-openapi-original.json#Get_Report_Status_reports__report_id__status_get
+- name: get_report_content
+  description: Fetch a completed report's contents
+  source_operation: openapi/tradeverifyd-openapi-original.json#Get_Report_Contents_reports__report_id__content_get
+- name: list_shipments
+  description: List shipments
+  source_operation: openapi/tradeverifyd-openapi-original.json#get_shipments_shipments_get
+- name: create_shipment
+  description: Create a shipment record
+  source_operation: openapi/tradeverifyd-openapi-original.json#create_shipment_shipments_post
+- name: issue_verifiable_credential
+  description: Issue a W3C Verifiable Credential for a shipment/supplier
+  source_operation: openapi/tradeverifyd-openapi-original.json#issue_vc_credentials_issue_post
+- name: submit_cbp_presentation
+  description: Submit a verifiable presentation to US Customs (CBP)
+  source_operation: openapi/tradeverifyd-openapi-original.json#submit_verifiable_presentation_us_customs_submit_presentation_post

@@ -1,0 +1,31 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Tradeverifyd
+  version: 1.0.0
+extends: openapi/tradeverifyd-openapi-original.json
+x-generated: '2026-07-21'
+x-method: generated
+actions:
+- target: $.info
+  update:
+    x-apievangelist:
+      provider: tradeverifyd
+      status-page: https://status.tradeverifyd.com/
+      trust-center: https://trust.tradeverifyd.com/
+      github-organization: https://github.com/tradeverifyd
+      postman-collection: postman/tradeverifyd-shipments-cbp-postman-collection.json
+      conventions: conventions/tradeverifyd-conventions.yml
+      error-catalog: errors/tradeverifyd-problem-types.yml
+      agentic-access: agentic-access/tradeverifyd-agentic-access.yml
+- target: $.info
+  update:
+    x-audience: >-
+      Supply chain risk, trade compliance, and customs teams integrating
+      entity screening, multi-tier graph analysis, risk-event monitoring,
+      shipment management, and verifiable-credential submission to US CBP.
+- target: $.tags
+  update:
+  - name: Entity
+    x-apievangelist-note: Entity search, resolution, profiles, verification, and graphs
+  - name: Verifiable Credentials
+    x-apievangelist-note: W3C VC issuance/validation and US CBP verifiable presentations (Transmute heritage)

@@ -1,0 +1,54 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/tradeverifyd-openapi-original.json
+description: >-
+  Cross-cutting request/response semantics of the Tradeverifyd API (v1),
+  derived from the published OpenAPI 3.1 document served at
+  https://api.tradeverifyd.com/v1/docs/openapi.json.
+
+base_url: https://api.tradeverifyd.com
+api_style: REST over HTTPS, JSON responses (FastAPI behind Azure API Management)
+
+authentication:
+  scheme: API key in HTTP header
+  header: ocp-apim-subscription-key
+  applies_to: All 46 operations (global security requirement ApiKeyAuth)
+  detail: authentication/tradeverifyd-authentication.yml
+
+idempotency:
+  supported: false
+  notes: >-
+    No Idempotency-Key header or idempotency contract is documented in the
+    OpenAPI or public docs.
+
+pagination:
+  style: page-number
+  request_params:
+    - page / page_size (entities, risk events, flags)
+    - per_page (reports)
+    - size (some listings)
+  notes: Page-number pagination; parameter names vary by resource family.
+
+async_operations:
+  pattern: request-then-poll
+  notes: >-
+    Report generation is asynchronous - POST /v1/reports (202) then poll
+    GET /v1/reports/{report_id}/status and fetch content when complete.
+
+versioning:
+  scheme: uri-path (/v1)
+  detail: lifecycle/tradeverifyd-lifecycle.yml
+
+error_envelope:
+  shape: FastAPI detail envelope; 422 HTTPValidationError with detail[] items
+  detail: errors/tradeverifyd-problem-types.yml
+
+rate_limits:
+  signaling: >-
+    Not documented in the OpenAPI. Keys are Azure API Management subscription
+    keys, which typically enforce product-level quotas; no public rate-limit
+    reference was found.
+
+request_tracing:
+  header: null
+  notes: No documented request-id/correlation header.
