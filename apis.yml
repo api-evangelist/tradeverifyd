@@ -220,6 +220,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/tradeverifyd-openapi-overlay.yaml
 - type: Website
   url: https://tradeverifyd.com/
 - type: Documentation
@@ -274,4 +276,4 @@ common:
   url: skills/_index.yml
 - type: OpenAPI
   name: SCITT Transparency Service (reference implementation, self-hosted)
-  url: openapi/tradeverifyd-transparency-service-openapi.yaml
+  url: openapi/_original/tradeverifyd-transparency-service-openapi.yaml
