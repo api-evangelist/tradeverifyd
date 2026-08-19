@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tradeverifyd Documents US Customs API",
+    "version": "0.2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "ocp-apim-subscription-key",
+      "value": "{{ocp-apim-subscription-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "US Customs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Submit Verifiable Presentation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tradeverifyd.com/v1/us_customs/submit_presentation",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a presentation to US Customs.\n\nRequest body:\n    credential_ids: A list of credential ids to submit to US Customs.\n\nReturns:\n    A response from submitting a presentation to US Customs."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

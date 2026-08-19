@@ -1,0 +1,984 @@
+{
+  "item": [
+    {
+      "id": "784cd4d5-d9ed-4ab0-8f0f-e2d61d1a52a0",
+      "name": "Flags",
+      "description": {
+        "content": "Flags impacting an entity",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "02de4b27-2531-4902-a6da-8e0a3722aadf",
+          "name": "Upload Flags",
+          "request": {
+            "name": "Upload Flags",
+            "description": {
+              "content": "Upload flags for processing. Expected time to process and be available in the\nsystem is approximately 5-10 minutes.\n\nThis endpoint allows uploading flags for entities. Each flag must be associated with an entity\nand contain information about potential risks or issues.\n\n**This information is private to your organization only and will not be shared with any other organization.**\n\n**Required Fields:**\n- `entity_id`: Unique identifier for the entity associated with the flag\n- `flag_type`: The primary category of the flag (e.g., \"Sanctions & Restricted Entities Risk\",\n\"Worker & Consumer Safety Risk\", \"Environmental Violations Risk\")\n- `flag_subtype`: A more specific classification within the flag type (e.g.,\n\"Financial Crimes & Violations\", \"International Sanctions\", \"Terrorism Financing\")\n- `source_location`: The URL or location where the flag information was found\n(e.g., \"https://example.example/news/article\")\n- `description`: Detailed explanation of the flag and its significance\n\nNote: `flag_type` and `flag_subtype` must fall into one of the existing flag types defined in the system.\n\n**Optional Fields:**\n- `tags`: Single word identifier for categorizing flags by subcategories\n- `time_start`: Start date/time when the flag becomes valid\n- `time_end`: End date/time when the flag expires\n\n**Response:**\nReturns a summary of the processing results including the total number of flags submitted\nand how many were successfully inserted into the system.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "flags",
+                "upload"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"entity_id\": \"<string>\",\n    \"flag_type\": \"<string>\",\n    \"flag_subtype\": \"<string>\",\n    \"description\": \"<string>\",\n    \"source_location\": \"<string>\",\n    \"tags\": \"<string>\",\n    \"time_start\": \"<string>\",\n    \"time_end\": \"<string>\"\n  },\n  {\n    \"entity_id\": \"<string>\",\n    \"flag_type\": \"<string>\",\n    \"flag_subtype\": \"<string>\",\n    \"description\": \"<string>\",\n    \"source_location\": \"<string>\",\n    \"tags\": \"<string>\",\n    \"time_start\": \"<string>\",\n    \"time_end\": \"<string>\"\n  }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b3b857b5-7cbd-4342-ac36-0c16d30407c3",
+              "name": "Flags processed successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "flags",
+                    "upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"entity_id\": \"507f1f77bcf86cd799439011\",\n    \"flag_type\": \"Sanctions & Restricted Entities Risk\",\n    \"flag_subtype\": \"International Sanctions\",\n    \"description\": \"Entity appears on OFAC Specially Designated Nationals List for involvement in illicit activities\",\n    \"tags\": \"financial_crimes\",\n    \"source_location\": \"https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345\",\n    \"time_start\": \"2024-01-15T00:00:00Z\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Flags processed successfully\",\n  \"flag_count\": 3,\n  \"inserted_count\": 3,\n  \"status\": \"completed\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bb0b6a68-4e05-4ac3-a111-7aa37d710524",
+              "name": "Bad Request - Validation errors",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "flags",
+                    "upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"entity_id\": \"507f1f77bcf86cd799439011\",\n    \"flag_type\": \"Sanctions & Restricted Entities Risk\",\n    \"flag_subtype\": \"International Sanctions\",\n    \"description\": \"Entity appears on OFAC Specially Designated Nationals List for involvement in illicit activities\",\n    \"tags\": \"financial_crimes\",\n    \"source_location\": \"https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345\",\n    \"time_start\": \"2024-01-15T00:00:00Z\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Validation error: Invalid flags payload.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "263e8142-fccb-427b-8a1a-e4ef8819a69d",
+              "name": "Missing entity_id",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "flags",
+                    "upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"entity_id\": \"507f1f77bcf86cd799439011\",\n    \"flag_type\": \"Sanctions & Restricted Entities Risk\",\n    \"flag_subtype\": \"International Sanctions\",\n    \"description\": \"Entity appears on OFAC Specially Designated Nationals List for involvement in illicit activities\",\n    \"tags\": \"financial_crimes\",\n    \"source_location\": \"https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345\",\n    \"time_start\": \"2024-01-15T00:00:00Z\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"type\": \"missing\",\n      \"loc\": [\n        \"body\",\n        0,\n        \"entity_id\"\n      ],\n      \"msg\": \"Field required\",\n      \"input\": {\n        \"flag_type\": \"Sanctions & Restricted Entities Risk\",\n        \"flag_subtype\": \"International Sanctions\",\n        \"description\": \"Entity appears on OFAC Specially Designated Nationals List for involvement in illicit activities\",\n        \"tags\": \"financial_crimes\",\n        \"source_location\": \"https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345\",\n        \"time_start\": \"2024-01-15T00:00:00Z\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6db4247d-4a42-4338-96e7-095c0af14c48",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "flags",
+                    "upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n  {\n    \"entity_id\": \"507f1f77bcf86cd799439011\",\n    \"flag_type\": \"Sanctions & Restricted Entities Risk\",\n    \"flag_subtype\": \"International Sanctions\",\n    \"description\": \"Entity appears on OFAC Specially Designated Nationals List for involvement in illicit activities\",\n    \"tags\": \"financial_crimes\",\n    \"source_location\": \"https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345\",\n    \"time_start\": \"2024-01-15T00:00:00Z\"\n  }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "af587677-39c4-4485-afab-ef3da02e9063",
+          "name": "Update a flag",
+          "request": {
+            "name": "Update a flag",
+            "description": {
+              "content": "Update an existing Flag.\nUsers can only update Flags that belong to their organization.\nThe provided information will override existing information. It is not a merge.\n\n**Required Fields**:\n- `flag_id`: ID for Flag undergoing update.\n- Flag information for update.\n\n**Returns**:\n- The Flag object representing the updated flag.\n\n**Example Usage**:\n- Requesting `PUT /v1/flags/update/{flag_id}` with a valid `flag_id` that belongs to the user's organization\n    will update the specified flag.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "flags",
+                "update",
+                ":flag_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "flag_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"entity_jurisdiction\": \"<string>\",\n  \"description\": \"<string>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"source\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"time_start\": \"<dateTime>\",\n  \"time_end\": \"<dateTime>\",\n  \"owner_email\": \"<string>\",\n  \"deleted\": false,\n  \"deleted_at\": \"<dateTime>\",\n  \"deletion_source\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7af679d2-b8bd-476c-9ef9-5b36c2d04950",
+              "name": "Flag successfully updated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "flags",
+                    "update",
+                    ":flag_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "flag_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entity_jurisdiction\": \"US\",\n  \"description\": \"Updated OFAC sanctions flag with additional context from compliance review\",\n  \"tags\": [\n    \"sanctions\",\n    \"financial_crimes\",\n    \"OFAC\"\n  ],\n  \"source\": [\n    \"https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345\"\n  ],\n  \"time_start\": \"2024-01-15T00:00:00Z\",\n  \"time_end\": \"2025-01-15T00:00:00Z\",\n  \"owner_email\": \"compliance@company.example\",\n  \"deleted\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"507f1f77bcf86cd799439023\",\n  \"entity_id\": \"507f1f77bcf86cd799439024\",\n  \"created_at\": \"2024-01-15T10:30:00Z\",\n  \"time_start\": \"2024-01-15T00:00:00Z\",\n  \"time_end\": \"2025-01-15T00:00:00Z\",\n  \"type\": \"507f1f77bcf86cd799439025\",\n  \"description\": \"Updated OFAC sanctions flag with additional context from compliance review\",\n  \"sources\": [\n    {\n      \"url\": \"https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345\",\n      \"title\": \"News on OFAC Sanctions\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e1f1f8f4-0872-43cf-b22e-1d894abbc911",
+              "name": "Flag not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "flags",
+                    "update",
+                    ":flag_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "flag_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entity_jurisdiction\": \"US\",\n  \"description\": \"Updated OFAC sanctions flag with additional context from compliance review\",\n  \"tags\": [\n    \"sanctions\",\n    \"financial_crimes\",\n    \"OFAC\"\n  ],\n  \"source\": [\n    \"https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345\"\n  ],\n  \"time_start\": \"2024-01-15T00:00:00Z\",\n  \"time_end\": \"2025-01-15T00:00:00Z\",\n  \"owner_email\": \"compliance@company.example\",\n  \"deleted\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Flag does not exist or you do not have access.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bc5e0c82-77bc-42e1-af53-fa2712d57ec7",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "flags",
+                    "update",
+                    ":flag_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "flag_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entity_jurisdiction\": \"US\",\n  \"description\": \"Updated OFAC sanctions flag with additional context from compliance review\",\n  \"tags\": [\n    \"sanctions\",\n    \"financial_crimes\",\n    \"OFAC\"\n  ],\n  \"source\": [\n    \"https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345\"\n  ],\n  \"time_start\": \"2024-01-15T00:00:00Z\",\n  \"time_end\": \"2025-01-15T00:00:00Z\",\n  \"owner_email\": \"compliance@company.example\",\n  \"deleted\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3bea2053-c084-4b80-be65-2d13057c50bc",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "flags",
+                    "update",
+                    ":flag_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "flag_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entity_jurisdiction\": \"US\",\n  \"description\": \"Updated OFAC sanctions flag with additional context from compliance review\",\n  \"tags\": [\n    \"sanctions\",\n    \"financial_crimes\",\n    \"OFAC\"\n  ],\n  \"source\": [\n    \"https://sanctionssearch.ofac.treas.example/Details.aspx?id=12345\"\n  ],\n  \"time_start\": \"2024-01-15T00:00:00Z\",\n  \"time_end\": \"2025-01-15T00:00:00Z\",\n  \"owner_email\": \"compliance@company.example\",\n  \"deleted\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b58ccc9b-96e9-464c-b2ec-afa15cb7ad1b",
+          "name": "Get Flags Types",
+          "request": {
+            "name": "Get Flags Types",
+            "description": {
+              "content": "This endpoint is designed to provide a list of all possible flags types and\nsubtypes.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "flags",
+                "types"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "96cd8aba-440b-4328-9bdb-29b23cba045b",
+              "name": "Example of a flag type returned by the Get Flags Types endpoint",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "flags",
+                    "types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"67db089a68f5abb001405784\",\n    \"flag_type_description\": \"Highlights entities mishandling, illegally disposing of, or improperly labeling toxic chemicals and hazardous materials.\",\n    \"flag_type\": \"Environmental Violations Risk\",\n    \"flag_subtype\": \"Chemical & Hazardous Substances Violation\",\n    \"flag_polarity\": -1\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3b4cad3a-5a09-4171-a7a1-e54f6228b426",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "flags",
+                    "types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "09778e16-c432-4df1-86a2-f28e81fe10b6",
+          "name": "Get Flags",
+          "request": {
+            "name": "Get Flags",
+            "description": {
+              "content": "Retrieve flags related to a specific entity.\n\nThis endpoint is designed to provide a list of flags associated with an\nentity. Flags represent important markers or alerts related to the entity,\nsuch as compliance issues, risk indicators, or other significant\nannotations.\n\nFlags can be invalidated by external evidence, or no longer apply for time\nreasons to a specific entity.\n\n## Note:\n- `entity_id` MUST be provided.\n- If interested in viewing flagged affiliates, please use the `Get Entity Graph\nFlagged Relationships` endpoint at\n`/entities/{entity_id}/graph/flagged_relationships`",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "flags"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "entity_id",
+                  "value": "<string>",
+                  "description": "(Required) The unique identifier of the entity for which flags are being requested. This parameter is required."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c80e12b4-1300-4b55-bf6f-bf611d38e298",
+              "name": "Successfully retrieved flags for the specified entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "flags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "entity_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"507f1f77bcf86cd799439011\",\n    \"entity_id\": \"507f1f77bcf86cd799439012\",\n    \"entity_name\": \"Example Contoso Inc.\",\n    \"entity_jurisdiction\": \"US\",\n    \"created_at\": \"2024-01-15T10:30:00Z\",\n    \"time_start\": \"2024-01-15T00:00:00Z\",\n    \"time_end\": \"2025-01-15T00:00:00Z\",\n    \"type\": \"507f1f77bcf86cd799439013\",\n    \"flag_type\": \"regulatory\",\n    \"flag_subtype\": \"export_compliance\",\n    \"description\": \"Export compliance review required for technology transfers to restricted jurisdictions\",\n    \"sources\": [\n      {\n        \"id\": \" 5d4964ad-81b6-41f8-9d56-bcdb30a08bfc \",\n        \"url\": \"https://bis.doc.example/index.php/policy-guidance/entity-list\",\n        \"title\": \"Export Compliance Review 2024\"\n      }\n    ]\n  },\n  {\n    \"id\": \"507f1f77bcf86cd799439014\",\n    \"entity_id\": \"507f1f77bcf86cd799439015\",\n    \"entity_name\": \"ACME CORP.\",\n    \"entity_jurisdiction\": \"TW\",\n    \"created_at\": \"2024-08-01T14:20:00Z\",\n    \"time_start\": \"2024-08-01T14:20:00Z\",\n    \"type\": \"507f1f77bcf86cd799439016\",\n    \"flag_type\": \"adverse_media\",\n    \"flag_subtype\": \"labor_concerns\",\n    \"description\": \"Reports of worker safety violations and excessive overtime at manufacturing facilities\",\n    \"sources\": [\n      {\n        \"url\": \"https://news.example/acme-labor-violations-2024\"\n      }\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0c06299e-fee9-4e4d-a5d9-257fe454eed6",
+              "name": "Entity not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "flags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "entity_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Entity not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c5544bce-eb84-4bb6-b58b-5a97c24e924a",
+              "name": "Unprocessable Content",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "flags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "entity_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"type\": \"missing\",\n      \"loc\": [\n        \"query\",\n        \"entity_id\"\n      ],\n      \"msg\": \"Field required\",\n      \"input\": \"\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ab2c5d38-a979-41fb-a516-063ccdc1203a",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "flags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "entity_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.tradeverifyd.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "ocp-apim-subscription-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "a037eeb3-3a4e-4150-8f67-60189a8fc8b7",
+    "name": "Tradeverifyd Documents Flags API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\nThe Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.\n\nFor more information visit [tradeverifyd.com](https://tradeverifyd.com).\n\nIf you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.\n\nWhen making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.\n\nFor example:\n\n```bash\ncurl --silent --location -G 'https://.../v1/search/entities' \\\n--data-urlencode 'name=Contoso Corporation' \\\n--data-urlencode 'jurisdiction=US' \\\n--header \"ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY\"\n```\n\n\nContact Support:\n Name: tradeverifyd.com\n Email: support@tradeverifyd.com",
+      "type": "text/plain"
+    }
+  }
+}

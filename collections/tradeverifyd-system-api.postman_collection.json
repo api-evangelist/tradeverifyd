@@ -1,0 +1,129 @@
+{
+  "item": [
+    {
+      "id": "6d646254-da78-4e24-93b9-e9c6256825ca",
+      "name": "System",
+      "description": {
+        "content": "System operations and monitoring",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0e661bdd-0b89-41ff-b8f6-a5949827527c",
+          "name": "OpenAPI JSON schema",
+          "request": {
+            "name": "OpenAPI JSON schema",
+            "description": {
+              "content": "Provides auto-generated OpenAPI JSON schema",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "openapi.json"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5ad3fb85-51fc-4b62-ba1d-1847a64ca336",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "openapi.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.tradeverifyd.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "ocp-apim-subscription-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "350ec8dd-43ab-4a24-891e-b0f147294f05",
+    "name": "Tradeverifyd Documents System API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\nThe Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.\n\nFor more information visit [tradeverifyd.com](https://tradeverifyd.com).\n\nIf you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.\n\nWhen making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.\n\nFor example:\n\n```bash\ncurl --silent --location -G 'https://.../v1/search/entities' \\\n--data-urlencode 'name=Contoso Corporation' \\\n--data-urlencode 'jurisdiction=US' \\\n--header \"ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY\"\n```\n\n\nContact Support:\n Name: tradeverifyd.com\n Email: support@tradeverifyd.com",
+      "type": "text/plain"
+    }
+  }
+}

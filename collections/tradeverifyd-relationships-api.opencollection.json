@@ -1,0 +1,59 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tradeverifyd Documents Relationships API",
+    "version": "0.2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "ocp-apim-subscription-key",
+      "value": "{{ocp-apim-subscription-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Relationships",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Relationship Types Detailed",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/relationship-types"
+          },
+          "docs": "Get all available relationship types with enhanced metadata.\n\nThis endpoint provides a comprehensive list of all relationship types used in the system\nwith additional metadata including category, display name, and bidirectional flag.\n\n**Categories:**\nRelationship types are organized into two categories:\n- `affiliate`: Affiliate connections including ownership, control, and partnership relationships\n- `trade`: Trade relationships including supply chain, financial, corporate, and other business co"
+        },
+        {
+          "info": {
+            "name": "Get Relationship Type Categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/relationship-type-categories"
+          },
+          "docs": "Get all relationship type categories with their associated types.\n\nThis endpoint provides a categorized view of all relationship types,\ngrouping them by their business purpose (e.g., ownership, supply chain, financial).\n\nUse this to understand the different categories of relationships and which\nspecific relationship types belong to each category."
+        },
+        {
+          "info": {
+            "name": "Get Relationship Types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/relationships/types"
+          },
+          "docs": "Get all available relationship types with their descriptions.\n\nThis endpoint provides a comprehensive list of all relationship types used in the system\n(e.g., \"IS_SUPPLIER_OF\", \"IS_OTHERWISE_LINKED_TO\", \"DIRECTLY_CONSOLIDATES\") along with\ndetailed descriptions of what each type means.\n\nUse this endpoint to understand the meaning of relationship types that appear in other\nAPI responses such as entity graphs and relationship queries."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

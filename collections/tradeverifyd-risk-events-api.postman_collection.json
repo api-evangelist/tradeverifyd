@@ -1,0 +1,586 @@
+{
+  "item": [
+    {
+      "id": "58e79c86-8d30-4674-8e61-7b42e33331a7",
+      "name": "Risk Events",
+      "description": {
+        "content": "Manage and retrieve events related to entities. This includes real-time updates on critical incidents like supply chain disruptions, compliance issues, or significant changes affecting entities. Stay informed about vital events that could impact your business operations and decision-making processes.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5a898cf6-8b87-4187-8a6a-0257ac81d74d",
+          "name": "Get Event",
+          "request": {
+            "name": "Get Event",
+            "description": {
+              "content": "Retrieve a specific risk event by its ID.\n\nThis endpoint provides detailed information about a particular event in the\ncontext of supply chain operations. It is useful for fetching specific\ndetails about compliance, trade disruptions, or other significant events.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "risk_events",
+                ":event_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "event_id",
+                  "description": "(Required) Unique Risk Event identifier."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3f1a5709-999d-4ba0-ac55-96ab2b8befce",
+              "name": "Risk event details retrieved successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "risk_events",
+                    ":event_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "event_id",
+                      "description": "(Required) Unique Risk Event identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"65f8a2b1c3d4e5f6a7b8c9d0\",\n  \"timestamp\": \"2024-03-15T08:30:00Z\",\n  \"last_modified\": \"2024-03-15T10:45:00Z\",\n  \"countries\": [\n    \"US\",\n    \"CN\"\n  ],\n  \"time_start\": \"2024-03-14T00:00:00Z\",\n  \"time_end\": \"2024-03-20T23:59:59Z\",\n  \"title\": \"Major Port Congestion at Los Angeles/Long Beach\",\n  \"description\": \"Severe congestion at the Los Angeles and Long Beach ports due to increased import volumes and labor shortages, causing significant delays in cargo processing and ship berthing.\",\n  \"sources\": [\n    \"https://www.reuters.example/business/port-congestion-2024\",\n    \"https://www.bloomberg.example/news/la-port-delays\"\n  ],\n  \"type\": \"port_congestion\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3096a5a5-f5ea-4208-af64-00ff95e3dd96",
+              "name": "Risk event not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "risk_events",
+                    ":event_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "event_id",
+                      "description": "(Required) Unique Risk Event identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Risk Event '65f8a2b1c3d4e5f6a7b8c9d9' does not exist.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e23664f8-0237-4787-aa5e-0e8b4e052248",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "risk_events",
+                    ":event_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "event_id",
+                      "description": "(Required) Unique Risk Event identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bac666cb-8650-45b1-8252-12fec3a92e08",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "risk_events",
+                    ":event_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "event_id",
+                      "description": "(Required) Unique Risk Event identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e757c164-1876-433a-ae95-7d99cb760b5a",
+          "name": "Get Risk Events",
+          "request": {
+            "name": "Get Risk Events",
+            "description": {
+              "content": "Retrieve a paginated feed of Risk Events matching the specifed filters,\nsorted by event creation time.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "risk_events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "event_types",
+                  "value": "<string>",
+                  "description": "If set, only Risk Events of the provided types will be included in the result set. If 'null', all types will be included in the result set."
+                },
+                {
+                  "disabled": false,
+                  "key": "event_types",
+                  "value": "<string>",
+                  "description": "If set, only Risk Events of the provided types will be included in the result set. If 'null', all types will be included in the result set."
+                },
+                {
+                  "disabled": false,
+                  "key": "countries",
+                  "value": "<string>",
+                  "description": "If set, only Risk Events impacting the provided countries will be included in the result set. If 'null', all countries will be included in the result set."
+                },
+                {
+                  "disabled": false,
+                  "key": "countries",
+                  "value": "<string>",
+                  "description": "If set, only Risk Events impacting the provided countries will be included in the result set. If 'null', all countries will be included in the result set."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Result page."
+                },
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "10",
+                  "description": "Number of results to return per-query."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "94dc7c4a-585f-4484-9944-88e47183628e",
+              "name": "Paginated list of risk events",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "risk_events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "event_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "event_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "countries",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "countries",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"facets\": [\n    {\n      \"type\": \"event_type\",\n      \"value\": \"port_congestion\",\n      \"count\": 15\n    },\n    {\n      \"type\": \"event_type\",\n      \"value\": \"semiconductor_shortage\",\n      \"count\": 8\n    },\n    {\n      \"type\": \"event_type\",\n      \"value\": \"hurricane\",\n      \"count\": 5\n    },\n    {\n      \"type\": \"event_country\",\n      \"value\": \"US\",\n      \"count\": 12\n    },\n    {\n      \"type\": \"event_country\",\n      \"value\": \"CN\",\n      \"count\": 10\n    },\n    {\n      \"type\": \"event_country\",\n      \"value\": \"TW\",\n      \"count\": 6\n    }\n  ],\n  \"page_results\": [\n    {\n      \"id\": \"65f8a2b1c3d4e5f6a7b8c9d0\",\n      \"timestamp\": \"2024-03-15T08:30:00Z\",\n      \"last_modified\": \"2024-03-15T10:45:00Z\",\n      \"countries\": [\n        \"US\",\n        \"CN\"\n      ],\n      \"time_start\": \"2024-03-14T00:00:00Z\",\n      \"time_end\": \"2024-03-20T23:59:59Z\",\n      \"title\": \"Major Port Congestion at Los Angeles/Long Beach\",\n      \"description\": \"Severe congestion at the Los Angeles and Long Beach ports due to increased import volumes and labor shortages\",\n      \"sources\": [\n        \"https://www.reuters.example/business/port-congestion-2024\",\n        \"https://www.bloomberg.example/news/la-port-delays\"\n      ],\n      \"type\": \"port_congestion\"\n    },\n    {\n      \"id\": \"65f8a2b1c3d4e5f6a7b8c9d1\",\n      \"timestamp\": \"2024-02-28T14:20:00Z\",\n      \"last_modified\": \"2024-03-01T09:15:00Z\",\n      \"countries\": [\n        \"TW\",\n        \"KR\",\n        \"JP\"\n      ],\n      \"time_start\": \"2024-02-15T00:00:00Z\",\n      \"title\": \"Global Semiconductor Shortage Intensifies\",\n      \"description\": \"Ongoing semiconductor chip shortage affecting automotive and electronics industries worldwide\",\n      \"sources\": [\n        \"https://www.ft.example/semiconductor-shortage-2024\"\n      ],\n      \"type\": \"semiconductor_shortage\"\n    },\n    {\n      \"id\": \"65f8a2b1c3d4e5f6a7b8c9d2\",\n      \"timestamp\": \"2024-01-10T12:00:00Z\",\n      \"last_modified\": \"2024-01-12T14:30:00Z\",\n      \"countries\": [\n        \"RU\",\n        \"UA\"\n      ],\n      \"time_start\": \"2024-01-10T00:00:00Z\",\n      \"title\": \"Trade Route Disruption in Black Sea Region\",\n      \"description\": \"Ongoing military conflict affecting grain and energy exports through Black Sea shipping lanes\",\n      \"sources\": [\n        \"https://www.bbc.example/news/black-sea-trade-2024\",\n        \"https://www.wsj.example/grain-exports-disrupted\"\n      ],\n      \"type\": \"military_conflict\"\n    }\n  ],\n  \"current_page\": 1,\n  \"total_results\": 28\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "357b10ca-4b26-40e8-8fe5-23d1478ea0b6",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "risk_events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "event_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "event_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "countries",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "countries",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8f6799cd-6852-48eb-90ba-66fa94f67d1d",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "risk_events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "event_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "event_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "countries",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "countries",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.tradeverifyd.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "ocp-apim-subscription-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "7fac479f-e21b-4fe1-8655-9164fc04b35e",
+    "name": "Tradeverifyd Documents Risk Events API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\nThe Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.\n\nFor more information visit [tradeverifyd.com](https://tradeverifyd.com).\n\nIf you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.\n\nWhen making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.\n\nFor example:\n\n```bash\ncurl --silent --location -G 'https://.../v1/search/entities' \\\n--data-urlencode 'name=Contoso Corporation' \\\n--data-urlencode 'jurisdiction=US' \\\n--header \"ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY\"\n```\n\n\nContact Support:\n Name: tradeverifyd.com\n Email: support@tradeverifyd.com",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tradeverifyd Documents System API",
+    "version": "0.2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "ocp-apim-subscription-key",
+      "value": "{{ocp-apim-subscription-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "System",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "OpenAPI JSON schema",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/openapi.json"
+          },
+          "docs": "Provides auto-generated OpenAPI JSON schema"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

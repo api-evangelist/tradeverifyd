@@ -1,0 +1,160 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tradeverifyd Documents Transparency Log API",
+    "version": "0.2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "ocp-apim-subscription-key",
+      "value": "{{ocp-apim-subscription-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Transparency Log",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Checkpoint Receipt",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/checkpoint"
+          },
+          "docs": "Get a scitt receipt for the last entry in the transparency log.\n"
+        },
+        {
+          "info": {
+            "name": "Get Merkle Tree Tile",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/tile/:level/:index",
+            "params": [
+              {
+                "name": "level",
+                "value": "",
+                "type": "path",
+                "description": "Merkle tree level (0-63)"
+              },
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Tile index (nested format like x001/x234/067)"
+              }
+            ]
+          },
+          "docs": "Get a Merkle tree tile from the transparency log.\nSupports C2SP tlog-tiles format with nested indices.\n"
+        },
+        {
+          "info": {
+            "name": "Get Entry Tile",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/tile/entries/:index",
+            "params": [
+              {
+                "name": "index",
+                "value": "",
+                "type": "path",
+                "description": "Entry tile index (nested format like x001/x234/067)"
+              }
+            ]
+          },
+          "docs": "Get an entry tile (bundle) from the transparency log.\nContains raw entry hashes for the specified tile index.\n"
+        },
+        {
+          "info": {
+            "name": "Query Statements",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/statements",
+            "params": [
+              {
+                "name": "iss",
+                "value": "",
+                "type": "query",
+                "description": "Filter by issuer URL"
+              },
+              {
+                "name": "sub",
+                "value": "",
+                "type": "query",
+                "description": "Filter by subject"
+              },
+              {
+                "name": "cty",
+                "value": "",
+                "type": "query",
+                "description": "Filter by content type"
+              },
+              {
+                "name": "typ",
+                "value": "",
+                "type": "query",
+                "description": "Filter by type"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results (default 100, max 1000)"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Pagination offset"
+              }
+            ]
+          },
+          "docs": "Query statement metadata with optional filters.\nReturns JSON array of statement metadata.\n"
+        },
+        {
+          "info": {
+            "name": "Register Statement (Alternative)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tradeverifyd.com/statements"
+          },
+          "docs": "Register a new COSE Sign1 statement in the transparency log.\nAlternative endpoint to POST /entries with the same behavior.\n\nSupports both application/cose and application/scitt-statement+cose content types.\n"
+        },
+        {
+          "info": {
+            "name": "Get Receipt (Alternative)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/statements/:entry_id/receipt",
+            "params": [
+              {
+                "name": "entry_id",
+                "value": "",
+                "type": "path",
+                "description": "Entry ID of the registered statement"
+              }
+            ]
+          },
+          "docs": "Retrieve a transparency receipt for a registered statement.\nAlternative endpoint to GET /entries/{entry_id} with the same behavior.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

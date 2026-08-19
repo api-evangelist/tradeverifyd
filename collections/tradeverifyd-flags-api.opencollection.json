@@ -1,0 +1,93 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tradeverifyd Documents Flags API",
+    "version": "0.2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "ocp-apim-subscription-key",
+      "value": "{{ocp-apim-subscription-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Flags",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Upload Flags",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tradeverifyd.com/v1/flags/upload",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Upload flags for processing. Expected time to process and be available in the\nsystem is approximately 5-10 minutes.\n\nThis endpoint allows uploading flags for entities. Each flag must be associated with an entity\nand contain information about potential risks or issues.\n\n**This information is private to your organization only and will not be shared with any other organization.**\n\n**Required Fields:**\n- `entity_id`: Unique identifier for the entity associated with the flag\n- `flag_type`: The primar"
+        },
+        {
+          "info": {
+            "name": "Update a flag",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.tradeverifyd.com/v1/flags/update/:flag_id",
+            "params": [
+              {
+                "name": "flag_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an existing Flag.\nUsers can only update Flags that belong to their organization.\nThe provided information will override existing information. It is not a merge.\n\n**Required Fields**:\n- `flag_id`: ID for Flag undergoing update.\n- Flag information for update.\n\n**Returns**:\n- The Flag object representing the updated flag.\n\n**Example Usage**:\n- Requesting `PUT /v1/flags/update/{flag_id}` with a valid `flag_id` that belongs to the user's organization\n    will update the specified flag."
+        },
+        {
+          "info": {
+            "name": "Get Flags Types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/flags/types"
+          },
+          "docs": "This endpoint is designed to provide a list of all possible flags types and\nsubtypes."
+        },
+        {
+          "info": {
+            "name": "Get Flags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/flags",
+            "params": [
+              {
+                "name": "entity_id",
+                "value": "",
+                "type": "query",
+                "description": "The unique identifier of the entity for which flags are being requested. This parameter is required."
+              }
+            ]
+          },
+          "docs": "Retrieve flags related to a specific entity.\n\nThis endpoint is designed to provide a list of flags associated with an\nentity. Flags represent important markers or alerts related to the entity,\nsuch as compliance issues, risk indicators, or other significant\nannotations.\n\nFlags can be invalidated by external evidence, or no longer apply for time\nreasons to a specific entity.\n\n## Note:\n- `entity_id` MUST be provided.\n- If interested in viewing flagged affiliates, please use the `Get Entity Graph\nF"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

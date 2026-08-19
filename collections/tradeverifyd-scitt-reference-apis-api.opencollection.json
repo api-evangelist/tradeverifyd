@@ -1,0 +1,78 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tradeverifyd Documents SCITT Reference APIs API",
+    "version": "0.2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "ocp-apim-subscription-key",
+      "value": "{{ocp-apim-subscription-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "SCITT Reference APIs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Service Configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/.well-known/scitt-configuration"
+          },
+          "docs": "Get the SCITT service configuration including supported algorithms,\nregistration policies, and service metadata (per SCRAPI specification).\n"
+        },
+        {
+          "info": {
+            "name": "Service Verification Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/.well-known/scitt-keys"
+          },
+          "docs": "Get the service's verification keys as a COSE Key Set in CBOR format\n(per SCRAPI specification and RFC 9052 Section 7).\n"
+        },
+        {
+          "info": {
+            "name": "Register Statement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tradeverifyd.com/entries"
+          },
+          "docs": "Register a new COSE Sign1 statement in the transparency log.\nThe statement will be assigned an entry ID and included in the Merkle tree.\n\nSupports both application/cose and application/scitt-statement+cose content types.\n"
+        },
+        {
+          "info": {
+            "name": "Get Receipt",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/entries/:entry_id",
+            "params": [
+              {
+                "name": "entry_id",
+                "value": "",
+                "type": "path",
+                "description": "Entry ID of the registered statement"
+              }
+            ]
+          },
+          "docs": "Retrieve a transparency receipt for a registered statement.\nThe receipt contains a Merkle inclusion proof and signed checkpoint.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

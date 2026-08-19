@@ -2,11 +2,9 @@ generated: '2026-07-21'
 method: derived
 status: candidate
 source: openapi/tradeverifyd-openapi-original.json
-description: >-
-  No official hosted MCP server was found for Tradeverifyd (no docs mention,
-  no @modelcontextprotocol or registry entry, nothing in the tradeverifyd
-  GitHub org). This is a candidate tool list derived from the published
-  OpenAPI operations for the marquee flows.
+description: No official hosted MCP server was found for Tradeverifyd (no docs mention, no @modelcontextprotocol
+  or registry entry, nothing in the tradeverifyd GitHub org). This is a candidate tool list derived from
+  the published OpenAPI operations for the marquee flows.
 server:
   name: tradeverifyd
   transport: http
@@ -56,3 +54,9 @@ tools:
 - name: submit_cbp_presentation
   description: Submit a verifiable presentation to US Customs (CBP)
   source_operation: openapi/tradeverifyd-openapi-original.json#submit_verifiable_presentation_us_customs_submit_presentation_post
+deployment:
+  mode: none
+  verified: derived
+  tools: 15
+  checked: '2026-08-12'
+  source: catalog MCP census

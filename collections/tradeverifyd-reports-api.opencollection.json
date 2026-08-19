@@ -1,0 +1,106 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tradeverifyd Documents Reports API",
+    "version": "0.2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "ocp-apim-subscription-key",
+      "value": "{{ocp-apim-subscription-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Report Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/reports/:report_id/status",
+            "params": [
+              {
+                "name": "report_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve the status of a Tradeverifyd Report Request by id."
+        },
+        {
+          "info": {
+            "name": "Create Report Request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tradeverifyd.com/v1/reports",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a request for generating Tradeverifyd compliance reports. TASA reports require entity_id, CPR/CGR reports require shipment_id. TASA reports can optionally include hs_code.Currently only TASA reports are fully implemented."
+        },
+        {
+          "info": {
+            "name": "Get Report Details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/reports/:report_id",
+            "params": [
+              {
+                "name": "report_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a Tradeverifyd Report Request Details by id.\n\nArgs:\n    report_id: UUID of the report.\n\nReturns:\n    ReportDetailResponse object:\n        id: UUID\n        requested_ts: datetime\n        completed_ts: Optional[datetime]\n        report_type: str\n        report_status: str\n        report_name: Optional[str]"
+        },
+        {
+          "info": {
+            "name": "Get Report Contents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/reports/:report_id/content",
+            "headers": [
+              {
+                "name": "accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "report_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "report_supplement",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Retrieve the contents of a Tradeverifyd Report by report id.\n\nArgs:\n    \n\n    report_id: UUID of the report to retrieve content for.\n\n    report_supplement: Optional supplement name to retrieve. Currently only \"extended-graph\" is supported. Only available for CGR reports in JSON format.\n    If the report_supplement is provided, only the supplement is returned, otherwise the report is returned in the format specified by the accept header.\n\n    accept: Content format preference. Supported values: "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

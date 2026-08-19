@@ -1,0 +1,424 @@
+{
+  "item": [
+    {
+      "id": "ea10709c-7153-4000-8387-4ab2f014c2c3",
+      "name": "Relationships",
+      "description": {
+        "content": "Relationships between entities",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d26be021-2bb9-48c5-b8e0-f7ff60ba1b11",
+          "name": "Get Relationship Types Detailed",
+          "request": {
+            "name": "Get Relationship Types Detailed",
+            "description": {
+              "content": "Get all available relationship types with enhanced metadata.\n\nThis endpoint provides a comprehensive list of all relationship types used in the system\nwith additional metadata including category, display name, and bidirectional flag.\n\n**Categories:**\nRelationship types are organized into two categories:\n- `affiliate`: Affiliate connections including ownership, control, and partnership relationships\n- `trade`: Trade relationships including supply chain, financial, corporate, and other business connections\n\nUse this endpoint to understand the meaning and categorization of relationship types\nthat appear in other API responses such as entity graphs and relationship queries.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "relationship-types"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b04bcc0a-5791-4115-ad5a-0e1aeb168a03",
+              "name": "List of all available relationship types with enhanced metadata",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "relationship-types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"type\": \"IS_SUPPLIER_OF\",\n    \"display_name\": \"Is Supplier Of\",\n    \"category\": \"trade\",\n    \"description\": \"An entity provides goods or services to another entity, usually in a commercial context.\",\n    \"bidirectional\": false\n  },\n  {\n    \"type\": \"IS_AFFILIATE_OF\",\n    \"display_name\": \"Is Affiliate Of\",\n    \"category\": \"affiliate\",\n    \"description\": \"An entity is associated with another, usually through ownership or control.\",\n    \"bidirectional\": false\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "03a1d28f-a281-4c73-9417-fb83ec33ab2a",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "relationship-types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "56faa81a-12a8-4f77-bbc4-54c3aa9399f0",
+          "name": "Get Relationship Type Categories",
+          "request": {
+            "name": "Get Relationship Type Categories",
+            "description": {
+              "content": "Get all relationship type categories with their associated types.\n\nThis endpoint provides a categorized view of all relationship types,\ngrouping them by their business purpose (e.g., ownership, supply chain, financial).\n\nUse this to understand the different categories of relationships and which\nspecific relationship types belong to each category.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "relationship-type-categories"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "185c7a26-66b6-4bb2-bc4c-8359ca8de14b",
+              "name": "List of all relationship type categories with their associated types",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "relationship-type-categories"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"categories\": [\n    {\n      \"name\": \"ownership\",\n      \"display_name\": \"Ownership Relationships\",\n      \"description\": \"Relationships indicating ownership or control between entities\",\n      \"relationship_count\": 4,\n      \"types\": [\n        \"IS_MAJORITY_SHAREHOLDER_OF\",\n        \"IS_SUBISIDIARY_OF\",\n        \"IS_THE_HOLDING_COMPANY_OF\",\n        \"IS_THE_PARENT_COMPANY_OF\"\n      ]\n    },\n    {\n      \"name\": \"supply_chain\",\n      \"display_name\": \"Supply Chain Relationships\",\n      \"description\": \"Relationships in the supply chain including suppliers, manufacturers, and shipping\",\n      \"relationship_count\": 6,\n      \"types\": [\n        \"IS_SUPPLIER_OF\",\n        \"IS_LIKELY_SUPPLIER_OF\",\n        \"IS_MANUFACTURER_OF\",\n        \"IS_A_VENDOR_OF\",\n        \"SHIPS_GOODS_TO\",\n        \"SHIPS_VIA\"\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f414534d-e711-4097-99df-224290d734b6",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "relationship-type-categories"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "45d817f3-e1ac-463d-bf41-59ae26e821c3",
+          "name": "Get Relationship Types",
+          "request": {
+            "name": "Get Relationship Types",
+            "description": {
+              "content": "Get all available relationship types with their descriptions.\n\nThis endpoint provides a comprehensive list of all relationship types used in the system\n(e.g., \"IS_SUPPLIER_OF\", \"IS_OTHERWISE_LINKED_TO\", \"DIRECTLY_CONSOLIDATES\") along with\ndetailed descriptions of what each type means.\n\nUse this endpoint to understand the meaning of relationship types that appear in other\nAPI responses such as entity graphs and relationship queries.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "relationships",
+                "types"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0d9046e0-b92b-4687-9184-df4f12c6f8d1",
+              "name": "List of all available relationship types with their descriptions",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "relationships",
+                    "types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"relationship_type\": \"IS_SUPPLIER_OF\",\n    \"description\": \"An entity provides goods or services to another entity, usually in a commercial context.\"\n  },\n  {\n    \"relationship_type\": \"IS_OTHERWISE_LINKED_TO\",\n    \"description\": \"One entity has been manually identified as relating to another, or there is a business reason to display two entities as connected when they otherwise would not be. Relations of this type must have a batch ID so they can easily be removed. The meaning of this relationship is poorly-defined and should be used sparingly as a last resort.\"\n  },\n  {\n    \"relationship_type\": \"DIRECTLY_CONSOLIDATES\",\n    \"description\": \"The parent entity fully consolidates the accounts of the child entity, as per the accounting standard(s) specified; the child entity is the closest entity being fully consolidated by the parent in any applicable hierarchical ownership structure.\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "99ad2a27-78f9-4e90-9bbd-51af29368e45",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "relationships",
+                    "types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.tradeverifyd.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "ocp-apim-subscription-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "83378070-8428-4e7f-ba92-b64b34e23937",
+    "name": "Tradeverifyd Documents Relationships API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\nThe Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.\n\nFor more information visit [tradeverifyd.com](https://tradeverifyd.com).\n\nIf you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.\n\nWhen making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.\n\nFor example:\n\n```bash\ncurl --silent --location -G 'https://.../v1/search/entities' \\\n--data-urlencode 'name=Contoso Corporation' \\\n--data-urlencode 'jurisdiction=US' \\\n--header \"ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY\"\n```\n\n\nContact Support:\n Name: tradeverifyd.com\n Email: support@tradeverifyd.com",
+      "type": "text/plain"
+    }
+  }
+}

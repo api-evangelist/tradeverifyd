@@ -1,0 +1,328 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tradeverifyd Documents Entity API",
+    "version": "0.2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "ocp-apim-subscription-key",
+      "value": "{{ocp-apim-subscription-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Entity",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Entity Search",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/search/entities",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Entity name."
+              },
+              {
+                "name": "address",
+                "value": "",
+                "type": "query",
+                "description": "Entity address."
+              },
+              {
+                "name": "jurisdiction",
+                "value": "",
+                "type": "query",
+                "description": "Two-letter ISO country code the entity should be associated with."
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "The maximum number of results to return. Must be between 1 and 100, inclusive."
+              },
+              {
+                "name": "flagged_only",
+                "value": "",
+                "type": "query",
+                "description": "If 'true', results will be limited to Entities currently affected by 1 or more Flags."
+              }
+            ]
+          },
+          "docs": "Search for Entities that match the provided search parameters."
+        },
+        {
+          "info": {
+            "name": "Entity Resolution",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/resolve/entity",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Entity name."
+              },
+              {
+                "name": "address",
+                "value": "",
+                "type": "query",
+                "description": "Entity address."
+              },
+              {
+                "name": "jurisdiction",
+                "value": "",
+                "type": "query",
+                "description": "Two-letter ISO country code the entity should be associated with."
+              },
+              {
+                "name": "flagged_only",
+                "value": "",
+                "type": "query",
+                "description": "If 'true', results will be limited to Entities currently affected by 1 or more Flags."
+              }
+            ]
+          },
+          "docs": "Resolve to the top-scoring Entity that matches the provided search parameters."
+        },
+        {
+          "info": {
+            "name": "Get Entities by Flag Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/entities/by-flag-type/:flag_type_id",
+            "params": [
+              {
+                "name": "flag_type_id",
+                "value": "",
+                "type": "path",
+                "description": "ObjectId of the flag type to filter entities by"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for pagination"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Number of entities per page"
+              }
+            ]
+          },
+          "docs": "Get entities that have flags of a specific flag type. To view possible flag types, use\nthe Get Flags Types endpoint `/flags/types`.\n\nThis endpoint allows customers to query entities based on specific compliance flags.\nResults are filtered by organization, meaning only entities with flags that are either\npublic or belong to the user's organization will be returned.\n\nThe response includes a list of entities that have a flag of the specified type, including information\non entity details, Tradeverif"
+        },
+        {
+          "info": {
+            "name": "Get Entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/entities/:entity_id",
+            "params": [
+              {
+                "name": "entity_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a single Entity by its Id"
+        },
+        {
+          "info": {
+            "name": "Get Entity Risk Events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/entities/:entity_id/risk_events",
+            "params": [
+              {
+                "name": "entity_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get Risk Events affecting an Entity."
+        },
+        {
+          "info": {
+            "name": "Get Entity Verification by entity id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/entities/:entity_id/verification",
+            "params": [
+              {
+                "name": "entity_id",
+                "value": "",
+                "type": "path",
+                "description": "Id of the Entity to use as the starting node for graph retrieval."
+              },
+              {
+                "name": "hs_code",
+                "value": "",
+                "type": "query",
+                "description": "Optional HS code (2, 4, or 6-digit) to filter the supplier graph used for assessment. When provided, only supplier relationships (IS_SUPPLIER_OF edges) that match the HS code are considered when analyzing the entity's supply chain. This filters the graph to show suppliers of specific products. Less specific codes (e.g., '52') match more specific codes (e.g., '5201', '520100'). Note: Supplier jurisdiction filtering will be added in future updates."
+              }
+            ]
+          },
+          "docs": "Retrieves the Tradeverifyd Supplier Assessment (TSA) details for a given entity. Returns the current\nsupplier assessment and compliance information recorded for the specified entity.\n\nNote: To generate a Tradeverifyd Advanced Supplier Assessment (TASA), use the POST /reports endpoint."
+        },
+        {
+          "info": {
+            "name": "Get Entity Verification by identifier",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/entities/:identifier_type/:identifier_value/verification",
+            "params": [
+              {
+                "name": "identifier_type",
+                "value": "",
+                "type": "path",
+                "description": "The type of the identifier (e.g., lei, mid)"
+              },
+              {
+                "name": "identifier_value",
+                "value": "",
+                "type": "path",
+                "description": "The value of the identifier"
+              },
+              {
+                "name": "hs_code",
+                "value": "",
+                "type": "query",
+                "description": "Optional HS code to filter the graph considered when calculating verification details for the requested Entity."
+              }
+            ]
+          },
+          "docs": "Retrieves a Tradeverifyd Supplier Assesssment (TSA) for an entity from alternative identifiers.\nThe purpose of this endpoint is to use external IDs (such as manufacturing or bank identifiers) to\nretrieve entity verification details in the form of a TSA.\n\nFor example:\n- Retrieving by LEI id: `GET /v1/entities/lei/559312VRR0Z0AXO77J92/verification`\n- Retrieving by BIC id: `GET /v1/entities/bic/XCDVTLBIXXX/verification`"
+        },
+        {
+          "info": {
+            "name": "Get Entity Graph",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/entities/:entity_id/graph",
+            "params": [
+              {
+                "name": "entity_id",
+                "value": "",
+                "type": "path",
+                "description": "Id of the Entity to use as the starting or root entity for graph retrieval."
+              },
+              {
+                "name": "hs_codes",
+                "value": "",
+                "type": "query",
+                "description": "A comma separated list of 2, 4, or 6-digit HS codes to filter by. A less-specific HS code will always match a more-specific code with the same chapter or heading. For example, code '12' will match '1234' and '1256'. If list is empty or null, all relationships are returned."
+              },
+              {
+                "name": "depth",
+                "value": "",
+                "type": "query",
+                "description": "Limits how many levels of related relationships the query will explore. For example, a depth of 1 returns only directly related items, while higher values include more distant connections."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page to retrieve"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "Number of relationships to return per page (max 100)"
+              },
+              {
+                "name": "include_affiliates",
+                "value": "",
+                "type": "query",
+                "description": "Set True to preserve affiliate relationships when filtering by HS codes. When True, affiliate relationships will be included in the graph even if they don't match the specified HS codes."
+              },
+              {
+                "name": "direction",
+                "value": "",
+                "type": "query",
+                "description": "The graph direction from the root entity.  Values are 'in' and 'out'. A typical relationship such as IS_SUPPLIER_OF is an inbound relationship pointing to the root entity. The default value is 'in', resulting in a graph of inbound relationships."
+              }
+            ]
+          },
+          "docs": "Retrieve a graph of paginated relationships for a single Entity.\n\nThis endpoint provides information about the relationships of an Entity,\nsuch as partnerships, affiliations, or any other defined connections. The\nreturned graph contains entity relationship data and includes\nentity properties.\n\nIn the returned relationships data, relationships are described as having\na `source`, an `target`, and a `type`. The direction of the relationship\nmoves from source to target, and is described by the type."
+        },
+        {
+          "info": {
+            "name": "Get Entity Graph Flagged Relationships",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/entities/:entity_id/graph/flagged_relationships",
+            "params": [
+              {
+                "name": "entity_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "hs_codes",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "include_flags",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "include_affiliates",
+                "value": "",
+                "type": "query",
+                "description": "Set True to preserve affiliate relationships when filtering by HS codes. When True, affiliate relationships will be included in the graph even if they don't match the specified HS codes."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get flagged relationships for an entity with full entity, relationship, and flag details.\n\nThis endpoint returns the shortest paths between the specified entity and all\nupstream flagged entities that pass through the provided HS codes. The response\nincludes complete details for all entities, relationships, and flags referenced\nin the paths.\n\nArgs:\n- entity_id: The ID of the entity to use as the starting point for relationship search\n- hs_codes: List of HS codes that paths must pass through to be"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

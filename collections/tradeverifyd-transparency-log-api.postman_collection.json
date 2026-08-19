@@ -1,0 +1,1149 @@
+{
+  "item": [
+    {
+      "id": "d6a5957d-e3f9-4829-9582-e2b5dc3d4e2e",
+      "name": "Transparency Log",
+      "description": {
+        "content": "Auxillary resources for securing and analyzing supply chain artifacts",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "41dfe695-d2ef-41ce-9a20-4c575ddd9b0b",
+          "name": "Get Checkpoint Receipt",
+          "request": {
+            "name": "Get Checkpoint Receipt",
+            "description": {
+              "content": "Get a scitt receipt for the last entry in the transparency log.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "checkpoint"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/scitt-receipt+cose"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e8e5cf01-b0ee-4731-bea4-7ca2071e2cfa",
+              "name": "Checkpoint receipt retrieved successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "checkpoint"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/scitt-receipt+cose"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Cache-Control",
+                  "value": "public, max-age=60",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/scitt-receipt+cose"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "9f93dce4-19c8-47f1-a9fc-55456421d98d",
+              "name": "Failed to get checkpoint (log may be empty)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "checkpoint"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3d806f26-3b04-48d1-86a3-ad66e284a7b2",
+          "name": "Get Merkle Tree Tile",
+          "request": {
+            "name": "Get Merkle Tree Tile",
+            "description": {
+              "content": "Get a Merkle tree tile from the transparency log.\nSupports C2SP tlog-tiles format with nested indices.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tile",
+                ":level",
+                ":index"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "level",
+                  "description": "(Required) Merkle tree level (0-63)"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "index",
+                  "description": "(Required) Tile index (nested format like x001/x234/067)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/octet-stream"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "33440667-7cc2-48d7-8129-fe1dd58384a7",
+              "name": "Tile retrieved successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tile",
+                    ":level",
+                    ":index"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "level",
+                      "description": "(Required) Merkle tree level (0-63)"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "index",
+                      "description": "(Required) Tile index (nested format like x001/x234/067)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/octet-stream"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Cache-Control",
+                  "value": "public, max-age=31536000, immutable",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/octet-stream"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "eb0b7bcb-7fe5-4a71-ba3a-401af966706a",
+              "name": "Tile not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tile",
+                    ":level",
+                    ":index"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "level",
+                      "description": "(Required) Merkle tree level (0-63)"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "index",
+                      "description": "(Required) Tile index (nested format like x001/x234/067)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cf658022-d3a3-44a5-8152-049be84014db",
+          "name": "Get Entry Tile",
+          "request": {
+            "name": "Get Entry Tile",
+            "description": {
+              "content": "Get an entry tile (bundle) from the transparency log.\nContains raw entry hashes for the specified tile index.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tile",
+                "entries",
+                ":index"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "index",
+                  "description": "(Required) Entry tile index (nested format like x001/x234/067)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/octet-stream"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3834faaf-e6c1-4c80-9bdf-51b8afa5b460",
+              "name": "Entry tile retrieved successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tile",
+                    "entries",
+                    ":index"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "index",
+                      "description": "(Required) Entry tile index (nested format like x001/x234/067)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/octet-stream"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Cache-Control",
+                  "value": "public, max-age=31536000, immutable",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/octet-stream"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "ad34a540-71d9-4fc1-a230-30c5a5de769a",
+              "name": "Entry tile not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tile",
+                    "entries",
+                    ":index"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "index",
+                      "description": "(Required) Entry tile index (nested format like x001/x234/067)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a71fb2a0-667d-4a07-9ace-7a7daa4758d1",
+          "name": "Query Statements",
+          "request": {
+            "name": "Query Statements",
+            "description": {
+              "content": "Query statement metadata with optional filters.\nReturns JSON array of statement metadata.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "statements"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "iss",
+                  "value": "<string>",
+                  "description": "Filter by issuer URL"
+                },
+                {
+                  "disabled": false,
+                  "key": "sub",
+                  "value": "<string>",
+                  "description": "Filter by subject"
+                },
+                {
+                  "disabled": false,
+                  "key": "cty",
+                  "value": "<string>",
+                  "description": "Filter by content type"
+                },
+                {
+                  "disabled": false,
+                  "key": "typ",
+                  "value": "<string>",
+                  "description": "Filter by type"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of results (default 100, max 1000)"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Pagination offset"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e4d721e5-b0c1-4e21-8c8e-84f1687da056",
+              "name": "Statements retrieved successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "statements"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "iss",
+                      "value": "https://issuer.example.com"
+                    },
+                    {
+                      "key": "sub",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "cty",
+                      "value": "application/json"
+                    },
+                    {
+                      "key": "typ",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"statements\": [\n    {\n      \"entry_id\": 86,\n      \"leaf_hash\": \"49bc8c5a970039e2ff0a015d8ed3a6a7db802352826d39c777d6dbe387b1a3df\",\n      \"iss\": \"urn:supply-chain:quantum-chip-design\",\n      \"sub\": \"urn:supply-chain:quantum-chip-design\",\n      \"cty\": \"application/json\",\n      \"payload_hash_alg\": -16,\n      \"payload_hash\": \"6824c806d0ed25c150522992e0e5e982ed91e977e027c4c2c8078035d333e835\",\n      \"payload_location\": \"https://quantum-chip-design.example/documents/memory-008.json\",\n      \"registered_at\": \"2025-10-19T15:34:56Z\"\n    },\n    {\n      \"entry_id\": 85,\n      \"leaf_hash\": \"775e591b66740ed8fbf69952cee0b3334f7acfd7d4e9ebf4e5c86c97bd4e516a\",\n      \"iss\": \"urn:supply-chain:quantum-chip-design\",\n      \"sub\": \"urn:supply-chain:quantum-chip-design\",\n      \"cty\": \"application/json\",\n      \"payload_hash_alg\": -16,\n      \"payload_hash\": \"2109d7c92c98ab3a73cfcff16b28477736e753883233bc5970657b28e438da3e\",\n      \"payload_location\": \"https://quantum-chip-design.example/documents/memory-007.json\",\n      \"registered_at\": \"2025-10-19T15:34:56Z\"\n    }\n  ],\n  \"limit\": 100,\n  \"offset\": 0,\n  \"total\": 86\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2138c852-1c82-4a59-9a70-2ad8e8adc3c1",
+              "name": "Failed to query statements",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "statements"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "iss",
+                      "value": "https://issuer.example.com"
+                    },
+                    {
+                      "key": "sub",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "cty",
+                      "value": "application/json"
+                    },
+                    {
+                      "key": "typ",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "017f3156-9450-4009-9500-f04032e71f0e",
+          "name": "Register Statement (Alternative)",
+          "request": {
+            "name": "Register Statement (Alternative)",
+            "description": {
+              "content": "Register a new COSE Sign1 statement in the transparency log.\nAlternative endpoint to POST /entries with the same behavior.\n\nSupports both application/cose and application/scitt-statement+cose content types.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "statements"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/cose"
+              },
+              {
+                "key": "Accept",
+                "value": "application/scitt-receipt+cose"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "<binary>"
+            }
+          },
+          "response": [
+            {
+              "id": "f9250d3d-e358-4cbe-bef5-1aaec006a184",
+              "name": "Statement registered successfully - returns COSE Sign1 receipt",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "statements"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/scitt-receipt+cose"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<binary>"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/scitt-receipt+cose"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "86020a59-0c02-433d-bc9f-d4f9f87dfb82",
+              "name": "Invalid request (malformed COSE Sign1 or validation failure)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "statements"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<binary>"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "9703664e-2888-4abe-b5a7-cf82d831c51c",
+              "name": "Unauthorized (missing or invalid API key)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "statements"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<binary>"
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "af945750-6236-4eec-b011-b4cafa5f898b",
+              "name": "Unsupported Media Type",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "statements"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<binary>"
+                }
+              },
+              "status": "Unsupported Media Type",
+              "code": 415,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "bf585662-4cad-4d7e-84c6-685ba7e0427b",
+          "name": "Get Receipt (Alternative)",
+          "request": {
+            "name": "Get Receipt (Alternative)",
+            "description": {
+              "content": "Retrieve a transparency receipt for a registered statement.\nAlternative endpoint to GET /entries/{entry_id} with the same behavior.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "statements",
+                ":entry_id",
+                "receipt"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<long>",
+                  "key": "entry_id",
+                  "description": "(Required) Entry ID of the registered statement"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/scitt-receipt+cose"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f3bb82c1-43cd-43dc-8391-23eac297f979",
+              "name": "Receipt retrieved successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "statements",
+                    ":entry_id",
+                    "receipt"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "entry_id",
+                      "description": "(Required) Entry ID of the registered statement"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/scitt-receipt+cose"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/scitt-receipt+cose"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "1d9b6585-2586-4f78-931d-ef6b382838e5",
+              "name": "Invalid entry ID format",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "statements",
+                    ":entry_id",
+                    "receipt"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "entry_id",
+                      "description": "(Required) Entry ID of the registered statement"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "6433e428-32a5-42be-bd4c-07c35f681140",
+              "name": "Statement not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "statements",
+                    ":entry_id",
+                    "receipt"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "entry_id",
+                      "description": "(Required) Entry ID of the registered statement"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.tradeverifyd.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "ocp-apim-subscription-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "d89982ee-d290-4df4-8bd4-0914638a96dc",
+    "name": "Tradeverifyd Documents Transparency Log API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\nThe Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.\n\nFor more information visit [tradeverifyd.com](https://tradeverifyd.com).\n\nIf you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.\n\nWhen making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.\n\nFor example:\n\n```bash\ncurl --silent --location -G 'https://.../v1/search/entities' \\\n--data-urlencode 'name=Contoso Corporation' \\\n--data-urlencode 'jurisdiction=US' \\\n--header \"ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY\"\n```\n\n\nContact Support:\n Name: tradeverifyd.com\n Email: support@tradeverifyd.com",
+      "type": "text/plain"
+    }
+  }
+}

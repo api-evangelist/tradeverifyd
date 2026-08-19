@@ -1,0 +1,82 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tradeverifyd Documents Risk Events API",
+    "version": "0.2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "ocp-apim-subscription-key",
+      "value": "{{ocp-apim-subscription-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Risk Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Event",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/risk_events/:event_id",
+            "params": [
+              {
+                "name": "event_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique Risk Event identifier."
+              }
+            ]
+          },
+          "docs": "Retrieve a specific risk event by its ID.\n\nThis endpoint provides detailed information about a particular event in the\ncontext of supply chain operations. It is useful for fetching specific\ndetails about compliance, trade disruptions, or other significant events."
+        },
+        {
+          "info": {
+            "name": "Get Risk Events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/risk_events",
+            "params": [
+              {
+                "name": "event_types",
+                "value": "",
+                "type": "query",
+                "description": "If set, only Risk Events of the provided types will be included in the result set. If 'null', all types will be included in the result set."
+              },
+              {
+                "name": "countries",
+                "value": "",
+                "type": "query",
+                "description": "If set, only Risk Events impacting the provided countries will be included in the result set. If 'null', all countries will be included in the result set."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Result page."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return per-query."
+              }
+            ]
+          },
+          "docs": "Retrieve a paginated feed of Risk Events matching the specifed filters,\nsorted by event creation time."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

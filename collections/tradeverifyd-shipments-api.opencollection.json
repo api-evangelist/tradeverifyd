@@ -1,0 +1,299 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tradeverifyd Documents Shipments API",
+    "version": "0.2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "ocp-apim-subscription-key",
+      "value": "{{ocp-apim-subscription-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Shipments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Shipment List",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/shipments",
+            "params": [
+              {
+                "name": "shipment_name",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sorting",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get a list of shipments."
+        },
+        {
+          "info": {
+            "name": "Create Shipment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tradeverifyd.com/v1/shipments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new shipment. To update an existing shipment, use PUT /shipments/{shipment_id} instead. Supports multiple organizational units per shipment for flexible organization structure management. Auto-creates LEI and ITI credentials if organization has AUTO_CREATE_SHIPMENT_CREDENTIALS enabled."
+        },
+        {
+          "info": {
+            "name": "Get Shipment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/shipments/:shipment_id",
+            "params": [
+              {
+                "name": "shipment_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a shipment by ID."
+        },
+        {
+          "info": {
+            "name": "Update Shipment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.tradeverifyd.com/v1/shipments/:shipment_id",
+            "params": [
+              {
+                "name": "shipment_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing shipment. The shipment ID is specified in the URL path. Supports multiple organizational units per shipment for flexible organization structure management."
+        },
+        {
+          "info": {
+            "name": "Get supplier information requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/shipment/:shipment_id/sirs",
+            "params": [
+              {
+                "name": "shipment_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "supplier_name",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "supplier_jurisdiction",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "tradeverifyd_score",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sorting",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get shipment supplier information requests"
+        },
+        {
+          "info": {
+            "name": "Get supplier information request",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/shipment/sirs/:sir_id",
+            "params": [
+              {
+                "name": "sir_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a shipment SIR by ID"
+        },
+        {
+          "info": {
+            "name": "Get supplier point of contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/shipment/sirs/:sir_id/suggested_contact_info",
+            "params": [
+              {
+                "name": "sir_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Look up suggested contact info for a SIR"
+        },
+        {
+          "info": {
+            "name": "Update supplier information request status",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tradeverifyd.com/v1/shipment/sirs/:sir_id/status",
+            "params": [
+              {
+                "name": "sir_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update the status of a shipment SIR by ID"
+        },
+        {
+          "info": {
+            "name": "Upload a document to a shipment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tradeverifyd.com/v1/shipment/:shipment_id/upload",
+            "params": [
+              {
+                "name": "shipment_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "query",
+                "description": "Path to upload the file to within the shipment folder for example 'Products/1234'"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            }
+          },
+          "docs": "Upload a single file to a shipment folder in cloud storage. Only single file uploads are supported. Files can be organized into subdirectories using the path parameter."
+        },
+        {
+          "info": {
+            "name": "Get CBP Requests for Shipment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/shipments/:shipment_id/cbps",
+            "params": [
+              {
+                "name": "shipment_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a list of CBP requests for a shipment."
+        },
+        {
+          "info": {
+            "name": "Get CBP Requests for Shipment and VC",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tradeverifyd.com/v1/shipments/:shipment_id/cbps/:vc_id",
+            "params": [
+              {
+                "name": "shipment_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "vc_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a list of CBP requests for a specific VC in a shipment."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

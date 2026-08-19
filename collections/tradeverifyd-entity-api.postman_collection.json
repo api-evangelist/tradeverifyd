@@ -1,0 +1,2644 @@
+{
+  "item": [
+    {
+      "id": "f679966d-18c5-498d-8cd9-33eca28c2c7a",
+      "name": "Entity",
+      "description": {
+        "content": "Operations involving entities. Entities encompass a range of organizations and individuals, primarily focusing on companies. This section provides functionalities to manage and interact with information about various entities, including their details, activities, and roles in the supply chain.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "de53b799-a34c-4d20-9b09-7ce0d195cb22",
+          "name": "Entity Search",
+          "request": {
+            "name": "Entity Search",
+            "description": {
+              "content": "Search for Entities that match the provided search parameters.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "search",
+                "entities"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "name",
+                  "value": "<string>",
+                  "description": "(Required) Entity name."
+                },
+                {
+                  "disabled": false,
+                  "key": "address",
+                  "value": "<string>",
+                  "description": "Entity address."
+                },
+                {
+                  "disabled": false,
+                  "key": "jurisdiction",
+                  "value": "<string>",
+                  "description": "Two-letter ISO country code the entity should be associated with."
+                },
+                {
+                  "disabled": false,
+                  "key": "size",
+                  "value": "10",
+                  "description": "The maximum number of results to return. Must be between 1 and 100, inclusive."
+                },
+                {
+                  "disabled": false,
+                  "key": "flagged_only",
+                  "value": "false",
+                  "description": "If 'true', results will be limited to Entities currently affected by 1 or more Flags."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6197cf03-781f-4fc6-a9c1-f98ebec7770e",
+              "name": "Entities matching search criteria",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "search",
+                    "entities"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "address",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "jurisdiction",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    },
+                    {
+                      "key": "flagged_only",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"507f1f77bcf86cd799439011\",\n    \"name\": \"Global Manufacturing Corp\",\n    \"aliases\": [\n      \"GMC\"\n    ],\n    \"jurisdiction\": \"US\",\n    \"addresses\": [\n      \"123 Industrial Blvd, Detroit, MI 48201, USA\",\n      \"456 Factory St, Cleveland, OH 44113, USA\"\n    ],\n    \"flagged\": true,\n    \"description\": \"Large-scale manufacturing company specializing in automotive components\",\n    \"primary_role\": \"manufacturer\",\n    \"url\": \"https://globalmanufacturingcorp.example\",\n    \"monitor\": true,\n    \"references\": {\n      \"flags\": {\n        \"total\": 2\n      },\n      \"relationships\": {\n        \"total\": 15,\n        \"from_relationships\": {\n          \"count\": 8\n        },\n        \"to_relationships\": {\n          \"count\": 7\n        }\n      },\n      \"risk_events\": {\n        \"total\": 1\n      }\n    },\n    \"external_ids\": [\n      {\n        \"id\": \"US-12345678-901\",\n        \"type\": \"duns\",\n        \"source\": \"dun_bradstreet\"\n      },\n      {\n        \"id\": \"98765432109876543210\",\n        \"type\": \"lei\",\n        \"source\": \"gleif\"\n      }\n    ],\n    \"modified_date\": \"2024-10-15T14:30:00Z\"\n  },\n  {\n    \"id\": \"507f1f77bcf86cd799439012\",\n    \"name\": \"Global Manufacturing Example Solutions\",\n    \"aliases\": [\n      \"GMES\"\n    ],\n    \"jurisdiction\": \"CA\",\n    \"addresses\": [\n      \"789 Commerce Way, Toronto, ON M5V 3B6, Canada\"\n    ],\n    \"flagged\": false,\n    \"description\": \"Manufacturing solutions provider\",\n    \"primary_role\": \"supplier\",\n    \"references\": {\n      \"flags\": {\n        \"total\": 0\n      },\n      \"relationships\": {\n        \"total\": 3\n      },\n      \"risk_events\": {\n        \"total\": 0\n      }\n    },\n    \"count_inferred_relationships\": {\n      \"depth\": 3,\n      \"value\": 3,\n      \"flagged_count\": 0,\n      \"last_updated\": \"2025-10-08T19:34:19.447000Z\"\n    },\n    \"modified_date\": \"2024-10-20T09:15:00Z\",\n    \"hs_codes\": {\n      \"incoming\": [\n        \"52\",\n        \"5214\",\n        \"521462\"\n      ],\n      \"outgoing\": [\n        \"81\",\n        \"8105\",\n        \"810507\"\n      ]\n    }\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "acf06e30-be31-4899-896c-72f33b617f54",
+              "name": "Bad Request - Invalid search parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "search",
+                    "entities"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "address",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "jurisdiction",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    },
+                    {
+                      "key": "flagged_only",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Either name or entity_id must be provided\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "90eb7211-41d3-44fe-80f4-db44c883ba0d",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "search",
+                    "entities"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "address",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "jurisdiction",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    },
+                    {
+                      "key": "flagged_only",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cadeb637-238e-4f01-b82b-2195f7a16ab4",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "search",
+                    "entities"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "address",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "jurisdiction",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    },
+                    {
+                      "key": "flagged_only",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "abb8b258-0baf-43a3-99b1-d5f777f32df0",
+          "name": "Entity Resolution",
+          "request": {
+            "name": "Entity Resolution",
+            "description": {
+              "content": "Resolve to the top-scoring Entity that matches the provided search parameters.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "resolve",
+                "entity"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "name",
+                  "value": "<string>",
+                  "description": "(Required) Entity name."
+                },
+                {
+                  "disabled": false,
+                  "key": "address",
+                  "value": "<string>",
+                  "description": "Entity address."
+                },
+                {
+                  "disabled": false,
+                  "key": "jurisdiction",
+                  "value": "<string>",
+                  "description": "Two-letter ISO country code the entity should be associated with."
+                },
+                {
+                  "disabled": false,
+                  "key": "flagged_only",
+                  "value": "false",
+                  "description": "If 'true', results will be limited to Entities currently affected by 1 or more Flags."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "59ee2d6b-e6c6-493c-8fff-994a4c7e6164",
+              "name": "Best matching entity resolved from search criteria",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "resolve",
+                    "entity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "address",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "jurisdiction",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "flagged_only",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"507f1f77bcf86cd799439015\",\n    \"name\": \"Example Contoso Inc.\",\n    \"aliases\": [\n      \"CONTOSO\",\n      \"EX CONTOSO\"\n    ],\n    \"jurisdiction\": \"US\",\n    \"addresses\": [\n      \"123 Main Street, Anytown, State, 12345\"\n    ],\n    \"flagged\": false,\n    \"description\": \"Multinational technology company specializing in consumer electronics\",\n    \"primary_role\": \"manufacturer\",\n    \"url\": \"https://contoso.example\",\n    \"monitor\": true,\n    \"auto_research\": true,\n    \"references\": {\n      \"flags\": {\n        \"total\": 0\n      },\n      \"relationships\": {\n        \"total\": 247,\n        \"from_relationships\": {\n          \"count\": 156\n        },\n        \"to_relationships\": {\n          \"count\": 91\n        }\n      },\n      \"risk_events\": {\n        \"total\": 0\n      }\n    },\n    \"external_ids\": [\n      {\n        \"id\": \"32019387069\",\n        \"type\": \"duns\",\n        \"source\": \"dun_bradstreet\"\n      },\n      {\n        \"id\": \"HWUPKR0MPOU8FGXBT394\",\n        \"type\": \"lei\",\n        \"source\": \"gleif\"\n      },\n      {\n        \"id\": \"CONT\",\n        \"type\": \"ticker\",\n        \"source\": \"nasdaq\"\n      }\n    ],\n    \"count_inferred_relationships\": {\n      \"depth\": 3,\n      \"value\": 3,\n      \"flagged_count\": 0,\n      \"last_updated\": \"2025-10-08T19:34:19.447000Z\"\n    },\n    \"modified_date\": \"2024-10-22T08:30:00Z\",\n    \"hs_codes\": {\n      \"incoming\": [],\n      \"outgoing\": [\n        \"68\",\n        \"6802\",\n        \"680221\"\n      ]\n    }\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "71fbb765-0363-46d0-8750-22e4973e9fc7",
+              "name": "Invalid resolution parameters.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "resolve",
+                    "entity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "address",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "jurisdiction",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "flagged_only",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"type\": \"string_too_long\",\n      \"loc\": [\n        \"query\",\n        \"jurisdiction\"\n      ],\n      \"msg\": \"String should have at most 2 characters\",\n      \"input\": \"USA\",\n      \"ctx\": {\n        \"max_length\": 2\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a850b289-4e2f-4ec6-ac9b-b4bded9fa163",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "resolve",
+                    "entity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "address",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "jurisdiction",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "flagged_only",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "10a28941-7572-4049-8d15-ffb9ca8f9278",
+          "name": "Get Entities by Flag Type",
+          "request": {
+            "name": "Get Entities by Flag Type",
+            "description": {
+              "content": "Get entities that have flags of a specific flag type. To view possible flag types, use\nthe Get Flags Types endpoint `/flags/types`.\n\nThis endpoint allows customers to query entities based on specific compliance flags.\nResults are filtered by organization, meaning only entities with flags that are either\npublic or belong to the user's organization will be returned.\n\nThe response includes a list of entities that have a flag of the specified type, including information\non entity details, Tradeverifyd scores, and flag information.\nBecause the response can be large, entities are returned across multiple pages of the response.\nThe response includes information on the maximum number of pages.\nUse the `limit` parameter to specify how many results should be returned in one page.\nUse the `page` parameter to select a page number.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "entities",
+                "by-flag-type",
+                ":flag_type_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number for pagination"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Number of entities per page"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "flag_type_id",
+                  "description": "(Required) ObjectId of the flag type to filter entities by"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2da0d5cf-9f79-41a3-a1a0-5b6cab9f8f12",
+              "name": "Entities with the specified flag type",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    "by-flag-type",
+                    ":flag_type_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "flag_type_id",
+                      "description": "(Required) ObjectId of the flag type to filter entities by"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"entities\": [\n    {\n      \"id\": \"67ca2eb28f1f60aa37278f33\",\n      \"name\": \"EXAMPLE CONTOSO INC.\",\n      \"jurisdiction\": \"US\",\n      \"type\": \"Company\",\n      \"status\": \"Active\",\n      \"addresses\": [\n        \"123 Main Street, Anytown, State, 12345\"\n      ],\n      \"flags\": [\n        {\n          \"id\": \"6808e96feb30f71f4da957c8\",\n          \"created_at\": \"2025-03-15T00:11:31.376Z\",\n          \"type\": \"67db2af315fadaf237af6a0e\",\n          \"flag_type\": \"Sanctions & Restricted Entities Risk\",\n          \"flag_subtype\": \"1260H Entities\",\n          \"flag_polarity\": -1,\n          \"description\": \"A flag that describes an staged_flag on the OpenSanctions default list.\",\n          \"sources\": [\n            {\n              \"url\": \"https://www.defense.gov/News/Releases/Release/Article/4023145/\"\n            }\n          ]\n        }\n      ],\n      \"aliases\": [\n        \"CONTOSO\",\n        \"EX CONTOSO\"\n      ]\n    }\n  ],\n  \"pagination\": {\n    \"page\": 1,\n    \"limit\": 50,\n    \"total_entities\": 127,\n    \"total_pages\": 3,\n    \"has_next\": true,\n    \"has_previous\": false\n  },\n  \"filter_summary\": {\n    \"flag_type_id\": \"67db2af315fadaf237af6a0e\",\n    \"flag_type\": \"Sanctions & Restricted Entities Risk\",\n    \"flag_subtype\": \"1260H Entities\",\n    \"flag_polarity\": -1\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7d73be68-5798-4c71-8723-4afd5bec858f",
+              "name": "Bad Request - Invalid parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    "by-flag-type",
+                    ":flag_type_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "flag_type_id",
+                      "description": "(Required) ObjectId of the flag type to filter entities by"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"flag_type_id must be a valid ObjectId\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "18bb2070-e238-4a45-aaca-2e3017bee76d",
+              "name": "Flag type not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    "by-flag-type",
+                    ":flag_type_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "flag_type_id",
+                      "description": "(Required) ObjectId of the flag type to filter entities by"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Flag type not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "472748fc-c256-4e5f-bfe5-651740570d3b",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    "by-flag-type",
+                    ":flag_type_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "flag_type_id",
+                      "description": "(Required) ObjectId of the flag type to filter entities by"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "35561c70-547b-4a6a-b30b-78bc8d09b0c9",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    "by-flag-type",
+                    ":flag_type_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "flag_type_id",
+                      "description": "(Required) ObjectId of the flag type to filter entities by"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ff73a761-eee9-4d81-a09a-ff5a02b87177",
+          "name": "Get Entity",
+          "request": {
+            "name": "Get Entity",
+            "description": {
+              "content": "Retrieve a single Entity by its Id",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "entities",
+                ":entity_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ba5b0765-0fc7-4a15-b358-ffd19a61d80d",
+              "name": "Successful entity match.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"507f1f77bcf86cd799439015\",\n  \"name\": \"Example Contoso Inc.\",\n  \"description\": \"Large-scale manufacturing company specializing in automotive components\",\n  \"primary_role\": \"manufacturer\",\n  \"aliases\": [\n    \"Contoso\",\n    \"EX CONTOSO\"\n  ],\n  \"url\": \"https://globalmanufacturingcorp.example\",\n  \"jurisdiction\": \"US\",\n  \"addresses\": [\n    \"123 Main Street, Anytown, State, 12345\"\n  ],\n  \"monitor\": false,\n  \"created_at\": \"1970-01-01T00:00:00.000Z\",\n  \"modified\": \"1970-01-01T00:00:00.000Z\",\n  \"region\": \"State\",\n  \"affiliated_jurisdiction\": \"CA\",\n  \"tradeverifyd_score\": 550,\n  \"references\": {\n    \"flags\": {\n      \"total\": 2\n    },\n    \"relationships\": {\n      \"total\": 15,\n      \"from_relationships\": {\n        \"count\": 8\n      },\n      \"to_relationships\": {\n        \"count\": 7\n      }\n    },\n    \"risk_events\": {\n      \"total\": 1\n    }\n  },\n  \"count_inferred_relationships\": {\n    \"depth\": 2,\n    \"value\": 2,\n    \"last_updated\": \"1970-01-01T00:00:00.000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1aecd55a-08a1-4f94-b882-480926a98b08",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ad46170d-0ee0-4460-a008-9e49e510fa9f",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cec9efc4-455d-4a6b-99ee-cca72e23c696",
+          "name": "Get Entity Risk Events",
+          "request": {
+            "name": "Get Entity Risk Events",
+            "description": {
+              "content": "Get Risk Events affecting an Entity.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "entities",
+                ":entity_id",
+                "risk_events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "cc888dba-6d1a-4b1f-ae0d-6d8a4910e122",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id",
+                    "risk_events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"string\",\n    \"timestamp\": \"1985-01-16T13:37:24.684Z\",\n    \"last_modified\": \"1996-11-27T10:22:13.249Z\",\n    \"countries\": [\n      \"string\",\n      \"string\"\n    ],\n    \"time_start\": \"1984-06-07T09:56:47.521Z\",\n    \"time_end\": \"1987-04-29T04:22:25.403Z\",\n    \"title\": \"string\",\n    \"description\": \"string\",\n    \"sources\": [\n      \"string\",\n      \"string\"\n    ],\n    \"type\": \"pandemic\"\n  },\n  {\n    \"id\": \"string\",\n    \"timestamp\": \"2015-07-22T22:28:30.226Z\",\n    \"last_modified\": \"1996-07-09T05:37:58.716Z\",\n    \"countries\": [\n      \"string\",\n      \"string\"\n    ],\n    \"time_start\": \"1973-05-28T07:11:33.682Z\",\n    \"time_end\": \"1970-10-07T09:14:53.608Z\",\n    \"title\": \"string\",\n    \"description\": \"string\",\n    \"sources\": [\n      \"string\",\n      \"string\"\n    ],\n    \"type\": \"tornado\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "492e0465-f413-40ee-8390-671db536a4fb",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id",
+                    "risk_events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b068d796-8d38-44c5-94a9-2c911d0d220f",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id",
+                    "risk_events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e9d6ad90-2530-4ce2-a6e7-6212e47b5253",
+          "name": "Get Entity Verification by entity id",
+          "request": {
+            "name": "Get Entity Verification by entity id",
+            "description": {
+              "content": "Retrieves the Tradeverifyd Supplier Assessment (TSA) details for a given entity. Returns the current\nsupplier assessment and compliance information recorded for the specified entity.\n\nNote: To generate a Tradeverifyd Advanced Supplier Assessment (TASA), use the POST /reports endpoint.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "entities",
+                ":entity_id",
+                "verification"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "hs_code",
+                  "value": "<string>",
+                  "description": "Optional HS code (2, 4, or 6-digit) to filter the supplier graph used for assessment. When provided, only supplier relationships (IS_SUPPLIER_OF edges) that match the HS code are considered when analyzing the entity's supply chain. This filters the graph to show suppliers of specific products. Less specific codes (e.g., '52') match more specific codes (e.g., '5201', '520100'). Note: Supplier jurisdiction filtering will be added in future updates."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) Id of the Entity to use as the starting node for graph retrieval."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "fba22ab3-0d8f-43dd-833e-25497a310447",
+              "name": "Successful entity verification retrieval.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id",
+                    "verification"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "hs_code",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) Id of the Entity to use as the starting node for graph retrieval."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"507f1f77bcf86cd799439015\",\n  \"name\": \"Example Contoso Inc.\",\n  \"jurisdiction\": \"US\",\n  \"addresses\": [\n    \"123 Main Street, Anytown, State, 12345\"\n  ],\n  \"text_summary\": \"One company in this supply chain has been flagged for compliance issues.\",\n  \"problematic_entities\": [\n    {\n      \"id\": \"507f1f77bcf86cd799439017\",\n      \"name\": \"ACME CORP.\",\n      \"flags\": [\n        {\n          \"sources\": [\n            \"https://www.dhs.gov/uflpa-entity-list\"\n          ],\n          \"type\": \"Human Rights Violation Risk\",\n          \"subtype\": \"Forced Labor Risk\",\n          \"flag_polarity\": -1\n        }\n      ],\n      \"addresses\": [\n        {\n          \"address\": \"789 1st Street, Anytown, State, 12345\",\n          \"problematic\": true,\n          \"problem_region\": \"AK\"\n        }\n      ],\n      \"jurisdiction\": \"US\",\n      \"depth\": 3,\n      \"tvpra_risks\": [\n        {\n          \"risk_type\": \"forced_labor\",\n          \"suspect_hs_codes\": [\n            \"52\"\n          ]\n        }\n      ],\n      \"has_excessive_addresses\": false\n    }\n  ],\n  \"tradeverifyd_score\": 550,\n  \"total_entity_ct\": 1,\n  \"identifiers\": [\n    {\n      \"type\": \"lei\",\n      \"source\": \"https://lei-lookup.com/record/example\",\n      \"id\": \"1b070d5e-eb8d-41e6-9055-a26f8f638571\"\n    }\n  ],\n  \"incoming_products\": [\n    \"52\",\n    \"61\"\n  ],\n  \"outgoing_products\": [\n    \"74\"\n  ],\n  \"top_supplier_connections\": [\n    {\n      \"id\": \"507f1f77bcf86cd799439018\",\n      \"name\": \"SANCTIONED TRADING LLC\",\n      \"jurisdiction\": \"RU\"\n    }\n  ],\n  \"top_customer_connections\": [\n    {\n      \"id\": \"507f1f77bcf86cd799439013\",\n      \"name\": \"RISKY SUPPLIERS LTD\",\n      \"jurisdiction\": \"CN\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bbb509b7-b7d5-4c51-a5e6-4c5b43369ea4",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id",
+                    "verification"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "hs_code",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) Id of the Entity to use as the starting node for graph retrieval."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "67c50e70-fee0-4d82-afa8-aedea6730b04",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id",
+                    "verification"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "hs_code",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) Id of the Entity to use as the starting node for graph retrieval."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9136a8bb-dc66-4ef5-9ea3-675d25cc3b57",
+          "name": "Get Entity Verification by identifier",
+          "request": {
+            "name": "Get Entity Verification by identifier",
+            "description": {
+              "content": "Retrieves a Tradeverifyd Supplier Assesssment (TSA) for an entity from alternative identifiers.\nThe purpose of this endpoint is to use external IDs (such as manufacturing or bank identifiers) to\nretrieve entity verification details in the form of a TSA.\n\nFor example:\n- Retrieving by LEI id: `GET /v1/entities/lei/559312VRR0Z0AXO77J92/verification`\n- Retrieving by BIC id: `GET /v1/entities/bic/XCDVTLBIXXX/verification`",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "entities",
+                ":identifier_type",
+                ":identifier_value",
+                "verification"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "hs_code",
+                  "value": "<string>",
+                  "description": "Optional HS code to filter the graph considered when calculating verification details for the requested Entity."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "identifier_type",
+                  "description": "(Required) The type of the identifier (e.g., lei, mid)"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "identifier_value",
+                  "description": "(Required) The value of the identifier"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "87794c6f-8f39-492c-8fa6-a486e43f8528",
+              "name": "Successful entity verification retrieval.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":identifier_type",
+                    ":identifier_value",
+                    "verification"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "hs_code",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "identifier_type",
+                      "description": "(Required) The type of the identifier (e.g., lei, mid)"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "identifier_value",
+                      "description": "(Required) The value of the identifier"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"607f1f77bcf86cd799439016\",\n  \"name\": \"Example Construction Ltd.\",\n  \"jurisdiction\": \"US\",\n  \"addresses\": [\n    \"101 Main Street, New York City, New York, 10001\"\n  ],\n  \"text_summary\": \"One company in this supply chain has been flagged for issues related to labor.\",\n  \"problematic_entities\": [\n    {\n      \"id\": \"507f1f77bcf86cd799439017\",\n      \"name\": \"ACME CORP.\",\n      \"flags\": [\n        {\n          \"sources\": [\n            \"https://www.dhs.gov/uflpa-entity-list\"\n          ],\n          \"type\": \"Worker & Consumer Safety Risk\",\n          \"subtype\": \"Transportation Safety Violations\",\n          \"flag_polarity\": -1\n        }\n      ],\n      \"addresses\": [\n        {\n          \"address\": \"789 1st Street, Anytown, State, 12345\",\n          \"problematic\": true,\n          \"problem_region\": \"AK\"\n        }\n      ],\n      \"jurisdiction\": \"US\",\n      \"depth\": 3,\n      \"tvpra_risks\": [\n        {\n          \"risk_type\": \"forced_labor\",\n          \"suspect_hs_codes\": [\n            \"52\"\n          ]\n        }\n      ],\n      \"has_excessive_addresses\": false\n    }\n  ],\n  \"tradeverifyd_score\": 550,\n  \"total_entity_ct\": 1,\n  \"identifiers\": [\n    {\n      \"type\": \"lei\",\n      \"source\": \"https://lei-lookup.com/record/example\",\n      \"id\": \"1b070d5e-eb8d-41e6-9055-a26f8f638571\"\n    }\n  ],\n  \"incoming_products\": [\n    \"52\",\n    \"61\"\n  ],\n  \"outgoing_products\": [\n    \"74\"\n  ],\n  \"top_supplier_connections\": [\n    {\n      \"id\": \"507f1f77bcf86cd799439018\",\n      \"name\": \"SANCTIONED TRADING LLC\",\n      \"jurisdiction\": \"RU\"\n    }\n  ],\n  \"top_customer_connections\": [\n    {\n      \"id\": \"507f1f77bcf86cd799439013\",\n      \"name\": \"RISKY SUPPLIERS LTD\",\n      \"jurisdiction\": \"CN\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6aa2051b-407d-4b86-afcd-aca75212ba94",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":identifier_type",
+                    ":identifier_value",
+                    "verification"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "hs_code",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "identifier_type",
+                      "description": "(Required) The type of the identifier (e.g., lei, mid)"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "identifier_value",
+                      "description": "(Required) The value of the identifier"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e32a6e90-f866-4432-9e22-2046aa00dd3f",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":identifier_type",
+                    ":identifier_value",
+                    "verification"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "hs_code",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "identifier_type",
+                      "description": "(Required) The type of the identifier (e.g., lei, mid)"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "identifier_value",
+                      "description": "(Required) The value of the identifier"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "94ef754c-9a33-415d-8011-8431aa18ccc3",
+          "name": "Get Entity Graph",
+          "request": {
+            "name": "Get Entity Graph",
+            "description": {
+              "content": "Retrieve a graph of paginated relationships for a single Entity.\n\nThis endpoint provides information about the relationships of an Entity,\nsuch as partnerships, affiliations, or any other defined connections. The\nreturned graph contains entity relationship data and includes\nentity properties.\n\nIn the returned relationships data, relationships are described as having\na `source`, an `target`, and a `type`. The direction of the relationship\nmoves from source to target, and is described by the type.\n\nThe page and page_size parameters determine the number of relationships\nto return per page.\n\nThe total_records and total_pages fields are only returned if depth is 3 or less.\nIf depth is greater than 3, these fields are omitted.\n\nNote: This endpoint includes Flags but NOT Risk Events data. Use the\n/risk_events endpoint to retrieve that information for specific entities.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "entities",
+                ":entity_id",
+                "graph"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "hs_codes",
+                  "value": "<string>",
+                  "description": "A comma separated list of 2, 4, or 6-digit HS codes to filter by. A less-specific HS code will always match a more-specific code with the same chapter or heading. For example, code '12' will match '1234' and '1256'. If list is empty or null, all relationships are returned."
+                },
+                {
+                  "disabled": false,
+                  "key": "depth",
+                  "value": "3",
+                  "description": "Limits how many levels of related relationships the query will explore. For example, a depth of 1 returns only directly related items, while higher values include more distant connections."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page to retrieve"
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "100",
+                  "description": "Number of relationships to return per page (max 100)"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_affiliates",
+                  "value": "false",
+                  "description": "Set True to preserve affiliate relationships when filtering by HS codes. When True, affiliate relationships will be included in the graph even if they don't match the specified HS codes."
+                },
+                {
+                  "disabled": false,
+                  "key": "direction",
+                  "value": "in",
+                  "description": "The graph direction from the root entity.  Values are 'in' and 'out'. A typical relationship such as IS_SUPPLIER_OF is an inbound relationship pointing to the root entity. The default value is 'in', resulting in a graph of inbound relationships."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) Id of the Entity to use as the starting or root entity for graph retrieval."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5bea81a6-9455-4d96-a69e-a7b4b0e8c3f6",
+              "name": "Graph of entities related to the entrypoint",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id",
+                    "graph"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "hs_codes",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "depth",
+                      "value": "3"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "include_affiliates",
+                      "value": "false"
+                    },
+                    {
+                      "key": "direction",
+                      "value": "in"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) Id of the Entity to use as the starting or root entity for graph retrieval."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"entrypoint\": {\n    \"id\": \"64ac25c572c173ba6f32e840\",\n    \"name\": \"COMPANY A\",\n    \"jurisdiction\": \"DE\",\n    \"flags\": [],\n    \"coordinates\": [],\n    \"addresses\": [],\n    \"aliases\": [],\n    \"ids\": []\n  },\n  \"entities\": [\n    {\n      \"id\": \"64ac25c572c173ba6f32e840\",\n      \"name\": \"COMPANY A\",\n      \"jurisdiction\": \"DE\",\n      \"flags\": [\n        {\n          \"id\": \"67ffefdc070a88cf06635ee9\",\n          \"entity_id\": \"64ac25c572c173ba6f32e840\",\n          \"entity_jurisdiction\": \"DE\",\n          \"type\": \"Compliant\",\n          \"subtype\": \"Forced Labor Risk\",\n          \"flag_polarity\": 1,\n          \"modified\": \"2023-05-23T20:31:42Z\",\n          \"source\": [\n            \"https://modernslaveryregister.gov.au/statements/\"\n          ],\n          \"tags\": [\n            \"COMPLIANT - Australia Modern Slavery Act 2018\"\n          ]\n        }\n      ],\n      \"coordinates\": [],\n      \"addresses\": [\n        \"123 abc street chicago illinois 12345\"\n      ],\n      \"aliases\": [\n        \"Company A. Inc.\",\n        \"Company A.\",\n        \"Company A. LLC\"\n      ],\n      \"ids\": [\n        {\n          \"id\": \"AAAAAAAAAAAAAAAAAAAA\",\n          \"active\": true,\n          \"created\": \"2025-09-24T12:29:26.080132\",\n          \"type\": \"lei\",\n          \"source\": \"https://www.gleif.org/en\"\n        },\n        {\n          \"id\": \"COAAAMUXXX\",\n          \"active\": true,\n          \"created\": \"2025-09-24T12:29:26.080144\",\n          \"type\": \"bic\",\n          \"source\": \"https://www.gleif.org/en\"\n        }\n      ]\n    },\n    {\n      \"id\": \"64ac25c772c173ba6f3c9c57\",\n      \"name\": \"Company B\",\n      \"jurisdiction\": \"DE\",\n      \"flags\": [],\n      \"coordinates\": [],\n      \"addresses\": [],\n      \"aliases\": [\n        \"Company B. Inc.\"\n      ],\n      \"ids\": [\n        {\n          \"id\": \"12345_ABCDEFGH\",\n          \"active\": true,\n          \"created\": \"2025-09-24T12:29:26.080169\",\n          \"type\": \"opencorporates\",\n          \"source\": \"https://www.handelsregister.de/\"\n        },\n        {\n          \"id\": \"12345_ABCDEFGH\",\n          \"active\": true,\n          \"created\": \"2025-09-24T12:29:26.080180\",\n          \"type\": \"opencorporates_native_company_number\",\n          \"source\": \"https://www.handelsregister.de/\"\n        },\n        {\n          \"id\": \"BBBBBBBBBBBBBBBBBBBB\",\n          \"active\": true,\n          \"created\": \"2025-09-24T12:29:26.080192\",\n          \"type\": \"lei\",\n          \"source\": \"opencorporates_additional_identifiers\"\n        }\n      ]\n    },\n    {\n      \"id\": \"64ac25c772c173ba6f3d0aa1\",\n      \"name\": \"Company C\",\n      \"jurisdiction\": \"JP\",\n      \"flags\": [],\n      \"coordinates\": [],\n      \"addresses\": [],\n      \"aliases\": [\n        \"Company C. Inc.\"\n      ],\n      \"ids\": [\n        {\n          \"id\": \"CCCCCCCCCCCCCCCCCCCC\",\n          \"active\": true,\n          \"created\": \"2025-09-24T12:29:26.080207\",\n          \"type\": \"lei\",\n          \"source\": \"https://www.gleif.org/en\"\n        },\n        {\n          \"id\": \"CCCCCCCCCCCCCCCCCCCC\",\n          \"active\": true,\n          \"created\": \"2025-09-24T12:29:26.080218\",\n          \"type\": \"mid\",\n          \"source\": \"Customs Directive 1234-567\"\n        }\n      ]\n    },\n    {\n      \"id\": \"64ac25c772c173ba6f3e637f\",\n      \"name\": \"Company D\",\n      \"jurisdiction\": \"JP\",\n      \"flags\": [],\n      \"coordinates\": [],\n      \"addresses\": [],\n      \"ids\": [\n        {\n          \"id\": \"DDDDDDDDDDDDDDDDDDDD\",\n          \"active\": true,\n          \"created\": \"2025-09-24T12:29:26.080233\",\n          \"type\": \"lei\",\n          \"source\": \"https://www.gleif.org/en\"\n        }\n      ]\n    },\n    {\n      \"id\": \"64ac25c872c173ba6f407757\",\n      \"name\": \"Company E\",\n      \"jurisdiction\": \"US\",\n      \"flags\": [],\n      \"coordinates\": [\n        {\n          \"lat\": 100,\n          \"lng\": 112,\n          \"type\": \"headquarters\"\n        },\n        {\n          \"lat\": 12,\n          \"lng\": 24,\n          \"type\": \"legal\"\n        }\n      ],\n      \"addresses\": [\n        \"456 abc street\",\n        \"123 abc street\"\n      ],\n      \"aliases\": [\n        \"Company E. Inc.\"\n      ],\n      \"ids\": [\n        {\n          \"id\": \"EEEEEEEEEEEEEEEEEEEE\",\n          \"active\": true,\n          \"created\": \"2025-09-24T12:29:26.080247\",\n          \"type\": \"lei\",\n          \"source\": \"https://www.gleif.org/en\"\n        }\n      ]\n    }\n  ],\n  \"relationships\": [\n    {\n      \"id\": \"64ac2a7172c173ba6f57dad2\",\n      \"type\": \"DIRECTLY_CONSOLIDATES\",\n      \"target\": \"64ac25c572c173ba6f3316cf\",\n      \"source\": \"64ac25c672c173ba6f36283d\",\n      \"modified\": \"2024-04-25T17:55:44.263000Z\",\n      \"sources\": [\n        \"https://search.gleif.org/#/record/AAAAAAAAAAAAAAAAAAAA/\",\n        \"https://search.gleif.org/#/record/BBBBBBBBBBBBBBBBBBBB/\"\n      ]\n    },\n    {\n      \"id\": \"64ac2a7272c173ba6f5d4ed0\",\n      \"type\": \"DIRECTLY_CONSOLIDATES\",\n      \"target\": \"64ac25d472c173ba6f530da1\",\n      \"source\": \"64ac25d472c173ba6f541022\",\n      \"modified\": \"2024-04-25T17:55:45.505000Z\",\n      \"sources\": [\n        \"https://search.gleif.org/#/record/CCCCCCCCCCCCCCCCCCCC/\",\n        \"https://search.gleif.org/#/record/DDDDDDDDDDDDDDDDDDDD/\"\n      ]\n    },\n    {\n      \"id\": \"64ac87dd1102a154bf0cbbc8\",\n      \"type\": \"IS_SUPPLIER_OF\",\n      \"target\": \"645a550a992fba23b295e4ea\",\n      \"source\": \"645a550a992fba23b295e4e9\",\n      \"hs_codes\": [\n        \"8541\"\n      ],\n      \"modified\": \"2025-02-20T16:10:51.079000Z\",\n      \"sources\": [\n        \"https://www.shu.ac.uk/helena-kennedy-centre-international-justice/research-and-projects/all-projects/in-broad-daylight\"\n      ]\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 1000,\n  \"records\": 134,\n  \"total_records\": 134,\n  \"total_pages\": 0\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1c622acd-feac-410b-a262-6c7dfafb24dd",
+              "name": "Invalid depth",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id",
+                    "graph"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "hs_codes",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "depth",
+                      "value": "3"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "include_affiliates",
+                      "value": "false"
+                    },
+                    {
+                      "key": "direction",
+                      "value": "in"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) Id of the Entity to use as the starting or root entity for graph retrieval."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Depth must be between 1 and 10.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4c0bfe4e-3ad5-4427-b7f8-a94d0f6a6d7e",
+              "name": "Unprocessable Content - invalid parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id",
+                    "graph"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "hs_codes",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "depth",
+                      "value": "3"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "include_affiliates",
+                      "value": "false"
+                    },
+                    {
+                      "key": "direction",
+                      "value": "in"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) Id of the Entity to use as the starting or root entity for graph retrieval."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"type\": \"literal_error\",\n      \"loc\": [\n        \"query\",\n        \"direction\"\n      ],\n      \"msg\": \"Input should be 'in' or 'out'\",\n      \"input\": \"between\",\n      \"ctx\": {\n        \"expected\": \"'in' or 'out'\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "778d48cf-88f5-4f2b-8911-56b4febae31e",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id",
+                    "graph"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "hs_codes",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "depth",
+                      "value": "3"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "100"
+                    },
+                    {
+                      "key": "include_affiliates",
+                      "value": "false"
+                    },
+                    {
+                      "key": "direction",
+                      "value": "in"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) Id of the Entity to use as the starting or root entity for graph retrieval."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4a07dd02-5614-4551-8bee-15a2727cfa67",
+          "name": "Get Entity Graph Flagged Relationships",
+          "request": {
+            "name": "Get Entity Graph Flagged Relationships",
+            "description": {
+              "content": "Get flagged relationships for an entity with full entity, relationship, and flag details.\n\nThis endpoint returns the shortest paths between the specified entity and all\nupstream flagged entities that pass through the provided HS codes. The response\nincludes complete details for all entities, relationships, and flags referenced\nin the paths.\n\nArgs:\n- entity_id: The ID of the entity to use as the starting point for relationship search\n- hs_codes: List of HS codes that paths must pass through to be considered\n- include_flags: Optional list of flag types to filter by (if not provided, all flag types are considered)\n- include_affiliates: When True, paths connected by affiliate relationships are included\n- paging: Pagination parameters\n\nReturns:\n- FlaggedRelationshipsResponse: Contains entities, relationships, and flags with all\nObjectIds serialized as strings with all ObjectIds serialized as strings",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "entities",
+                ":entity_id",
+                "graph",
+                "flagged_relationships"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "hs_codes",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "hs_codes",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "include_flags",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_flags",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_affiliates",
+                  "value": "false",
+                  "description": "Set True to preserve affiliate relationships when filtering by HS codes. When True, affiliate relationships will be included in the graph even if they don't match the specified HS codes."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "25"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ef4ec0a0-40c7-4286-99bb-acca72e0ea4e",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id",
+                    "graph",
+                    "flagged_relationships"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "hs_codes",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "hs_codes",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_flags",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_flags",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_affiliates",
+                      "value": "false"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "25"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"entities\": [\n    {\n      \"aliases\": [\n        \"Company A Inc.\"\n      ],\n      \"location\": {\n        \"HeadquartersAddress\": {\n          \"addressLines\": [\n            \"NO.36 EAST OF NORTH 3 ROAD\"\n          ],\n          \"addressNumber\": \"36\",\n          \"city\": \"City A\",\n          \"coordinates\": {\n            \"latitude\": 0,\n            \"longitude\": 0\n          },\n          \"country\": \"Country A\",\n          \"language\": \"en\",\n          \"region\": \"Region A\"\n        },\n        \"LegalAddress\": {\n          \"addressLines\": [\n            \"NO.36 EAST OF NORTH 3 ROAD\"\n          ],\n          \"addressNumber\": \"36\",\n          \"city\": \"City A\",\n          \"coordinates\": {\n            \"latitude\": 0,\n            \"longitude\": 0\n          },\n          \"country\": \"Country A\",\n          \"language\": \"en\",\n          \"region\": \"Region A\"\n        }\n      },\n      \"modified\": \"2025-09-12T00:00:00Z\",\n      \"name\": \"Company A\",\n      \"uuid\": \"bceaa087-7532-46b0-bc5d-b57d1a0573b7\"\n    }\n  ],\n  \"relationships\": [\n    {\n      \"modified\": \"2025-09-12T00:00:00Z\",\n      \"relation_from\": \"64ac25c672c173ba6f399722\",\n      \"relation_to\": \"64ac25c872c173ba6f415635\",\n      \"source\": [\n        \"https://search.gleif.org/#/record/AAAAAAAAAAAAAAAAAAAA/\",\n        \"https://search.gleif.org/#/record/BBBBBBBBBBBBBBBBBBBB/\"\n      ],\n      \"type\": \"DIRECTLY_CONSOLIDATES\"\n    }\n  ],\n  \"flags\": [\n    {\n      \"entity_id\": \"66b5aca01091cc1ae224b0dd\",\n      \"flag_polarity\": 1,\n      \"flag_subtype\": \"Forced Labor Risk\",\n      \"flag_type\": \"Compliant\",\n      \"modified\": \"2025-09-12T00:00:00Z\",\n      \"source\": [\n        \"https://modernslaveryregister.gov.au/statements/\"\n      ],\n      \"tags\": [\n        \"COMPLIANT - Australia Modern Slavery Act 2018\"\n      ]\n    }\n  ],\n  \"pagination\": {\n    \"current_page\": 1,\n    \"page_size\": 50,\n    \"total_pages\": 1,\n    \"total_records\": 1\n  },\n  \"filters\": {\n    \"key_0\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"sorting\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "242783f0-6138-4cd3-8b15-f7201d07b3b5",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id",
+                    "graph",
+                    "flagged_relationships"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "hs_codes",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "hs_codes",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_flags",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_flags",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_affiliates",
+                      "value": "false"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "25"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a06c7b7b-5574-4dc9-9007-e7d1df0cfeca",
+              "name": "Internal server error - contact support",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "entities",
+                    ":entity_id",
+                    "graph",
+                    "flagged_relationships"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "hs_codes",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "hs_codes",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_flags",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_flags",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_affiliates",
+                      "value": "false"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "25"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "ocp-apim-subscription-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Internal server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.tradeverifyd.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "ocp-apim-subscription-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "c696e7f0-add4-4e28-97fd-a8107e141345",
+    "name": "Tradeverifyd Documents Entity API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\nThe Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.\n\nFor more information visit [tradeverifyd.com](https://tradeverifyd.com).\n\nIf you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.\n\nWhen making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.\n\nFor example:\n\n```bash\ncurl --silent --location -G 'https://.../v1/search/entities' \\\n--data-urlencode 'name=Contoso Corporation' \\\n--data-urlencode 'jurisdiction=US' \\\n--header \"ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY\"\n```\n\n\nContact Support:\n Name: tradeverifyd.com\n Email: support@tradeverifyd.com",
+      "type": "text/plain"
+    }
+  }
+}
