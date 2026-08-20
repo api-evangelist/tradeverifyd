@@ -93,6 +93,8 @@ apis:
   humanURL: https://api.tradeverifyd.com/v1/docs
   baseURL: https://api.tradeverifyd.com
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
