@@ -12,6 +12,18 @@ description: >-
   requests, and verifiable-credential issuance, authenticated with an
   ocp-apim-subscription-key header.
 url: https://raw.githubusercontent.com/api-evangelist/tradeverifyd/refs/heads/main/apis.yml
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
