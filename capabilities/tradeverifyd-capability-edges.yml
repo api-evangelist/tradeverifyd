@@ -1,0 +1,48 @@
+slug: tradeverifyd
+provider: Tradeverifyd
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Transportation & Logistics
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: US Customs
+  spec_file: tradeverifyd-us-customs-api-openapi.yml
+  capability_id: BC-2480
+  capability_id_l1: BC-2480
+  capability_name: Customs & Trade Compliance Management
+  confidence: 0.75
+  evidence: POST /v1/us_customs/submit_presentation — Submit Verifiable Presentation; schema us_customs__CBPRequest
+  reason: Submits verifiable evidence to US Customs and Border Protection in response to CBP requests,
+    which is cross-border customs/trade compliance filing. Left at L1 because the submission is UFLPA-style
+    evidence rather than a specific declaration, origin or trusted-trader process.
+- tag: Entity
+  spec_file: tradeverifyd-entity-api-openapi.yml
+  capability_id: BC-510.30
+  capability_id_l1: BC-510
+  capability_name: Supplier Risk Management
+  confidence: 0.7
+  evidence: Get Entity Risk Events; Get Entity Verification by entity id; Get Entity Graph Flagged Relationships;
+    schemas VerificationFlag, ProblematicEntity, TopSupplierConnection
+  reason: Operations resolve and screen trading-partner entities, expose risk events, verification flags
+    and flagged supplier relationship graphs — this is due-diligence/risk assessment on suppliers rather
+    than a transport execution capability. Some ambiguity with denied-party screening under customs compliance.
+- tag: Shipments
+  spec_file: tradeverifyd-shipments-api-openapi.yml
+  capability_id: BC-2480
+  capability_id_l1: BC-2480
+  capability_name: Customs & Trade Compliance Management
+  confidence: 0.7
+  evidence: Get CBP Requests for Shipment; Upload a document to a shipment; Get supplier information requests;
+    schemas CBPRequestListing, SupplierInformationRequestStatus
+  reason: Shipment records exist to gather supplier information requests and documentary evidence against
+    US Customs (CBP) requests for cross-border consignments — cross-border trade compliance rather than
+    transport execution. Not clear which sub-capability (declaration vs trusted trader vs screening),
+    so L1 only.

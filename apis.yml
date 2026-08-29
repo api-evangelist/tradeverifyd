@@ -234,6 +234,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/tradeverifyd-capability-edges.yml
+  name: Tradeverifyd Business Capability Map
 - type: Overlay
   url: overlays/tradeverifyd-openapi-overlay.yaml
 - type: Website
