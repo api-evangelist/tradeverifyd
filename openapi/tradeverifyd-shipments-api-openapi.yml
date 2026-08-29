@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Tradeverifyd Documents Shipments API
+  title: Tradeverifyd Shipments API
   description: '
 
     The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
@@ -1375,98 +1375,59 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    SupplierInformationSuggestedContactResponse:
+    UpdateShipmentRequest:
       properties:
-        info_type:
-          title: Info Type
-          description: Describes the type of contact information found.
+        shipment_name:
+          type: string
+          title: Shipment Name
+          description: Name of shipment.
+        origin:
+          title: Origin
+          description: Location of the shipment's origin.
           type: string
           nullable: true
-        name:
-          title: Name
-          description: Name of the supplier.
+        destination:
+          title: Destination
+          description: Location of the shipment's destination.
           type: string
           nullable: true
-        website:
-          title: Website
-          description: The supplier's website.
+        departure_date:
+          title: Departure Date
+          description: Date of the shipment's departure.
           type: string
+          format: date-time
           nullable: true
-        contactPhone:
-          title: Contactphone
-          description: The contact phone number for the supplier.
+        arrival_date:
+          title: Arrival Date
+          description: Date of the shipment's arrival.
           type: string
+          format: date-time
           nullable: true
-        address:
-          $ref: '#/components/schemas/SuggestedContactAddress'
-          nullable: true
-        citations:
-          title: Citations
-          description: References for the suggested supplier contacts.
-          default: []
-          items:
-            $ref: '#/components/schemas/SuggestedContactCitation'
-          type: array
-          nullable: true
-      type: object
-      required:
-      - address
-      title: SupplierInformationSuggestedContactResponse
-      description: Response model for suggested contact information for a supplier
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    SupplierInformationRequestFilter:
-      properties:
-        supplier_name:
-          items:
-            type: string
-          type: array
-          title: Supplier Name
-          description: Supplier name(s) used to filter responses.
-        supplier_jurisdiction:
-          items:
-            type: string
-          type: array
-          title: Supplier Jurisdiction
-          description: Supplier jurisdiction(s) used to filter responses.
         status:
+          $ref: '#/components/schemas/ShipmentStatus'
+        active:
+          type: boolean
+          title: Active
+          description: Boolean signifying if the shipment is active or inactive.
+          default: true
+        organizational_units:
           items:
             type: string
           type: array
-          title: Status
-          description: Status used to filter responses.
-        tradeverifyd_score:
-          items: {}
-          type: array
-          title: Tradeverifyd Score
-          description: Tradeverifyd Score used to filter responses.
+          title: Organizational Units
+          description: Subunit(s) of the organization.
+        detention_id:
+          title: Detention Id
+          description: Databaes ID of the detention for the shipment, if applicable.
+          type: string
+          nullable: true
       type: object
       required:
-      - supplier_name
-      - supplier_jurisdiction
+      - shipment_name
       - status
-      - tradeverifyd_score
-      title: SupplierInformationRequestFilter
-      description: Wrapper for SIR filters
+      - organizational_units
+      title: UpdateShipmentRequest
+      description: Model for updating a shipment.
     ShipmentResponse:
       properties:
         shipment_id:
@@ -1517,18 +1478,90 @@ components:
       - active
       title: ShipmentResponse
       description: Response model for a shipment.
-    SupplierInformationRequestDetailResponse:
+    SupplierInformationRequestListing:
+      properties:
+        requests:
+          items:
+            $ref: '#/components/schemas/SupplierInformationRequestResponse'
+          type: array
+          title: Requests
+          description: List of supplier information requests.
+        pagination:
+          description: Details of the API's paginated response.
+          $ref: '#/components/schemas/earthstream_services__services__shipment__common__models__Pagination'
+          nullable: true
+        sorting:
+          items:
+            type: string
+          type: array
+          title: Sorting
+          description: Describes sorting method for the response, if applicable.
+        filters:
+          description: Details of the API's filters, if applicable.
+          $ref: '#/components/schemas/SupplierInformationRequestFilter'
+          nullable: true
+      type: object
+      required:
+      - requests
+      - pagination
+      - sorting
+      - filters
+      title: SupplierInformationRequestListing
+      description: Wrapper for SIR responses
+    earthstream_services__services__shipment__common__models__Pagination:
+      properties:
+        current_page:
+          type: integer
+          title: Current Page
+          description: Current page of results.
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of shipments on current page.
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages in API response.
+        total_records:
+          type: integer
+          title: Total Records
+          description: Total number of records in API response.
+      type: object
+      required:
+      - current_page
+      - page_size
+      - total_pages
+      - total_records
+      title: Pagination
+      description: 'Using to return paging information to the client.
+
+
+        current_page: the current page of data
+
+
+        total_pages: the total number of pages
+
+
+        total_records: the number of records found
+
+
+        page_size: the current page size'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SupplierInformationRequestResponse:
       properties:
         sir_id:
           type: string
           format: uuid
           title: Sir Id
-          description: Database ID of supplier information request record.
-        shipment_id:
-          type: string
-          format: uuid
-          title: Shipment Id
-          description: ID of shipment.
+          description: Identifier of supplier information request record.
         supplier_name:
           type: string
           title: Supplier Name
@@ -1537,26 +1570,6 @@ components:
           type: string
           title: Supplier Jurisdiction
           description: Jurisdiction of the supplier.
-        supplier_parent_name:
-          title: Supplier Parent Name
-          description: Name of the supplier parent.
-          type: string
-          nullable: true
-        supplier_parent_jurisdiction:
-          title: Supplier Parent Jurisdiction
-          description: Jurisdiction of the supplier parent.
-          type: string
-          nullable: true
-        supplier_domain:
-          title: Supplier Domain
-          description: URL domain of the supplier.
-          type: string
-          nullable: true
-        supplier_address:
-          title: Supplier Address
-          description: Address of the supplier.
-          type: string
-          nullable: true
         status:
           $ref: '#/components/schemas/SupplierInformationRequestStatus'
         tradeverifyd_score:
@@ -1564,54 +1577,181 @@ components:
           description: Tradeverifyd Score associated with the supplier.
           type: number
           nullable: true
-        supplier_hs_codes:
-          title: Supplier Hs Codes
-          description: List of HS codes associated with the supplier.
+      type: object
+      required:
+      - sir_id
+      - supplier_name
+      - supplier_jurisdiction
+      - status
+      title: SupplierInformationRequestResponse
+      description: Response model for a supplier information request.
+    SuggestedContactCitation:
+      properties:
+        source:
+          title: Source
+          description: Name of the suggested supplier contact reference.
           type: string
           nullable: true
-        related_parts:
-          title: Related Parts
-          description: Brief description of the parts related to the SIR.
+        url:
+          title: Url
+          description: URL for the suggested supplier contact reference.
           type: string
           nullable: true
-        product:
-          title: Product
-          description: Product associated with the SIR.
-          type: string
+      type: object
+      title: SuggestedContactCitation
+      description: Citation information for suggested supplier contact references.
+    ShipmentListingResponse:
+      properties:
+        shipments:
+          items:
+            $ref: '#/components/schemas/ShipmentResponse'
+          type: array
+          title: Shipments
+          description: List of shipments that belong to user's organization and match search parameters.
+        pagination:
+          description: Details of the API's paginated response.
+          $ref: '#/components/schemas/earthstream_services__services__shipment__common__models__Pagination'
           nullable: true
-        timeframe_start:
-          title: Timeframe Start
-          description: Start date of the SIR.
-          type: string
-          format: date
+        filters:
+          title: Filters
+          description: Details of the API's filters, if applicable.
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type: object
           nullable: true
-        timeframe_stop:
-          title: Timeframe Stop
-          description: End date of the SIR.
+        sorting:
+          items:
+            type: string
+          type: array
+          title: Sorting
+          description: Describes sorting method for the response, if applicable.
+      type: object
+      required:
+      - shipments
+      - pagination
+      - filters
+      - sorting
+      title: ShipmentListingResponse
+      description: Response model for a list of shipments
+    ShipmentStatus:
+      type: string
+      enum:
+      - Created
+      - In Transit
+      - Detained
+      - Complete
+      title: ShipmentStatus
+      description: Enum for shipment status.
+    app__schemas__shipments__CBPRequest:
+      properties:
+        id:
+          title: Id
+          description: The identifier for the CBP Request
           type: string
-          format: date
+          format: uuid
           nullable: true
-        reports:
-          title: Reports
-          description: Reports associated with the SIR.
+        created:
+          title: Created
+          description: The timestamp of when the CBP was created
+          type: string
+          format: date-time
+          nullable: true
+        last_modified:
+          title: Last Modified
+          description: The timestamp of the last modification to the CBP
+          type: string
+          format: date-time
+          nullable: true
+        shipment_id:
+          type: string
+          format: uuid
+          title: Shipment Id
+          description: The ID of the Shipment to which the CBP belongs
+        vc_ids:
+          title: Vc Ids
+          description: A list of related VC ids
           items:
             type: string
           type: array
           nullable: true
-        entity_id:
-          title: Entity Id
-          description: ID of the entity associated with the SIR.
+        presentation:
+          title: Presentation
+          description: The raw data of the Presentation submitted to CBP.
+          type: string
+          nullable: true
+        presentation_id:
+          title: Presentation Id
+          description: The CBP may be related to a presentation
+          type: string
+          nullable: true
+        submitted_date:
+          type: string
+          format: date-time
+          title: Submitted Date
+          description: The timestamp of when the request was submitted to CBP
+        cbp_response_code:
+          title: Cbp Response Code
+          description: The response code, if any, from CBP
           type: string
           nullable: true
       type: object
       required:
-      - sir_id
+      - id
+      - created
+      - last_modified
       - shipment_id
-      - supplier_name
-      - supplier_jurisdiction
-      - status
-      title: SupplierInformationRequestDetailResponse
-      description: Supplier information request detail response.
+      - vc_ids
+      - presentation
+      - presentation_id
+      - submitted_date
+      - cbp_response_code
+      title: CBPRequest
+      description: CBP Request information (shared schema for both public and internal APIs)
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SupplierInformationRequestStatus:
+      type: string
+      enum:
+      - Not Contacted
+      - Documents Requested
+      - Documents Received
+      - Eliminated
+      title: SupplierInformationRequestStatus
+      description: Enum for supplier information request status.
+    CBPRequestListing:
+      properties:
+        requests:
+          items:
+            $ref: '#/components/schemas/app__schemas__shipments__CBPRequest'
+          type: array
+          title: Requests
+          description: A listing of CBP Requests
+      type: object
+      required:
+      - requests
+      title: CBPRequestListing
+      description: List of CBP Requests (shared schema for both public and internal APIs)
     ShipmentUploadResponse:
       properties:
         success:
@@ -1721,66 +1861,142 @@ components:
       - status
       title: ShipmentDetailResponse
       description: Response model for a shipment response.
-    earthstream_services__services__shipment__common__models__Pagination:
+    Body_update_shipment_sir_status_shipment_sirs__sir_id__status_post:
       properties:
-        current_page:
-          type: integer
-          title: Current Page
-          description: Current page of results.
-        page_size:
-          type: integer
-          title: Page Size
-          description: Number of shipments on current page.
-        total_pages:
-          type: integer
-          title: Total Pages
-          description: Total number of pages in API response.
-        total_records:
-          type: integer
-          title: Total Records
-          description: Total number of records in API response.
+        status:
+          $ref: '#/components/schemas/SupplierInformationRequestStatus'
       type: object
       required:
-      - current_page
-      - page_size
-      - total_pages
-      - total_records
-      title: Pagination
-      description: 'Using to return paging information to the client.
-
-
-        current_page: the current page of data
-
-
-        total_pages: the total number of pages
-
-
-        total_records: the number of records found
-
-
-        page_size: the current page size'
-    Body_upload_shipment_file_shipment__shipment_id__upload_post:
+      - status
+      title: Body_update_shipment_sir_status_shipment_sirs__sir_id__status_post
+    SupplierInformationRequestDetailResponse:
       properties:
-        file:
+        sir_id:
+          type: string
+          format: uuid
+          title: Sir Id
+          description: Database ID of supplier information request record.
+        shipment_id:
+          type: string
+          format: uuid
+          title: Shipment Id
+          description: ID of shipment.
+        supplier_name:
+          type: string
+          title: Supplier Name
+          description: Name of the supplier.
+        supplier_jurisdiction:
+          type: string
+          title: Supplier Jurisdiction
+          description: Jurisdiction of the supplier.
+        supplier_parent_name:
+          title: Supplier Parent Name
+          description: Name of the supplier parent.
+          type: string
+          nullable: true
+        supplier_parent_jurisdiction:
+          title: Supplier Parent Jurisdiction
+          description: Jurisdiction of the supplier parent.
+          type: string
+          nullable: true
+        supplier_domain:
+          title: Supplier Domain
+          description: URL domain of the supplier.
+          type: string
+          nullable: true
+        supplier_address:
+          title: Supplier Address
+          description: Address of the supplier.
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/SupplierInformationRequestStatus'
+        tradeverifyd_score:
+          title: Tradeverifyd Score
+          description: Tradeverifyd Score associated with the supplier.
+          type: number
+          nullable: true
+        supplier_hs_codes:
+          title: Supplier Hs Codes
+          description: List of HS codes associated with the supplier.
+          type: string
+          nullable: true
+        related_parts:
+          title: Related Parts
+          description: Brief description of the parts related to the SIR.
+          type: string
+          nullable: true
+        product:
+          title: Product
+          description: Product associated with the SIR.
+          type: string
+          nullable: true
+        timeframe_start:
+          title: Timeframe Start
+          description: Start date of the SIR.
+          type: string
+          format: date
+          nullable: true
+        timeframe_stop:
+          title: Timeframe Stop
+          description: End date of the SIR.
+          type: string
+          format: date
+          nullable: true
+        reports:
+          title: Reports
+          description: Reports associated with the SIR.
           items:
             type: string
-            format: binary
           type: array
-          title: File
-          description: Only single file uploads are allowed
+          nullable: true
+        entity_id:
+          title: Entity Id
+          description: ID of the entity associated with the SIR.
+          type: string
+          nullable: true
       type: object
       required:
-      - file
-      title: Body_upload_shipment_file_shipment__shipment_id__upload_post
-    HTTPValidationError:
+      - sir_id
+      - shipment_id
+      - supplier_name
+      - supplier_jurisdiction
+      - status
+      title: SupplierInformationRequestDetailResponse
+      description: Supplier information request detail response.
+    SupplierInformationRequestFilter:
       properties:
-        detail:
+        supplier_name:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            type: string
           type: array
-          title: Detail
+          title: Supplier Name
+          description: Supplier name(s) used to filter responses.
+        supplier_jurisdiction:
+          items:
+            type: string
+          type: array
+          title: Supplier Jurisdiction
+          description: Supplier jurisdiction(s) used to filter responses.
+        status:
+          items:
+            type: string
+          type: array
+          title: Status
+          description: Status used to filter responses.
+        tradeverifyd_score:
+          items: {}
+          type: array
+          title: Tradeverifyd Score
+          description: Tradeverifyd Score used to filter responses.
       type: object
-      title: HTTPValidationError
+      required:
+      - supplier_name
+      - supplier_jurisdiction
+      - status
+      - tradeverifyd_score
+      title: SupplierInformationRequestFilter
+      description: Wrapper for SIR filters
     SuggestedContactAddress:
       properties:
         streetAddress:
@@ -1816,273 +2032,6 @@ components:
       type: object
       title: SuggestedContactAddress
       description: Response model for a street address of a suggested supplier contact
-    ShipmentListingResponse:
-      properties:
-        shipments:
-          items:
-            $ref: '#/components/schemas/ShipmentResponse'
-          type: array
-          title: Shipments
-          description: List of shipments that belong to user's organization and match search parameters.
-        pagination:
-          description: Details of the API's paginated response.
-          $ref: '#/components/schemas/earthstream_services__services__shipment__common__models__Pagination'
-          nullable: true
-        filters:
-          title: Filters
-          description: Details of the API's filters, if applicable.
-          additionalProperties:
-            items:
-              type: string
-            type: array
-          type: object
-          nullable: true
-        sorting:
-          items:
-            type: string
-          type: array
-          title: Sorting
-          description: Describes sorting method for the response, if applicable.
-      type: object
-      required:
-      - shipments
-      - pagination
-      - filters
-      - sorting
-      title: ShipmentListingResponse
-      description: Response model for a list of shipments
-    SuggestedContactCitation:
-      properties:
-        source:
-          title: Source
-          description: Name of the suggested supplier contact reference.
-          type: string
-          nullable: true
-        url:
-          title: Url
-          description: URL for the suggested supplier contact reference.
-          type: string
-          nullable: true
-      type: object
-      title: SuggestedContactCitation
-      description: Citation information for suggested supplier contact references.
-    UpdateShipmentRequest:
-      properties:
-        shipment_name:
-          type: string
-          title: Shipment Name
-          description: Name of shipment.
-        origin:
-          title: Origin
-          description: Location of the shipment's origin.
-          type: string
-          nullable: true
-        destination:
-          title: Destination
-          description: Location of the shipment's destination.
-          type: string
-          nullable: true
-        departure_date:
-          title: Departure Date
-          description: Date of the shipment's departure.
-          type: string
-          format: date-time
-          nullable: true
-        arrival_date:
-          title: Arrival Date
-          description: Date of the shipment's arrival.
-          type: string
-          format: date-time
-          nullable: true
-        status:
-          $ref: '#/components/schemas/ShipmentStatus'
-        active:
-          type: boolean
-          title: Active
-          description: Boolean signifying if the shipment is active or inactive.
-          default: true
-        organizational_units:
-          items:
-            type: string
-          type: array
-          title: Organizational Units
-          description: Subunit(s) of the organization.
-        detention_id:
-          title: Detention Id
-          description: Databaes ID of the detention for the shipment, if applicable.
-          type: string
-          nullable: true
-      type: object
-      required:
-      - shipment_name
-      - status
-      - organizational_units
-      title: UpdateShipmentRequest
-      description: Model for updating a shipment.
-    SupplierInformationRequestListing:
-      properties:
-        requests:
-          items:
-            $ref: '#/components/schemas/SupplierInformationRequestResponse'
-          type: array
-          title: Requests
-          description: List of supplier information requests.
-        pagination:
-          description: Details of the API's paginated response.
-          $ref: '#/components/schemas/earthstream_services__services__shipment__common__models__Pagination'
-          nullable: true
-        sorting:
-          items:
-            type: string
-          type: array
-          title: Sorting
-          description: Describes sorting method for the response, if applicable.
-        filters:
-          description: Details of the API's filters, if applicable.
-          $ref: '#/components/schemas/SupplierInformationRequestFilter'
-          nullable: true
-      type: object
-      required:
-      - requests
-      - pagination
-      - sorting
-      - filters
-      title: SupplierInformationRequestListing
-      description: Wrapper for SIR responses
-    CBPRequestListing:
-      properties:
-        requests:
-          items:
-            $ref: '#/components/schemas/app__schemas__shipments__CBPRequest'
-          type: array
-          title: Requests
-          description: A listing of CBP Requests
-      type: object
-      required:
-      - requests
-      title: CBPRequestListing
-      description: List of CBP Requests (shared schema for both public and internal APIs)
-    SupplierInformationRequestResponse:
-      properties:
-        sir_id:
-          type: string
-          format: uuid
-          title: Sir Id
-          description: Identifier of supplier information request record.
-        supplier_name:
-          type: string
-          title: Supplier Name
-          description: Name of the supplier.
-        supplier_jurisdiction:
-          type: string
-          title: Supplier Jurisdiction
-          description: Jurisdiction of the supplier.
-        status:
-          $ref: '#/components/schemas/SupplierInformationRequestStatus'
-        tradeverifyd_score:
-          title: Tradeverifyd Score
-          description: Tradeverifyd Score associated with the supplier.
-          type: number
-          nullable: true
-      type: object
-      required:
-      - sir_id
-      - supplier_name
-      - supplier_jurisdiction
-      - status
-      title: SupplierInformationRequestResponse
-      description: Response model for a supplier information request.
-    ShipmentStatus:
-      type: string
-      enum:
-      - Created
-      - In Transit
-      - Detained
-      - Complete
-      title: ShipmentStatus
-      description: Enum for shipment status.
-    Body_update_shipment_sir_status_shipment_sirs__sir_id__status_post:
-      properties:
-        status:
-          $ref: '#/components/schemas/SupplierInformationRequestStatus'
-      type: object
-      required:
-      - status
-      title: Body_update_shipment_sir_status_shipment_sirs__sir_id__status_post
-    SupplierInformationRequestStatus:
-      type: string
-      enum:
-      - Not Contacted
-      - Documents Requested
-      - Documents Received
-      - Eliminated
-      title: SupplierInformationRequestStatus
-      description: Enum for supplier information request status.
-    app__schemas__shipments__CBPRequest:
-      properties:
-        id:
-          title: Id
-          description: The identifier for the CBP Request
-          type: string
-          format: uuid
-          nullable: true
-        created:
-          title: Created
-          description: The timestamp of when the CBP was created
-          type: string
-          format: date-time
-          nullable: true
-        last_modified:
-          title: Last Modified
-          description: The timestamp of the last modification to the CBP
-          type: string
-          format: date-time
-          nullable: true
-        shipment_id:
-          type: string
-          format: uuid
-          title: Shipment Id
-          description: The ID of the Shipment to which the CBP belongs
-        vc_ids:
-          title: Vc Ids
-          description: A list of related VC ids
-          items:
-            type: string
-          type: array
-          nullable: true
-        presentation:
-          title: Presentation
-          description: The raw data of the Presentation submitted to CBP.
-          type: string
-          nullable: true
-        presentation_id:
-          title: Presentation Id
-          description: The CBP may be related to a presentation
-          type: string
-          nullable: true
-        submitted_date:
-          type: string
-          format: date-time
-          title: Submitted Date
-          description: The timestamp of when the request was submitted to CBP
-        cbp_response_code:
-          title: Cbp Response Code
-          description: The response code, if any, from CBP
-          type: string
-          nullable: true
-      type: object
-      required:
-      - id
-      - created
-      - last_modified
-      - shipment_id
-      - vc_ids
-      - presentation
-      - presentation_id
-      - submitted_date
-      - cbp_response_code
-      title: CBPRequest
-      description: CBP Request information (shared schema for both public and internal APIs)
     CreateShipmentRequest:
       properties:
         shipment_id:
@@ -2142,6 +2091,57 @@ components:
       - organizational_units
       title: CreateShipmentRequest
       description: Request model for creating a shipment.
+    SupplierInformationSuggestedContactResponse:
+      properties:
+        info_type:
+          title: Info Type
+          description: Describes the type of contact information found.
+          type: string
+          nullable: true
+        name:
+          title: Name
+          description: Name of the supplier.
+          type: string
+          nullable: true
+        website:
+          title: Website
+          description: The supplier's website.
+          type: string
+          nullable: true
+        contactPhone:
+          title: Contactphone
+          description: The contact phone number for the supplier.
+          type: string
+          nullable: true
+        address:
+          $ref: '#/components/schemas/SuggestedContactAddress'
+          nullable: true
+        citations:
+          title: Citations
+          description: References for the suggested supplier contacts.
+          default: []
+          items:
+            $ref: '#/components/schemas/SuggestedContactCitation'
+          type: array
+          nullable: true
+      type: object
+      required:
+      - address
+      title: SupplierInformationSuggestedContactResponse
+      description: Response model for suggested contact information for a supplier
+    Body_upload_shipment_file_shipment__shipment_id__upload_post:
+      properties:
+        file:
+          items:
+            type: string
+            format: binary
+          type: array
+          title: File
+          description: Only single file uploads are allowed
+      type: object
+      required:
+      - file
+      title: Body_upload_shipment_file_shipment__shipment_id__upload_post
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Tradeverifyd Documents Relationships API
+  title: Tradeverifyd Relationships API
   description: '
 
     The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
@@ -216,6 +216,34 @@ paths:
                     detail: Internal server error
 components:
   schemas:
+    RelationshipTypeResponse:
+      properties:
+        relationship_type:
+          type: string
+          title: Relationship Type
+          description: The type of relationship
+        description:
+          type: string
+          title: Description
+          description: Description of what this relationship type means
+      type: object
+      required:
+      - relationship_type
+      - description
+      title: RelationshipTypeResponse
+      description: "Response model for relationship types.\n\nAttributes:\n    relationship_type: The type of relationship (e.g., IS_SUPPLIER_OF, IS_OTHERWISE_LINKED_TO).\n    description: A description of what this relationship type means."
+    RelationshipTypeCategoriesResponse:
+      properties:
+        categories:
+          items:
+            $ref: '#/components/schemas/RelationshipTypeCategory'
+          type: array
+          title: Categories
+      type: object
+      required:
+      - categories
+      title: RelationshipTypeCategoriesResponse
+      description: "Response model for relationship type categories endpoint.\n\nAttributes:\n    categories: List of relationship type categories."
     RelationshipTypeCategory:
       properties:
         name:
@@ -249,34 +277,6 @@ components:
       - types
       title: RelationshipTypeCategory
       description: "Response model for relationship type categories.\n\nAttributes:\n    name: The category name (e.g., ownership, supply_chain).\n    display_name: Human-readable name for the category.\n    description: Description of what this category represents.\n    relationship_count: Number of relationship types in this category.\n    types: List of relationship type names in this category."
-    RelationshipTypeResponse:
-      properties:
-        relationship_type:
-          type: string
-          title: Relationship Type
-          description: The type of relationship
-        description:
-          type: string
-          title: Description
-          description: Description of what this relationship type means
-      type: object
-      required:
-      - relationship_type
-      - description
-      title: RelationshipTypeResponse
-      description: "Response model for relationship types.\n\nAttributes:\n    relationship_type: The type of relationship (e.g., IS_SUPPLIER_OF, IS_OTHERWISE_LINKED_TO).\n    description: A description of what this relationship type means."
-    RelationshipTypeCategoriesResponse:
-      properties:
-        categories:
-          items:
-            $ref: '#/components/schemas/RelationshipTypeCategory'
-          type: array
-          title: Categories
-      type: object
-      required:
-      - categories
-      title: RelationshipTypeCategoriesResponse
-      description: "Response model for relationship type categories endpoint.\n\nAttributes:\n    categories: List of relationship type categories."
     RelationshipTypeDetailResponse:
       properties:
         type:

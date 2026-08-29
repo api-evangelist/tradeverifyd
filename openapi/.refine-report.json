@@ -1,19 +1,8 @@
 {
   "provider": "tradeverifyd",
   "sources": [
-    "tradeverifyd-documents-api-openapi.yml",
-    "tradeverifyd-entity-api-openapi.yml",
-    "tradeverifyd-flags-api-openapi.yml",
-    "tradeverifyd-organizations-api-openapi.yml",
-    "tradeverifyd-relationships-api-openapi.yml",
-    "tradeverifyd-reports-api-openapi.yml",
-    "tradeverifyd-risk-events-api-openapi.yml",
-    "tradeverifyd-scitt-reference-apis-api-openapi.yml",
-    "tradeverifyd-shipments-api-openapi.yml",
-    "tradeverifyd-system-api-openapi.yml",
-    "tradeverifyd-transparency-log-api-openapi.yml",
-    "tradeverifyd-us-customs-api-openapi.yml",
-    "tradeverifyd-verifiable-credentials-api-openapi.yml"
+    "_original/tradeverifyd-openapi-original.json",
+    "_original/tradeverifyd-transparency-service-openapi.yaml"
   ],
   "outputs": [
     "tradeverifyd-documents-api-openapi.yml",
@@ -23,16 +12,36 @@
     "tradeverifyd-relationships-api-openapi.yml",
     "tradeverifyd-reports-api-openapi.yml",
     "tradeverifyd-risk-events-api-openapi.yml",
-    "tradeverifyd-scitt-reference-apis-api-openapi.yml",
     "tradeverifyd-shipments-api-openapi.yml",
     "tradeverifyd-system-api-openapi.yml",
-    "tradeverifyd-transparency-log-api-openapi.yml",
     "tradeverifyd-us-customs-api-openapi.yml",
-    "tradeverifyd-verifiable-credentials-api-openapi.yml"
+    "tradeverifyd-verifiable-credentials-api-openapi.yml",
+    "tradeverifyd-scitt-reference-apis-api-openapi.yml",
+    "tradeverifyd-transparency-log-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "tradeverifyd-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "tradeverifyd-openapi-original.json: declared missing tag: Organizations",
+    "tradeverifyd-openapi-original.json: declared missing tag: US Customs",
+    "tradeverifyd-transparency-service-openapi.yaml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0"
+  ],
+  "skipped": [
+    "tradeverifyd-documents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "tradeverifyd-entity-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "tradeverifyd-flags-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "tradeverifyd-organizations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "tradeverifyd-relationships-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "tradeverifyd-reports-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "tradeverifyd-risk-events-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "tradeverifyd-scitt-reference-apis-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "tradeverifyd-shipments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "tradeverifyd-system-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "tradeverifyd-transparency-log-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "tradeverifyd-us-customs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "tradeverifyd-verifiable-credentials-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Tradeverifyd Documents Flags API
+  title: Tradeverifyd Flags API
   description: '
 
     The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
@@ -569,269 +569,6 @@ paths:
                     detail: Internal server error
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    FlagTypeResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier for the flag type.
-        flag_type_description:
-          type: string
-          title: Flag Type Description
-          description: Brief description of the flag's meaning.
-        flag_type:
-          type: string
-          title: Flag Type
-          description: Primary type of the flag.
-        flag_subtype:
-          type: string
-          title: Flag Subtype
-          description: Subtype of the flag.
-        flag_polarity:
-          type: integer
-          title: Flag Polarity
-          description: Positive (+1) indicates compliance/certification, negative (-1) indicates violations/sanctions.
-      type: object
-      required:
-      - id
-      - flag_type_description
-      - flag_type
-      - flag_subtype
-      - flag_polarity
-      title: FlagTypeResponse
-      description: "Response model for flag types without the score field.\n\nAttributes:\n\n    id: ID of the flag type.\n    flag_type_description: Description of the flag type.\n    flag_type: Type of the flag.\n    flag_subtype: Subtype of the flag.\n    flag_polarity: Polarity of the flag."
-    FlagUpdateItem:
-      properties:
-        entity_jurisdiction:
-          title: Entity Jurisdiction
-          description: Jurisdiction of the entity
-          type: string
-          nullable: true
-        description:
-          title: Description
-          description: Detailed description of the flag
-          type: string
-          nullable: true
-        tags:
-          title: Tags
-          description: Single word identifier for flag by subcategories
-          items:
-            type: string
-          type: array
-          nullable: true
-        source:
-          title: Source
-          description: Source of Flag Information such as a URL
-          items:
-            type: string
-          type: array
-          nullable: true
-        time_start:
-          title: Time Start
-          description: Start time of the flag's validity
-          type: string
-          format: date-time
-          nullable: true
-        time_end:
-          title: Time End
-          description: End time of flag's validity
-          type: string
-          format: date-time
-          nullable: true
-        owner_email:
-          title: Owner Email
-          description: Email of flag owner
-          type: string
-          nullable: true
-        deleted:
-          type: boolean
-          title: Deleted
-          description: Boolean marking deleted flags
-          default: false
-        deleted_at:
-          title: Deleted At
-          description: Time flag was deleted
-          type: string
-          format: date-time
-          nullable: true
-        deletion_source:
-          title: Deletion Source
-          description: Source of deletion
-          type: string
-          nullable: true
-      type: object
-      title: FlagUpdateItem
-      description: 'Individual flag item for update flag endpoint.
-
-        Attributes listed here represent those that users can update.'
-    Translation:
-      properties:
-        translated_text:
-          type: string
-          title: Translated Text
-          description: The full translated text
-        source_lang:
-          type: string
-          maxLength: 2
-          title: Source Language
-          description: The ISO 639 code for the language of the source text
-        result_lang:
-          type: string
-          maxLength: 2
-          title: Result Language
-          description: The ISO 639 code for the language to which the source text has been translated
-        timestamp:
-          type: string
-          format: date-time
-          title: Translation Time
-          description: The date and time the translation was made
-        model:
-          title: Model
-          description: The model used to perform the translation
-          type: string
-          nullable: true
-      type: object
-      required:
-      - translated_text
-      - source_lang
-      - result_lang
-      - timestamp
-      title: Translation
-      description: "Represents a translation of a text.\n\nAttributes:\n    translated_text: the full text of the translation.\n    source_lang: the language of the source text.\n    result_lang: the language of the resulting translation.\n    timestamp: the date and time the translation was made.\n    model: the model used to perfom the translation."
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ExternalBulkFlagResponse:
-      properties:
-        message:
-          type: string
-          title: Message
-          description: Status message
-        flag_count:
-          type: integer
-          title: Flag Count
-          description: Total number of flags in the request
-        inserted_count:
-          type: integer
-          title: Inserted Count
-          description: Number of flags successfully inserted
-        status:
-          type: string
-          title: Status
-          description: Processing status
-      type: object
-      required:
-      - message
-      - flag_count
-      - inserted_count
-      - status
-      title: ExternalBulkFlagResponse
-      description: Response model for external bulk flag operations.
-    Source:
-      properties:
-        id:
-          title: Source Identifier
-          description: Unique identifier for the source.
-          type: string
-          maxLength: 128
-          nullable: true
-        url:
-          title: Source URL
-          description: Web address where the source is located.
-          type: string
-          nullable: true
-        title:
-          title: Source Title
-          description: Title of the web resource.
-          type: string
-          maxLength: 512
-          nullable: true
-        full_text:
-          title: Source Full Text
-          description: Complete textual content of the resource.
-          type: string
-          maxLength: 10000
-          nullable: true
-        signature:
-          title: Source Signature
-          description: Digital signature associated with the source for verification purposes.
-          additionalProperties:
-            type: string
-          type: object
-          nullable: true
-        translations:
-          title: Translations
-          description: Any translations made of the source text
-          items:
-            $ref: '#/components/schemas/Translation'
-          type: array
-          nullable: true
-      type: object
-      required:
-      - url
-      title: Source
-      description: "Represents a web-based resource or document, providing key identification\nand content details.\n\nAttributes:\n    id: A unique identifier for the source, useful in tracking\n        or referencing.\n    url: The web address where the source can be accessed,\n        providing direct linkage.\n    title: The title of the web resource, summarizing its content\n        or purpose.\n    full_text: The complete textual content of the resource,\n        useful for analysis or reference.\n    signature: A digital signature associated with the source,\n        serving as a means of verification or authenticity.\n    translations: Any translations of the source\n\nNote:\n    This model is adaptable for inclusion of additional metadata\n    fields to enrich the description and context of the source."
-    DataStatus:
-      properties:
-        state:
-          type: string
-          enum:
-          - invalid
-          - suspected
-          - confirmed
-          title: State
-          description: The level of confirmation for the data provided in the flag record.
-          default: suspected
-        confidence:
-          title: Confidence
-          description: Level of confidence in the information contained in the flag record.
-          type: string
-          enum:
-          - almost no chance
-          - very unlikely
-          - unlikely
-          - roughly even chance
-          - likely
-          - very likely
-          - almost certain
-          nullable: true
-        sources:
-          title: Sources
-          description: A list of sources supporting the state and confidence level.
-          items:
-            $ref: '#/components/schemas/Source'
-          type: array
-          nullable: true
-      type: object
-      title: DataStatus
-      description: "Supoorts enhancing a class with status information.\n\nAttributes:\n    state: the state value: invalid, suspected, or confirmed. Defaults to\n    suspected.\n    confidence: the level of confidence in the state: almost no chance, very unlikely,\n    unlikely, roughly even chance, likely, very likely, almost certain.\n    sources: a list of sources supporting the state and confidence level."
     ExternalBulkFlagItem:
       properties:
         entity_id:
@@ -878,6 +615,61 @@ components:
       - source_location
       title: ExternalBulkFlagItem
       description: Individual flag item for bulk flag API
+    DataStatus:
+      properties:
+        state:
+          type: string
+          enum:
+          - invalid
+          - suspected
+          - confirmed
+          title: State
+          description: The level of confirmation for the data provided in the flag record.
+          default: suspected
+        confidence:
+          title: Confidence
+          description: Level of confidence in the information contained in the flag record.
+          type: string
+          enum:
+          - almost no chance
+          - very unlikely
+          - unlikely
+          - roughly even chance
+          - likely
+          - very likely
+          - almost certain
+          nullable: true
+        sources:
+          title: Sources
+          description: A list of sources supporting the state and confidence level.
+          items:
+            $ref: '#/components/schemas/Source'
+          type: array
+          nullable: true
+      type: object
+      title: DataStatus
+      description: "Supoorts enhancing a class with status information.\n\nAttributes:\n    state: the state value: invalid, suspected, or confirmed. Defaults to\n    suspected.\n    confidence: the level of confidence in the state: almost no chance, very unlikely,\n    unlikely, roughly even chance, likely, very likely, almost certain.\n    sources: a list of sources supporting the state and confidence level."
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     DisplayFlagResponse:
       properties:
         id:
@@ -965,6 +757,180 @@ components:
         Extends the internal flag model to provide comprehensive flag details
 
         including entity context and relationship depth information.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    FlagUpdateItem:
+      properties:
+        entity_jurisdiction:
+          title: Entity Jurisdiction
+          description: Jurisdiction of the entity
+          type: string
+          nullable: true
+        description:
+          title: Description
+          description: Detailed description of the flag
+          type: string
+          nullable: true
+        tags:
+          title: Tags
+          description: Single word identifier for flag by subcategories
+          items:
+            type: string
+          type: array
+          nullable: true
+        source:
+          title: Source
+          description: Source of Flag Information such as a URL
+          items:
+            type: string
+          type: array
+          nullable: true
+        time_start:
+          title: Time Start
+          description: Start time of the flag's validity
+          type: string
+          format: date-time
+          nullable: true
+        time_end:
+          title: Time End
+          description: End time of flag's validity
+          type: string
+          format: date-time
+          nullable: true
+        owner_email:
+          title: Owner Email
+          description: Email of flag owner
+          type: string
+          nullable: true
+        deleted:
+          type: boolean
+          title: Deleted
+          description: Boolean marking deleted flags
+          default: false
+        deleted_at:
+          title: Deleted At
+          description: Time flag was deleted
+          type: string
+          format: date-time
+          nullable: true
+        deletion_source:
+          title: Deletion Source
+          description: Source of deletion
+          type: string
+          nullable: true
+      type: object
+      title: FlagUpdateItem
+      description: 'Individual flag item for update flag endpoint.
+
+        Attributes listed here represent those that users can update.'
+    ExternalBulkFlagResponse:
+      properties:
+        message:
+          type: string
+          title: Message
+          description: Status message
+        flag_count:
+          type: integer
+          title: Flag Count
+          description: Total number of flags in the request
+        inserted_count:
+          type: integer
+          title: Inserted Count
+          description: Number of flags successfully inserted
+        status:
+          type: string
+          title: Status
+          description: Processing status
+      type: object
+      required:
+      - message
+      - flag_count
+      - inserted_count
+      - status
+      title: ExternalBulkFlagResponse
+      description: Response model for external bulk flag operations.
+    FlagTypeResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the flag type.
+        flag_type_description:
+          type: string
+          title: Flag Type Description
+          description: Brief description of the flag's meaning.
+        flag_type:
+          type: string
+          title: Flag Type
+          description: Primary type of the flag.
+        flag_subtype:
+          type: string
+          title: Flag Subtype
+          description: Subtype of the flag.
+        flag_polarity:
+          type: integer
+          title: Flag Polarity
+          description: Positive (+1) indicates compliance/certification, negative (-1) indicates violations/sanctions.
+      type: object
+      required:
+      - id
+      - flag_type_description
+      - flag_type
+      - flag_subtype
+      - flag_polarity
+      title: FlagTypeResponse
+      description: "Response model for flag types without the score field.\n\nAttributes:\n\n    id: ID of the flag type.\n    flag_type_description: Description of the flag type.\n    flag_type: Type of the flag.\n    flag_subtype: Subtype of the flag.\n    flag_polarity: Polarity of the flag."
+    Source:
+      properties:
+        id:
+          title: Source Identifier
+          description: Unique identifier for the source.
+          type: string
+          maxLength: 128
+          nullable: true
+        url:
+          title: Source URL
+          description: Web address where the source is located.
+          type: string
+          nullable: true
+        title:
+          title: Source Title
+          description: Title of the web resource.
+          type: string
+          maxLength: 512
+          nullable: true
+        full_text:
+          title: Source Full Text
+          description: Complete textual content of the resource.
+          type: string
+          maxLength: 10000
+          nullable: true
+        signature:
+          title: Source Signature
+          description: Digital signature associated with the source for verification purposes.
+          additionalProperties:
+            type: string
+          type: object
+          nullable: true
+        translations:
+          title: Translations
+          description: Any translations made of the source text
+          items:
+            $ref: '#/components/schemas/Translation'
+          type: array
+          nullable: true
+      type: object
+      required:
+      - url
+      title: Source
+      description: "Represents a web-based resource or document, providing key identification\nand content details.\n\nAttributes:\n    id: A unique identifier for the source, useful in tracking\n        or referencing.\n    url: The web address where the source can be accessed,\n        providing direct linkage.\n    title: The title of the web resource, summarizing its content\n        or purpose.\n    full_text: The complete textual content of the resource,\n        useful for analysis or reference.\n    signature: A digital signature associated with the source,\n        serving as a means of verification or authenticity.\n    translations: Any translations of the source\n\nNote:\n    This model is adaptable for inclusion of additional metadata\n    fields to enrich the description and context of the source."
     UpdateFlagResponse:
       properties:
         id:
@@ -1022,6 +988,40 @@ components:
       - type
       title: UpdateFlagResponse
       description: Response model for updated flags
+    Translation:
+      properties:
+        translated_text:
+          type: string
+          title: Translated Text
+          description: The full translated text
+        source_lang:
+          type: string
+          maxLength: 2
+          title: Source Language
+          description: The ISO 639 code for the language of the source text
+        result_lang:
+          type: string
+          maxLength: 2
+          title: Result Language
+          description: The ISO 639 code for the language to which the source text has been translated
+        timestamp:
+          type: string
+          format: date-time
+          title: Translation Time
+          description: The date and time the translation was made
+        model:
+          title: Model
+          description: The model used to perform the translation
+          type: string
+          nullable: true
+      type: object
+      required:
+      - translated_text
+      - source_lang
+      - result_lang
+      - timestamp
+      title: Translation
+      description: "Represents a translation of a text.\n\nAttributes:\n    translated_text: the full text of the translation.\n    source_lang: the language of the source text.\n    result_lang: the language of the resulting translation.\n    timestamp: the date and time the translation was made.\n    model: the model used to perfom the translation."
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

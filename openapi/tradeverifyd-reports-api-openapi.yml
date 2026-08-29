@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Tradeverifyd Documents Reports API
+  title: Tradeverifyd Reports API
   description: '
 
     The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
@@ -336,27 +336,105 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ExternalEnttiyId:
+    Coordinate:
+      properties:
+        lat:
+          type: number
+          title: Lat
+        lng:
+          type: number
+          title: Lng
+        type:
+          type: string
+          enum:
+          - headquarters
+          - legal
+          title: Type
+      type: object
+      required:
+      - lat
+      - lng
+      - type
+      title: Coordinate
+      description: Latitude and longitude associated with an Entity
+    EventArticleType:
+      type: string
+      enum:
+      - disruptive_event
+      - important_information
+      - educational_article
+      - report
+      - other
+      title: EventArticleType
+      description: Enum of event article types.
+    ReportDetailResponse:
       properties:
         id:
           type: string
+          format: uuid
           title: Id
-          description: The External Id
-        type:
+        requested_ts:
           type: string
-          title: Type
-          description: The type of the identifier
-        source:
+          format: date-time
+          title: Requested Ts
+        completed_ts:
+          title: Completed Ts
           type: string
-          title: Source
-          description: The source of the identifieer
+          format: date-time
+          nullable: true
+        report_type:
+          type: string
+          title: Report Type
+        report_status:
+          type: string
+          title: Report Status
+        report_name:
+          title: Report Name
+          type: string
+          nullable: true
       type: object
       required:
       - id
+      - requested_ts
+      - completed_ts
+      - report_type
+      - report_status
+      - report_name
+      title: ReportDetailResponse
+      description: Report Detail Response
+    mesur_data_access__tradeverifyd__datamodels__common__Identifier:
+      properties:
+        type:
+          type: string
+          title: Type
+        source:
+          type: string
+          title: Source
+        id:
+          type: string
+          title: Id
+      type: object
+      required:
       - type
       - source
-      title: ExternalEnttiyId
-      description: Class for information about external Entity Identifiers
+      - id
+      title: Identifier
+      description: External ID for an entity
+    ReportStatusResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - status
+      title: ReportStatusResponse
+      description: Report Status Response
     CPRContentsResponse:
       properties:
         report_type:
@@ -435,6 +513,15 @@ components:
       - entities
       title: CPRContentsResponse
       description: Contents response for a CPR (DRR) report
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ExtractionMetadata:
       properties:
         model_vendor:
@@ -482,331 +569,6 @@ components:
       - msg
       - type
       title: ValidationError
-    AbridgedRelationship:
-      properties:
-        _id:
-          type: string
-          title: Id
-          default: None
-        type:
-          type: string
-          enum:
-          - DIRECTLY_CONSOLIDATES
-          - FEEDS_FROM
-          - FINANCES
-          - FUND_MANAGES
-          - IN_COLLABORATIVE_VENTURE_WITH
-          - IS_AFFILIATE_OF
-          - IS_AN_AGENT_OF
-          - IS_A_VENDOR_OF
-          - IS_BUSINESS_PARTNER_OF
-          - IS_MAJORITY_SHAREHOLDER_OF
-          - IS_MANUFACTURER_OF
-          - IS_MERGED_WITH
-          - IS_PARTNER_IN_JOINT_VENTURE
-          - IS_SUBISIDIARY_OF
-          - IS_SUPPLIER_OF
-          - IS_LIKELY_SUPPLIER_OF
-          - IS_THE_HOLDING_COMPANY_OF
-          - IS_THE_PARENT_COMPANY_OF
-          - IS_THE_TRADE_UNION_FOR
-          - IS_TRADEMARK_OF
-          - IS_TRAINING_PARTNER_OF
-          - OPERATES_INTERNATIONAL_BRANCH
-          - OWNS_COLLABORATIVE_VENTURE
-          - OWNS_FUND
-          - SHIPS_GOODS_TO
-          - SHIPS_VIA
-          - ULTIMATELY_CONSOLIDATES
-          - IS_OTHERWISE_LINKED_TO
-          - RELATED_TO
-          title: Type
-        relation_to:
-          type: string
-          title: Relation To
-        relation_from:
-          type: string
-          title: Relation From
-        normalized_products:
-          title: Normalized Products
-          items:
-            type: string
-          type: array
-          nullable: true
-        modified:
-          type: string
-          format: date-time
-          title: Modified
-        source:
-          title: Source
-          items:
-            type: string
-          type: array
-          nullable: true
-        exclusion_id:
-          title: Exclusion Id
-          type: string
-          nullable: true
-      type: object
-      required:
-      - type
-      - relation_to
-      - relation_from
-      - modified
-      title: AbridgedRelationship
-      description: Minimum EntityRelationship data needed by Tradeverifyd Portal graphs
-    AbridgedGraphEntity:
-      properties:
-        _id:
-          type: string
-          title: Id
-        name:
-          type: string
-          title: Name
-        jurisdiction:
-          type: string
-          title: Jurisdiction
-        mesur_type:
-          type: string
-          enum:
-          - Company
-          - Facility
-          - Farm
-          title: Mesur Type
-          default: Company
-        flags:
-          title: Flags
-          items:
-            $ref: '#/components/schemas/Flag'
-          type: array
-          nullable: true
-        risk_events:
-          title: Risk Events
-          items:
-            $ref: '#/components/schemas/BaseRiskEvent'
-          type: array
-          nullable: true
-        graph_relative_risk_score:
-          title: Graph Relative Risk Score
-          type: integer
-          nullable: true
-        tradeverifyd_risk_score:
-          title: Tradeverifyd Risk Score
-          type: integer
-          nullable: true
-        coordinates:
-          items:
-            $ref: '#/components/schemas/Coordinate'
-          type: array
-          title: Coordinates
-          default: []
-        addresses:
-          items:
-            type: string
-          type: array
-          title: Addresses
-          default: []
-        aliases:
-          title: Aliases
-          items:
-            type: string
-          type: array
-          nullable: true
-        ids:
-          title: Ids
-          items:
-            $ref: '#/components/schemas/mesur_data_access__tradeverifyd__datamodels__common__Identifier'
-          type: array
-          nullable: true
-        upstream_depth:
-          type: integer
-          title: Upstream Depth
-          default: -1
-        downstream_depth:
-          type: integer
-          title: Downstream Depth
-          default: -1
-        depth:
-          title: Depth
-          description: 'Shortest distance from graph query entrypoint. This field will only
-
-            return the UPSTREAM distance. If this Entity does not participate in the
-
-            upstream graph of the entrypoint Entity for the graph, ''depth'' will be
-
-            None.'
-          readOnly: true
-          type: integer
-          nullable: true
-        downstream_distance:
-          title: Downstream Distance
-          description: 'Shortest available distance from entrypoint Entity to this Entity if
-
-            traversing from this Entity to the entrypoint. This field will only
-
-            return the DOWNSTREAM distance.  If this Entity does not participate in
-
-            the downstream graph of the entrypoint Entity for the graph,
-
-            ''downstream_distance'' will be None.'
-          readOnly: true
-          type: integer
-          nullable: true
-      type: object
-      required:
-      - _id
-      - name
-      - jurisdiction
-      - depth
-      - downstream_distance
-      title: AbridgedGraphEntity
-      description: Minimum Entity data needed by Tradeverifyd Portal graphs
-    CGRContentsResponse:
-      properties:
-        report_type:
-          type: string
-          title: Report Type
-          description: The type of report requested.
-        report_id:
-          type: string
-          format: uuid
-          title: Report Id
-          description: Unique ID (uuid) of the report.
-        products:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Products
-          description: List of products included in the report.
-        companies:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Companies
-          description: List of companies included in the report.
-        supplier_information_requests:
-          items: {}
-          type: array
-          title: Supplier Information Requests
-          default: Supplier information requests involved in the report.
-        hs_code_map:
-          additionalProperties: true
-          type: object
-          title: Hs Code Map
-          default: A mapping of HS codes in the report to their descriptions.
-        ranked_supplier_contexts:
-          items: {}
-          type: array
-          title: Ranked Supplier Contexts
-          description: A sorted list of supplier information requests with the context that feeds into the ranking algorithm.
-        entity_research_summary:
-          additionalProperties: true
-          type: object
-          title: Entity Research Summary
-          default: A brief summary of the entity research involved in this report.
-      type: object
-      required:
-      - report_type
-      - report_id
-      - products
-      - companies
-      - ranked_supplier_contexts
-      title: CGRContentsResponse
-      description: Contents response for a CGR (DPR) report
-    ReportDetailResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        requested_ts:
-          type: string
-          format: date-time
-          title: Requested Ts
-        completed_ts:
-          title: Completed Ts
-          type: string
-          format: date-time
-          nullable: true
-        report_type:
-          type: string
-          title: Report Type
-        report_status:
-          type: string
-          title: Report Status
-        report_name:
-          title: Report Name
-          type: string
-          nullable: true
-      type: object
-      required:
-      - id
-      - requested_ts
-      - completed_ts
-      - report_type
-      - report_status
-      - report_name
-      title: ReportDetailResponse
-      description: Report Detail Response
-    ReportStatusResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        status:
-          type: string
-          title: Status
-      type: object
-      required:
-      - id
-      - status
-      title: ReportStatusResponse
-      description: Report Status Response
-    CreateReportRequest:
-      properties:
-        report_type:
-          type: string
-          enum:
-          - tasa
-          - cgr
-          - cpr
-          title: Report Type
-        report_name:
-          title: Report Name
-          type: string
-          maxLength: 255
-          nullable: true
-        shipment_id:
-          title: Shipment Id
-          type: string
-          format: uuid
-          nullable: true
-        entity_id:
-          title: Entity Id
-          type: string
-          nullable: true
-        hs_code:
-          title: Hs Code
-          type: string
-          nullable: true
-      type: object
-      required:
-      - report_type
-      title: CreateReportRequest
-      description: Create Report Request
-    EventArticleType:
-      type: string
-      enum:
-      - disruptive_event
-      - important_information
-      - educational_article
-      - report
-      - other
-      title: EventArticleType
-      description: Enum of event article types.
     TASAContentsResponse:
       properties:
         importer_name:
@@ -941,327 +703,133 @@ components:
       - supply_chains
       title: WSCContentsResponse
       description: Contents response for a WSC report
-    Coordinate:
+    AbridgedRelationship:
       properties:
-        lat:
-          type: number
-          title: Lat
-        lng:
-          type: number
-          title: Lng
-        type:
-          type: string
-          enum:
-          - headquarters
-          - legal
-          title: Type
-      type: object
-      required:
-      - lat
-      - lng
-      - type
-      title: Coordinate
-      description: Latitude and longitude associated with an Entity
-    mesur_data_access__tradeverifyd__datamodels__common__Identifier:
-      properties:
-        type:
-          type: string
-          title: Type
-        source:
-          type: string
-          title: Source
-        id:
-          type: string
-          title: Id
-      type: object
-      required:
-      - type
-      - source
-      - id
-      title: Identifier
-      description: External ID for an entity
-    Flag:
-      properties:
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        modified:
-          type: string
-          format: date-time
-          title: Modified
-        batch:
-          title: Batch
-          type: string
-          nullable: true
         _id:
           type: string
           title: Id
           default: None
-        schema_version:
-          type: integer
-          title: Schema Version
-          default: 1
-        entity_id:
-          type: string
-          title: Entity Id
         type:
           type: string
+          enum:
+          - DIRECTLY_CONSOLIDATES
+          - FEEDS_FROM
+          - FINANCES
+          - FUND_MANAGES
+          - IN_COLLABORATIVE_VENTURE_WITH
+          - IS_AFFILIATE_OF
+          - IS_AN_AGENT_OF
+          - IS_A_VENDOR_OF
+          - IS_BUSINESS_PARTNER_OF
+          - IS_MAJORITY_SHAREHOLDER_OF
+          - IS_MANUFACTURER_OF
+          - IS_MERGED_WITH
+          - IS_PARTNER_IN_JOINT_VENTURE
+          - IS_SUBISIDIARY_OF
+          - IS_SUPPLIER_OF
+          - IS_LIKELY_SUPPLIER_OF
+          - IS_THE_HOLDING_COMPANY_OF
+          - IS_THE_PARENT_COMPANY_OF
+          - IS_THE_TRADE_UNION_FOR
+          - IS_TRADEMARK_OF
+          - IS_TRAINING_PARTNER_OF
+          - OPERATES_INTERNATIONAL_BRANCH
+          - OWNS_COLLABORATIVE_VENTURE
+          - OWNS_FUND
+          - SHIPS_GOODS_TO
+          - SHIPS_VIA
+          - ULTIMATELY_CONSOLIDATES
+          - IS_OTHERWISE_LINKED_TO
+          - RELATED_TO
           title: Type
-        tags:
-          title: Tags
+        relation_to:
+          type: string
+          title: Relation To
+        relation_from:
+          type: string
+          title: Relation From
+        normalized_products:
+          title: Normalized Products
           items:
             type: string
           type: array
           nullable: true
+        modified:
+          type: string
+          format: date-time
+          title: Modified
         source:
           title: Source
           items:
             type: string
           type: array
           nullable: true
-        entity_jurisdiction:
-          title: Entity Jurisdiction
+        exclusion_id:
+          title: Exclusion Id
           type: string
           nullable: true
-        customer_managed:
-          type: boolean
-          title: Customer Managed
-          default: false
-        owner_email:
-          title: Owner Email
-          type: string
-          nullable: true
-        organization:
-          title: Organization
-          type: string
-          nullable: true
-        deleted:
-          type: boolean
-          title: Deleted
-          default: false
-        deleted_at:
-          title: Deleted At
-          type: string
-          format: date-time
-          nullable: true
-        deletion_source:
-          title: Deletion Source
-          type: string
-          nullable: true
-        confidence:
-          title: Confidence
-          type: integer
-          nullable: true
-        time_start:
-          title: Time Start
-          type: string
-          format: date-time
-          nullable: true
-        time_end:
-          title: Time End
-          type: string
-          format: date-time
-          nullable: true
-        description:
-          title: Description
-          type: string
-          nullable: true
-        score:
-          type: number
-          title: Score
-          default: 0.5
-        decay_factor:
-          title: Decay Factor
-          default: 1.0
-          type: number
-          nullable: true
-        decay_version:
-          type: integer
-          title: Decay Version
-          default: 1
-        penalties:
-          title: Penalties
-          items:
-            additionalProperties:
-              type: string
-            type: object
-          type: array
-          nullable: true
-        url_sources:
-          title: Url Sources
-          description: 'Members of ''source'' field that are also well-formed URLs. If Flag.source
-
-            has 1 or more entries, but none are valid URLs, the value of this
-
-            computed field will be None.'
-          readOnly: true
-          items:
-            type: string
-          type: array
-          nullable: true
-      additionalProperties: true
       type: object
       required:
-      - entity_id
       - type
-      - url_sources
-      title: Flag
-      description: "Represents a flag associated with a particular entity.\n\nA flag is positive if, for example, the entity it is associated with has\nbeen certified by an authoritative body to be in compliance with an accepted\nstandard. It is negative if the associated entity participates in or is\nassociated with a sanctioned, illegal, or otherwise undesirable activity.\n\nAttributes:\n    id: Database id of the record, corresponds to mongodb '_id'.\n\n    entity_id: Database id of the entity the flag is applied to, corresponds\n    to target entity '_id' in mongodb.\n\n    schema_version: Document schema.\n\n    type: Details about the nature of the flag. This may be the name of the\n    relevant certification or sanction, e.g. 'RSPO Certified' or 'ITAR\n    Debarred (DTC) - State Department', or a more general category, e.g.\n    'forced labor'. This should be an ObjectIdField stored in the 'flag_types'\n    collection - optionally a string allowed here for validation when the ObjectId\n    field needs to be looked up and displayed in the portal.\n\n    tags: A list of semi-arbitrary strings that provides additional\n    classifications or detail on the nature of the flag type. An example of\n    this might be a flag with type \"Forced Labor Risk\" with subtype\n    \"Operating in Uyghur Region\", \"Sourcing directly from Uyghur Region\", or\n    \"Accepted labor transfers outside Uyghur Region\".\n\n    source: List of ONE url to a page containing information that is\n    relevant to the flag, or the entity it applies to. For user-uploaded\n    flags, this field will be None.\n\n    entity_jurisdiction: ISO country code of the entity that the flag\n    applies to, if the jurisdiction is known.\n\n    customer_managed: This field is true if a customer has created this flag\n    directly, otherwise, it is false. A customer-managed flag MUST NOT be\n    visible outside of the organization of the user who created it.\n\n    owner_email: The email address of the user who created the\n    customer-managed flag. If 'customer_managed' is false, this field MUST\n    be None.\n\n    organization: The globally-unique name of the organization to which a\n    customer-managed flag belongs, which is currently the same as the\n    organization to which the flag's creator belongs. If 'customer_managed'\n    if false, this field MUST be None.\n\n    is_positive: A derived field not present on the underlying record. This\n    field controls whether the flag is displayed to users as a 'positive' or\n    'negative' flag.\n\n    deleted: Whether or not the flag is currently in-force.\n\n    deleted_at: If the flag is no longer in force for any reason, this field\n    is the time the flag ceased to be applicable to the target entity.\n\n    deletion_source: If 'deleted_at' is not null, this field explains why\n    the flag is no longer in effect. It may be a URL to a web source\n    offering further explanation.\n\n    confidence: For flag records generated by bots, this field indicates the\n    strength of our belief that the decision to assign a flag is correct.\n    100 is the most confident, 0 is the least. If a flag was not generated\n    by a bot, this field must be None.\n\n    time_start: Time at which flag took effect. Currently, this field is\n    only set on Flags uploaded via Earthstream API.\n\n    time_end: Time after which flag is no longer in effect. Currently, this\n    field is only set on Flags uploaded via Earthstream API.\n\n    description: Plain-text description for the flag. Currently, this field\n    is only set on Flags uploaded via Earthstream API.\n\n    # TODO: TV-10497 Remove this field, as the default is set to 0.5, which is being nullified\n    # in GraphEntity.entity_score. This might be important for risk events, but not for Flags.\n    score: The score of the flag.\n\n    decay_factor: The amount by which a flag decays, which is re-calculated daily according to\n    the flag's decay strategy and the flag's age. This gets factored into an entity's score\n    through the TradeverifydScoringService later on, through the regulatory flag strategy. The\n    decay_factor should always be a float between 0 and 1, but for soft deleted flags, it will\n    be set to 1.0 as to not impact the entity's score.\n\n    decay_version: The version of the decay strategy used to calculate the decay_factor.\n\n    penalties: A optional list of dictionaries, each containing the following keys:\n    - penalty_agency: The agency that issued the penalty\n    - penalty_usd: The amount of the penalty in USD\n    - penalty_date: The date of the penalty"
-    RiskEventSource:
+      - relation_to
+      - relation_from
+      - modified
+      title: AbridgedRelationship
+      description: Minimum EntityRelationship data needed by Tradeverifyd Portal graphs
+    CGRContentsResponse:
       properties:
-        type:
-          type: string
-          enum:
-          - webpage
-          title: Type
-          default: webpage
-        url:
-          type: string
-          minLength: 1
-          title: Url
-        publication_date:
-          title: Publication Date
-          type: string
-          format: date-time
-          nullable: true
-      type: object
-      required:
-      - url
-      title: RiskEventSource
-      description: "Reference to a webpage (usually a journalistic article) that reports and/or\ndescribes the RiskEvent.\n\nRiskEvents gleaned from (e.g.) uploaded text documents have a different\nsource type than RiskEvents found in web articles.\n\nAttributes:\n    type: The kind of source.\n\n    url: Web address of the source.\n\n    publication_date: Optional date when the source was published."
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    AbridgedGraph:
-      properties:
-        entrypoint:
-          $ref: '#/components/schemas/AbridgedGraphEntity'
-          nullable: true
-        entities:
-          items:
-            $ref: '#/components/schemas/AbridgedGraphEntity'
-          type: array
-          title: Entities
-        relationships:
-          items:
-            $ref: '#/components/schemas/AbridgedRelationship'
-          type: array
-          title: Relationships
-        page:
-          type: integer
-          title: Page
-          default: 0
-        page_size:
-          type: integer
-          title: Page Size
-          default: 0
-        records:
-          type: integer
-          title: Records
-          default: 0
-        total_records:
-          title: Total Records
-          type: integer
-          nullable: true
-        total_pages:
-          title: Total Pages
-          type: integer
-          nullable: true
-        entity_graph_counts:
-          title: Entity Graph Counts
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          nullable: true
-      type: object
-      required:
-      - entities
-      - relationships
-      title: AbridgedGraph
-      description: 'Abridged graph response shape
-
-        entry is the root of the graph'
-    DSCContentsResponse:
-      properties:
-        report_id:
-          anyOf:
-          - type: string
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Report Id
-          description: Unique ID (uuid) of the report.
         report_type:
           type: string
-          const: dsc
           title: Report Type
           description: The type of report requested.
-        subscription_id:
-          type: string
-          title: Subscription Id
-          description: ID of the subscription in the report.
-        subscription_name:
-          type: string
-          title: Subscription Name
-          description: Name of the subscription i nthe report.
-        summary:
-          type: string
-          title: Summary
-          description: Brief summary of the report.
-        summary_bullets:
-          items:
-            type: string
-          type: array
-          title: Summary Bullets
-          description: Key points from the report's summary.
-        risk_events:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Risk Events
-          description: Risk events included in the report.
-        supply_graph:
-          $ref: '#/components/schemas/AbridgedGraph'
-        top_risk_suppliers:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Top Risk Suppliers
-          description: A list of the top risk suppliers in the report.
-      type: object
-      required:
-      - report_id
-      - report_type
-      - subscription_id
-      - subscription_name
-      - summary
-      - summary_bullets
-      - risk_events
-      - supply_graph
-      - top_risk_suppliers
-      title: DSCContentsResponse
-      description: Contents response for a DSC report
-    CreateReportResponse:
-      properties:
         report_id:
           type: string
           format: uuid
           title: Report Id
+          description: Unique ID (uuid) of the report.
+        products:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Products
+          description: List of products included in the report.
+        companies:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Companies
+          description: List of companies included in the report.
+        supplier_information_requests:
+          items: {}
+          type: array
+          title: Supplier Information Requests
+          default: Supplier information requests involved in the report.
+        hs_code_map:
+          additionalProperties: true
+          type: object
+          title: Hs Code Map
+          default: A mapping of HS codes in the report to their descriptions.
+        ranked_supplier_contexts:
+          items: {}
+          type: array
+          title: Ranked Supplier Contexts
+          description: A sorted list of supplier information requests with the context that feeds into the ranking algorithm.
+        entity_research_summary:
+          additionalProperties: true
+          type: object
+          title: Entity Research Summary
+          default: A brief summary of the entity research involved in this report.
       type: object
       required:
+      - report_type
       - report_id
-      title: CreateReportResponse
-      description: Create Report Response
+      - products
+      - companies
+      - ranked_supplier_contexts
+      title: CGRContentsResponse
+      description: Contents response for a CGR (DPR) report
     BaseRiskEvent:
       properties:
         created_at:
@@ -1500,6 +1068,438 @@ components:
       - last_notification
       title: BaseRiskEvent
       description: "Represents an Event which happens in the real world that is likely to\ndisrupt economic activity for affected entities.\n\nAttributes:\n    id: Database id of the record, corresponds to MongoDB '_id'.\n\n    title: The title or a brief description of the event. This should\n    capture the essence of what the event is about.\n\n    summary: A more detailed summary or description of the event. This\n    provides additional context and information about the event.\n\n    sources: References that report and/or describe the event.\n\n    expires: Time after which the RiskEvent is no longer 'in-effect'.\n\n    type: Identifies the type of the event. The event type is the main\n    driver of event processing, e.g. when it expires, how it propagates to\n    entities, etc.\n\n    start_date: Time the event began\n\n    end_date: Time the event ended\n\n    last_propagation: Last time this event propagated to entities. Will be\n    'None' if it has never been propagated.\n\n    last_notification: Last time notifications for this event were\n    published. Will be 'None' if no notifications have been generated.\n\n    hidden: A 'hidden' RiskEvent has been un-propagated from all Entities so\n    that it is no longer affecting any scores, and should not be displayed\n    to any users. This field is temporary and will be displaced by\n    'review_status' once accompanying features for 'review_status' are\n    complete.\n\n    review_status: New RiskEvents are created in a 'pending' state. Pending\n    RiskEvents are invisible to end users, and have no impact on Entity\n    scores or other calculations. On human review, a RiskEvent may be\n    either 'approved' or 'denied'. If the RiskEvent is approved, it is\n    propagated to affected Entities, where it will impact Entity risk\n    scoring and other calculations. If denied, a corresponding\n    'RiskEventFeedback' record exists that explains why the RiskEvent is\n    irrelevant or inappropriate. RiskEvents are allowed to transition\n    between 'approved' and 'denied' any number of times, though such\n    transitions should be rare.\n\n    extraction_metadata: LLM vendor, model, and schema used to extract Risk\n    Event information from input text. This information can be used to\n    compare the performance of different prompts and models.\n\n    force_expired: If True, the expiration time set at creation has been\n    manually overridden to 'force' the record to expire.\n\n    original_expiry: If exists and is non-null, contains the expiration time\n    from before the document was force-expired."
+    CreateReportRequest:
+      properties:
+        report_type:
+          type: string
+          enum:
+          - tasa
+          - cgr
+          - cpr
+          title: Report Type
+        report_name:
+          title: Report Name
+          type: string
+          maxLength: 255
+          nullable: true
+        shipment_id:
+          title: Shipment Id
+          type: string
+          format: uuid
+          nullable: true
+        entity_id:
+          title: Entity Id
+          type: string
+          nullable: true
+        hs_code:
+          title: Hs Code
+          type: string
+          nullable: true
+      type: object
+      required:
+      - report_type
+      title: CreateReportRequest
+      description: Create Report Request
+    Flag:
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+        batch:
+          title: Batch
+          type: string
+          nullable: true
+        _id:
+          type: string
+          title: Id
+          default: None
+        schema_version:
+          type: integer
+          title: Schema Version
+          default: 1
+        entity_id:
+          type: string
+          title: Entity Id
+        type:
+          type: string
+          title: Type
+        tags:
+          title: Tags
+          items:
+            type: string
+          type: array
+          nullable: true
+        source:
+          title: Source
+          items:
+            type: string
+          type: array
+          nullable: true
+        entity_jurisdiction:
+          title: Entity Jurisdiction
+          type: string
+          nullable: true
+        customer_managed:
+          type: boolean
+          title: Customer Managed
+          default: false
+        owner_email:
+          title: Owner Email
+          type: string
+          nullable: true
+        organization:
+          title: Organization
+          type: string
+          nullable: true
+        deleted:
+          type: boolean
+          title: Deleted
+          default: false
+        deleted_at:
+          title: Deleted At
+          type: string
+          format: date-time
+          nullable: true
+        deletion_source:
+          title: Deletion Source
+          type: string
+          nullable: true
+        confidence:
+          title: Confidence
+          type: integer
+          nullable: true
+        time_start:
+          title: Time Start
+          type: string
+          format: date-time
+          nullable: true
+        time_end:
+          title: Time End
+          type: string
+          format: date-time
+          nullable: true
+        description:
+          title: Description
+          type: string
+          nullable: true
+        score:
+          type: number
+          title: Score
+          default: 0.5
+        decay_factor:
+          title: Decay Factor
+          default: 1.0
+          type: number
+          nullable: true
+        decay_version:
+          type: integer
+          title: Decay Version
+          default: 1
+        penalties:
+          title: Penalties
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          type: array
+          nullable: true
+        url_sources:
+          title: Url Sources
+          description: 'Members of ''source'' field that are also well-formed URLs. If Flag.source
+
+            has 1 or more entries, but none are valid URLs, the value of this
+
+            computed field will be None.'
+          readOnly: true
+          items:
+            type: string
+          type: array
+          nullable: true
+      additionalProperties: true
+      type: object
+      required:
+      - entity_id
+      - type
+      - url_sources
+      title: Flag
+      description: "Represents a flag associated with a particular entity.\n\nA flag is positive if, for example, the entity it is associated with has\nbeen certified by an authoritative body to be in compliance with an accepted\nstandard. It is negative if the associated entity participates in or is\nassociated with a sanctioned, illegal, or otherwise undesirable activity.\n\nAttributes:\n    id: Database id of the record, corresponds to mongodb '_id'.\n\n    entity_id: Database id of the entity the flag is applied to, corresponds\n    to target entity '_id' in mongodb.\n\n    schema_version: Document schema.\n\n    type: Details about the nature of the flag. This may be the name of the\n    relevant certification or sanction, e.g. 'RSPO Certified' or 'ITAR\n    Debarred (DTC) - State Department', or a more general category, e.g.\n    'forced labor'. This should be an ObjectIdField stored in the 'flag_types'\n    collection - optionally a string allowed here for validation when the ObjectId\n    field needs to be looked up and displayed in the portal.\n\n    tags: A list of semi-arbitrary strings that provides additional\n    classifications or detail on the nature of the flag type. An example of\n    this might be a flag with type \"Forced Labor Risk\" with subtype\n    \"Operating in Uyghur Region\", \"Sourcing directly from Uyghur Region\", or\n    \"Accepted labor transfers outside Uyghur Region\".\n\n    source: List of ONE url to a page containing information that is\n    relevant to the flag, or the entity it applies to. For user-uploaded\n    flags, this field will be None.\n\n    entity_jurisdiction: ISO country code of the entity that the flag\n    applies to, if the jurisdiction is known.\n\n    customer_managed: This field is true if a customer has created this flag\n    directly, otherwise, it is false. A customer-managed flag MUST NOT be\n    visible outside of the organization of the user who created it.\n\n    owner_email: The email address of the user who created the\n    customer-managed flag. If 'customer_managed' is false, this field MUST\n    be None.\n\n    organization: The globally-unique name of the organization to which a\n    customer-managed flag belongs, which is currently the same as the\n    organization to which the flag's creator belongs. If 'customer_managed'\n    if false, this field MUST be None.\n\n    is_positive: A derived field not present on the underlying record. This\n    field controls whether the flag is displayed to users as a 'positive' or\n    'negative' flag.\n\n    deleted: Whether or not the flag is currently in-force.\n\n    deleted_at: If the flag is no longer in force for any reason, this field\n    is the time the flag ceased to be applicable to the target entity.\n\n    deletion_source: If 'deleted_at' is not null, this field explains why\n    the flag is no longer in effect. It may be a URL to a web source\n    offering further explanation.\n\n    confidence: For flag records generated by bots, this field indicates the\n    strength of our belief that the decision to assign a flag is correct.\n    100 is the most confident, 0 is the least. If a flag was not generated\n    by a bot, this field must be None.\n\n    time_start: Time at which flag took effect. Currently, this field is\n    only set on Flags uploaded via Earthstream API.\n\n    time_end: Time after which flag is no longer in effect. Currently, this\n    field is only set on Flags uploaded via Earthstream API.\n\n    description: Plain-text description for the flag. Currently, this field\n    is only set on Flags uploaded via Earthstream API.\n\n    # TODO: TV-10497 Remove this field, as the default is set to 0.5, which is being nullified\n    # in GraphEntity.entity_score. This might be important for risk events, but not for Flags.\n    score: The score of the flag.\n\n    decay_factor: The amount by which a flag decays, which is re-calculated daily according to\n    the flag's decay strategy and the flag's age. This gets factored into an entity's score\n    through the TradeverifydScoringService later on, through the regulatory flag strategy. The\n    decay_factor should always be a float between 0 and 1, but for soft deleted flags, it will\n    be set to 1.0 as to not impact the entity's score.\n\n    decay_version: The version of the decay strategy used to calculate the decay_factor.\n\n    penalties: A optional list of dictionaries, each containing the following keys:\n    - penalty_agency: The agency that issued the penalty\n    - penalty_usd: The amount of the penalty in USD\n    - penalty_date: The date of the penalty"
+    CreateReportResponse:
+      properties:
+        report_id:
+          type: string
+          format: uuid
+          title: Report Id
+      type: object
+      required:
+      - report_id
+      title: CreateReportResponse
+      description: Create Report Response
+    RiskEventSource:
+      properties:
+        type:
+          type: string
+          enum:
+          - webpage
+          title: Type
+          default: webpage
+        url:
+          type: string
+          minLength: 1
+          title: Url
+        publication_date:
+          title: Publication Date
+          type: string
+          format: date-time
+          nullable: true
+      type: object
+      required:
+      - url
+      title: RiskEventSource
+      description: "Reference to a webpage (usually a journalistic article) that reports and/or\ndescribes the RiskEvent.\n\nRiskEvents gleaned from (e.g.) uploaded text documents have a different\nsource type than RiskEvents found in web articles.\n\nAttributes:\n    type: The kind of source.\n\n    url: Web address of the source.\n\n    publication_date: Optional date when the source was published."
+    AbridgedGraphEntity:
+      properties:
+        _id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        jurisdiction:
+          type: string
+          title: Jurisdiction
+        mesur_type:
+          type: string
+          enum:
+          - Company
+          - Facility
+          - Farm
+          title: Mesur Type
+          default: Company
+        flags:
+          title: Flags
+          items:
+            $ref: '#/components/schemas/Flag'
+          type: array
+          nullable: true
+        risk_events:
+          title: Risk Events
+          items:
+            $ref: '#/components/schemas/BaseRiskEvent'
+          type: array
+          nullable: true
+        graph_relative_risk_score:
+          title: Graph Relative Risk Score
+          type: integer
+          nullable: true
+        tradeverifyd_risk_score:
+          title: Tradeverifyd Risk Score
+          type: integer
+          nullable: true
+        coordinates:
+          items:
+            $ref: '#/components/schemas/Coordinate'
+          type: array
+          title: Coordinates
+          default: []
+        addresses:
+          items:
+            type: string
+          type: array
+          title: Addresses
+          default: []
+        aliases:
+          title: Aliases
+          items:
+            type: string
+          type: array
+          nullable: true
+        ids:
+          title: Ids
+          items:
+            $ref: '#/components/schemas/mesur_data_access__tradeverifyd__datamodels__common__Identifier'
+          type: array
+          nullable: true
+        upstream_depth:
+          type: integer
+          title: Upstream Depth
+          default: -1
+        downstream_depth:
+          type: integer
+          title: Downstream Depth
+          default: -1
+        depth:
+          title: Depth
+          description: 'Shortest distance from graph query entrypoint. This field will only
+
+            return the UPSTREAM distance. If this Entity does not participate in the
+
+            upstream graph of the entrypoint Entity for the graph, ''depth'' will be
+
+            None.'
+          readOnly: true
+          type: integer
+          nullable: true
+        downstream_distance:
+          title: Downstream Distance
+          description: 'Shortest available distance from entrypoint Entity to this Entity if
+
+            traversing from this Entity to the entrypoint. This field will only
+
+            return the DOWNSTREAM distance.  If this Entity does not participate in
+
+            the downstream graph of the entrypoint Entity for the graph,
+
+            ''downstream_distance'' will be None.'
+          readOnly: true
+          type: integer
+          nullable: true
+      type: object
+      required:
+      - _id
+      - name
+      - jurisdiction
+      - depth
+      - downstream_distance
+      title: AbridgedGraphEntity
+      description: Minimum Entity data needed by Tradeverifyd Portal graphs
+    AbridgedGraph:
+      properties:
+        entrypoint:
+          $ref: '#/components/schemas/AbridgedGraphEntity'
+          nullable: true
+        entities:
+          items:
+            $ref: '#/components/schemas/AbridgedGraphEntity'
+          type: array
+          title: Entities
+        relationships:
+          items:
+            $ref: '#/components/schemas/AbridgedRelationship'
+          type: array
+          title: Relationships
+        page:
+          type: integer
+          title: Page
+          default: 0
+        page_size:
+          type: integer
+          title: Page Size
+          default: 0
+        records:
+          type: integer
+          title: Records
+          default: 0
+        total_records:
+          title: Total Records
+          type: integer
+          nullable: true
+        total_pages:
+          title: Total Pages
+          type: integer
+          nullable: true
+        entity_graph_counts:
+          title: Entity Graph Counts
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          nullable: true
+      type: object
+      required:
+      - entities
+      - relationships
+      title: AbridgedGraph
+      description: 'Abridged graph response shape
+
+        entry is the root of the graph'
+    ExternalEnttiyId:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: The External Id
+        type:
+          type: string
+          title: Type
+          description: The type of the identifier
+        source:
+          type: string
+          title: Source
+          description: The source of the identifieer
+      type: object
+      required:
+      - id
+      - type
+      - source
+      title: ExternalEnttiyId
+      description: Class for information about external Entity Identifiers
+    DSCContentsResponse:
+      properties:
+        report_id:
+          anyOf:
+          - type: string
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Report Id
+          description: Unique ID (uuid) of the report.
+        report_type:
+          type: string
+          const: dsc
+          title: Report Type
+          description: The type of report requested.
+        subscription_id:
+          type: string
+          title: Subscription Id
+          description: ID of the subscription in the report.
+        subscription_name:
+          type: string
+          title: Subscription Name
+          description: Name of the subscription i nthe report.
+        summary:
+          type: string
+          title: Summary
+          description: Brief summary of the report.
+        summary_bullets:
+          items:
+            type: string
+          type: array
+          title: Summary Bullets
+          description: Key points from the report's summary.
+        risk_events:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Risk Events
+          description: Risk events included in the report.
+        supply_graph:
+          $ref: '#/components/schemas/AbridgedGraph'
+        top_risk_suppliers:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Top Risk Suppliers
+          description: A list of the top risk suppliers in the report.
+      type: object
+      required:
+      - report_id
+      - report_type
+      - subscription_id
+      - subscription_name
+      - summary
+      - summary_bullets
+      - risk_events
+      - supply_graph
+      - top_risk_suppliers
+      title: DSCContentsResponse
+      description: Contents response for a DSC report
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
