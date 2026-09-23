@@ -1,36 +1,7 @@
 openapi: 3.2.0
 info:
   title: Tradeverifyd Documents API
-  description: '
-
-    The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
-
-
-    For more information visit [tradeverifyd.com](https://tradeverifyd.com).
-
-
-    If you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.
-
-
-    When making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.
-
-
-    For example:
-
-
-    ```bash
-
-    curl --silent --location -G ''https://.../v1/search/entities'' \
-
-    --data-urlencode ''name=Contoso Corporation'' \
-
-    --data-urlencode ''jurisdiction=US'' \
-
-    --header "ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY"
-
-    ```
-
-    '
+  description: The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
   termsOfService: https://tradeverifyd.com/terms-of-service
   contact:
     name: tradeverifyd.com
@@ -140,6 +111,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     Body_upload_file_file_upload_post:
       properties:
         file:
@@ -150,15 +130,6 @@ components:
       required:
       - file
       title: Body_upload_file_file_upload_post
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     FileUploadResponse:
       properties:
         success:

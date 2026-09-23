@@ -1,36 +1,7 @@
 openapi: 3.2.0
 info:
   title: Tradeverifyd Risk Events API
-  description: '
-
-    The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
-
-
-    For more information visit [tradeverifyd.com](https://tradeverifyd.com).
-
-
-    If you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.
-
-
-    When making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.
-
-
-    For example:
-
-
-    ```bash
-
-    curl --silent --location -G ''https://.../v1/search/entities'' \
-
-    --data-urlencode ''name=Contoso Corporation'' \
-
-    --data-urlencode ''jurisdiction=US'' \
-
-    --header "ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY"
-
-    ```
-
-    '
+  description: The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
   termsOfService: https://tradeverifyd.com/terms-of-service
   contact:
     name: tradeverifyd.com
@@ -449,6 +420,27 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     GetRiskEventsResponse:
       properties:
         facets:
@@ -481,53 +473,6 @@ components:
       - total_results
       title: GetRiskEventsResponse
       description: Response payload for GET RiskEvents query
-    Facet:
-      properties:
-        type:
-          type: string
-          enum:
-          - event_type
-          - event_country
-          title: Type
-          description: Facet type.
-        value:
-          type: string
-          minLength: 1
-          title: Value
-          description: Distinct facet value.
-        count:
-          type: integer
-          minimum: 1.0
-          title: Count
-          description: Number of records in the entire (non-paginated) result set matching the distinct facet value.
-      type: object
-      required:
-      - type
-      - value
-      - count
-      title: Facet
-      description: Number of result values matching a distinct value for a given facet.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     RiskEvent:
       properties:
         id:
@@ -697,6 +642,32 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    Facet:
+      properties:
+        type:
+          type: string
+          enum:
+          - event_type
+          - event_country
+          title: Type
+          description: Facet type.
+        value:
+          type: string
+          minLength: 1
+          title: Value
+          description: Distinct facet value.
+        count:
+          type: integer
+          minimum: 1.0
+          title: Count
+          description: Number of records in the entire (non-paginated) result set matching the distinct facet value.
+      type: object
+      required:
+      - type
+      - value
+      - count
+      title: Facet
+      description: Number of result values matching a distinct value for a given facet.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -1,36 +1,7 @@
 openapi: 3.2.0
 info:
   title: Tradeverifyd Relationships API
-  description: '
-
-    The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
-
-
-    For more information visit [tradeverifyd.com](https://tradeverifyd.com).
-
-
-    If you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.
-
-
-    When making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.
-
-
-    For example:
-
-
-    ```bash
-
-    curl --silent --location -G ''https://.../v1/search/entities'' \
-
-    --data-urlencode ''name=Contoso Corporation'' \
-
-    --data-urlencode ''jurisdiction=US'' \
-
-    --header "ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY"
-
-    ```
-
-    '
+  description: The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
   termsOfService: https://tradeverifyd.com/terms-of-service
   contact:
     name: tradeverifyd.com
@@ -216,6 +187,37 @@ paths:
                     detail: Internal server error
 components:
   schemas:
+    RelationshipTypeDetailResponse:
+      properties:
+        type:
+          type: string
+          title: Type
+          description: The type of relationship
+        display_name:
+          type: string
+          title: Display Name
+          description: Human-readable name for the relationship type
+        category:
+          type: string
+          title: Category
+          description: The category this relationship belongs to
+        description:
+          type: string
+          title: Description
+          description: Description of what this relationship type means
+        bidirectional:
+          type: boolean
+          title: Bidirectional
+          description: Whether this relationship type is bidirectional
+      type: object
+      required:
+      - type
+      - display_name
+      - category
+      - description
+      - bidirectional
+      title: RelationshipTypeDetailResponse
+      description: "Enhanced response model for relationship types with additional metadata.\n\nAttributes:\n    type: The type of relationship (e.g., IS_SUPPLIER_OF, DIRECTLY_CONSOLIDATES).\n    display_name: Human-readable name for the relationship type.\n    category: The category this relationship belongs to (e.g., supply_chain, ownership).\n    description: A description of what this relationship type means.\n    bidirectional: Whether this relationship type is bidirectional."
     RelationshipTypeResponse:
       properties:
         relationship_type:
@@ -232,18 +234,6 @@ components:
       - description
       title: RelationshipTypeResponse
       description: "Response model for relationship types.\n\nAttributes:\n    relationship_type: The type of relationship (e.g., IS_SUPPLIER_OF, IS_OTHERWISE_LINKED_TO).\n    description: A description of what this relationship type means."
-    RelationshipTypeCategoriesResponse:
-      properties:
-        categories:
-          items:
-            $ref: '#/components/schemas/RelationshipTypeCategory'
-          type: array
-          title: Categories
-      type: object
-      required:
-      - categories
-      title: RelationshipTypeCategoriesResponse
-      description: "Response model for relationship type categories endpoint.\n\nAttributes:\n    categories: List of relationship type categories."
     RelationshipTypeCategory:
       properties:
         name:
@@ -277,37 +267,18 @@ components:
       - types
       title: RelationshipTypeCategory
       description: "Response model for relationship type categories.\n\nAttributes:\n    name: The category name (e.g., ownership, supply_chain).\n    display_name: Human-readable name for the category.\n    description: Description of what this category represents.\n    relationship_count: Number of relationship types in this category.\n    types: List of relationship type names in this category."
-    RelationshipTypeDetailResponse:
+    RelationshipTypeCategoriesResponse:
       properties:
-        type:
-          type: string
-          title: Type
-          description: The type of relationship
-        display_name:
-          type: string
-          title: Display Name
-          description: Human-readable name for the relationship type
-        category:
-          type: string
-          title: Category
-          description: The category this relationship belongs to
-        description:
-          type: string
-          title: Description
-          description: Description of what this relationship type means
-        bidirectional:
-          type: boolean
-          title: Bidirectional
-          description: Whether this relationship type is bidirectional
+        categories:
+          items:
+            $ref: '#/components/schemas/RelationshipTypeCategory'
+          type: array
+          title: Categories
       type: object
       required:
-      - type
-      - display_name
-      - category
-      - description
-      - bidirectional
-      title: RelationshipTypeDetailResponse
-      description: "Enhanced response model for relationship types with additional metadata.\n\nAttributes:\n    type: The type of relationship (e.g., IS_SUPPLIER_OF, DIRECTLY_CONSOLIDATES).\n    display_name: Human-readable name for the relationship type.\n    category: The category this relationship belongs to (e.g., supply_chain, ownership).\n    description: A description of what this relationship type means.\n    bidirectional: Whether this relationship type is bidirectional."
+      - categories
+      title: RelationshipTypeCategoriesResponse
+      description: "Response model for relationship type categories endpoint.\n\nAttributes:\n    categories: List of relationship type categories."
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -1,36 +1,7 @@
 openapi: 3.2.0
 info:
   title: Tradeverifyd Flags API
-  description: '
-
-    The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
-
-
-    For more information visit [tradeverifyd.com](https://tradeverifyd.com).
-
-
-    If you have questions regarding specific use cases or how to accomplish them, please reach out to [support@tradeverifyd.com](mailto:support@tradeverifyd.com?subject=Tradeverifyd%20use%20cases) for guidance.
-
-
-    When making requests that require a Tradeverifyd API Key make sure the correct HTTP Header is included.
-
-
-    For example:
-
-
-    ```bash
-
-    curl --silent --location -G ''https://.../v1/search/entities'' \
-
-    --data-urlencode ''name=Contoso Corporation'' \
-
-    --data-urlencode ''jurisdiction=US'' \
-
-    --header "ocp-apim-subscription-key: $TRADEVERIFYD_API_KEY"
-
-    ```
-
-    '
+  description: The Tradeverifyd API offers advanced capabilities for analyzing supply chain entities and their intricate relationships, enabling users to gain deep insights into the complex dynamics of global trade networks.
   termsOfService: https://tradeverifyd.com/terms-of-service
   contact:
     name: tradeverifyd.com
@@ -240,7 +211,30 @@ paths:
       tags:
       - Flags
       summary: Update a flag
-      description: "Update an existing Flag.\nUsers can only update Flags that belong to their organization.\nThe provided information will override existing information. It is not a merge.\n\n**Required Fields**:\n- `flag_id`: ID for Flag undergoing update.\n- Flag information for update.\n\n**Returns**:\n- The Flag object representing the updated flag.\n\n**Example Usage**:\n- Requesting `PUT /v1/flags/update/{flag_id}` with a valid `flag_id` that belongs to the user's organization\n    will update the specified flag."
+      description: 'Update an existing Flag.
+
+        Users can only update Flags that belong to their organization.
+
+        The provided information will override existing information. It is not a merge.
+
+
+        **Required Fields**:
+
+        - `flag_id`: ID for Flag undergoing update.
+
+        - Flag information for update.
+
+
+        **Returns**:
+
+        - The Flag object representing the updated flag.
+
+
+        **Example Usage**:
+
+        - Requesting `PUT /v1/flags/update/{flag_id}` with a valid `flag_id` that belongs to the user''s organization
+
+        will update the specified flag.'
       operationId: update_flag_flags_update__flag_id__put
       parameters:
       - name: flag_id
@@ -569,52 +563,92 @@ paths:
                     detail: Internal server error
 components:
   schemas:
-    ExternalBulkFlagItem:
+    Translation:
       properties:
-        entity_id:
+        translated_text:
           type: string
-          title: Entity Id
-          description: ID of the associated staged entity
-        flag_type:
+          title: Translated Text
+          description: The full translated text
+        source_lang:
           type: string
-          title: Flag Type
-          description: Type of flag
-        flag_subtype:
+          maxLength: 2
+          title: Source Language
+          description: The ISO 639 code for the language of the source text
+        result_lang:
           type: string
-          title: Flag Subtype
-          description: Subtype of flag
-        description:
+          maxLength: 2
+          title: Result Language
+          description: The ISO 639 code for the language to which the source text has been translated
+        timestamp:
           type: string
-          title: Description
-          description: Detailed description of the flag
-        tags:
-          title: Tags
-          description: Single word identifier for flag by subcategories
-          type: string
-          nullable: true
-        source_location:
-          type: string
-          title: Source Location
-          description: Source of Flag Information such as a URL
-        time_start:
-          title: Time Start
-          description: Start time of the flag's validity
-          type: string
-          nullable: true
-        time_end:
-          title: Time End
-          description: End time of the flag's validity
+          format: date-time
+          title: Translation Time
+          description: The date and time the translation was made
+        model:
+          title: Model
+          description: The model used to perform the translation
           type: string
           nullable: true
       type: object
       required:
-      - entity_id
+      - translated_text
+      - source_lang
+      - result_lang
+      - timestamp
+      title: Translation
+      description: "Represents a translation of a text.\n\nAttributes:\n    translated_text: the full text of the translation.\n    source_lang: the language of the source text.\n    result_lang: the language of the resulting translation.\n    timestamp: the date and time the translation was made.\n    model: the model used to perfom the translation."
+    FlagTypeResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the flag type.
+        flag_type_description:
+          type: string
+          title: Flag Type Description
+          description: Brief description of the flag's meaning.
+        flag_type:
+          type: string
+          title: Flag Type
+          description: Primary type of the flag.
+        flag_subtype:
+          type: string
+          title: Flag Subtype
+          description: Subtype of the flag.
+        flag_polarity:
+          type: integer
+          title: Flag Polarity
+          description: Positive (+1) indicates compliance/certification, negative (-1) indicates violations/sanctions.
+      type: object
+      required:
+      - id
+      - flag_type_description
       - flag_type
       - flag_subtype
-      - description
-      - source_location
-      title: ExternalBulkFlagItem
-      description: Individual flag item for bulk flag API
+      - flag_polarity
+      title: FlagTypeResponse
+      description: "Response model for flag types without the score field.\n\nAttributes:\n\n    id: ID of the flag type.\n    flag_type_description: Description of the flag type.\n    flag_type: Type of the flag.\n    flag_subtype: Subtype of the flag.\n    flag_polarity: Polarity of the flag."
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     DataStatus:
       properties:
         state:
@@ -649,27 +683,96 @@ components:
       type: object
       title: DataStatus
       description: "Supoorts enhancing a class with status information.\n\nAttributes:\n    state: the state value: invalid, suspected, or confirmed. Defaults to\n    suspected.\n    confidence: the level of confidence in the state: almost no chance, very unlikely,\n    unlikely, roughly even chance, likely, very likely, almost certain.\n    sources: a list of sources supporting the state and confidence level."
-    ValidationError:
+    ExternalBulkFlagResponse:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        message:
           type: string
           title: Message
-        type:
+          description: Status message
+        flag_count:
+          type: integer
+          title: Flag Count
+          description: Total number of flags in the request
+        inserted_count:
+          type: integer
+          title: Inserted Count
+          description: Number of flags successfully inserted
+        status:
           type: string
-          title: Error Type
+          title: Status
+          description: Processing status
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - message
+      - flag_count
+      - inserted_count
+      - status
+      title: ExternalBulkFlagResponse
+      description: Response model for external bulk flag operations.
+    FlagUpdateItem:
+      properties:
+        entity_jurisdiction:
+          title: Entity Jurisdiction
+          description: Jurisdiction of the entity
+          type: string
+          nullable: true
+        description:
+          title: Description
+          description: Detailed description of the flag
+          type: string
+          nullable: true
+        tags:
+          title: Tags
+          description: Single word identifier for flag by subcategories
+          items:
+            type: string
+          type: array
+          nullable: true
+        source:
+          title: Source
+          description: Source of Flag Information such as a URL
+          items:
+            type: string
+          type: array
+          nullable: true
+        time_start:
+          title: Time Start
+          description: Start time of the flag's validity
+          type: string
+          format: date-time
+          nullable: true
+        time_end:
+          title: Time End
+          description: End time of flag's validity
+          type: string
+          format: date-time
+          nullable: true
+        owner_email:
+          title: Owner Email
+          description: Email of flag owner
+          type: string
+          nullable: true
+        deleted:
+          type: boolean
+          title: Deleted
+          description: Boolean marking deleted flags
+          default: false
+        deleted_at:
+          title: Deleted At
+          description: Time flag was deleted
+          type: string
+          format: date-time
+          nullable: true
+        deletion_source:
+          title: Deletion Source
+          description: Source of deletion
+          type: string
+          nullable: true
+      type: object
+      title: FlagUpdateItem
+      description: 'Individual flag item for update flag endpoint.
+
+        Attributes listed here represent those that users can update.'
     DisplayFlagResponse:
       properties:
         id:
@@ -757,136 +860,6 @@ components:
         Extends the internal flag model to provide comprehensive flag details
 
         including entity context and relationship depth information.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    FlagUpdateItem:
-      properties:
-        entity_jurisdiction:
-          title: Entity Jurisdiction
-          description: Jurisdiction of the entity
-          type: string
-          nullable: true
-        description:
-          title: Description
-          description: Detailed description of the flag
-          type: string
-          nullable: true
-        tags:
-          title: Tags
-          description: Single word identifier for flag by subcategories
-          items:
-            type: string
-          type: array
-          nullable: true
-        source:
-          title: Source
-          description: Source of Flag Information such as a URL
-          items:
-            type: string
-          type: array
-          nullable: true
-        time_start:
-          title: Time Start
-          description: Start time of the flag's validity
-          type: string
-          format: date-time
-          nullable: true
-        time_end:
-          title: Time End
-          description: End time of flag's validity
-          type: string
-          format: date-time
-          nullable: true
-        owner_email:
-          title: Owner Email
-          description: Email of flag owner
-          type: string
-          nullable: true
-        deleted:
-          type: boolean
-          title: Deleted
-          description: Boolean marking deleted flags
-          default: false
-        deleted_at:
-          title: Deleted At
-          description: Time flag was deleted
-          type: string
-          format: date-time
-          nullable: true
-        deletion_source:
-          title: Deletion Source
-          description: Source of deletion
-          type: string
-          nullable: true
-      type: object
-      title: FlagUpdateItem
-      description: 'Individual flag item for update flag endpoint.
-
-        Attributes listed here represent those that users can update.'
-    ExternalBulkFlagResponse:
-      properties:
-        message:
-          type: string
-          title: Message
-          description: Status message
-        flag_count:
-          type: integer
-          title: Flag Count
-          description: Total number of flags in the request
-        inserted_count:
-          type: integer
-          title: Inserted Count
-          description: Number of flags successfully inserted
-        status:
-          type: string
-          title: Status
-          description: Processing status
-      type: object
-      required:
-      - message
-      - flag_count
-      - inserted_count
-      - status
-      title: ExternalBulkFlagResponse
-      description: Response model for external bulk flag operations.
-    FlagTypeResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier for the flag type.
-        flag_type_description:
-          type: string
-          title: Flag Type Description
-          description: Brief description of the flag's meaning.
-        flag_type:
-          type: string
-          title: Flag Type
-          description: Primary type of the flag.
-        flag_subtype:
-          type: string
-          title: Flag Subtype
-          description: Subtype of the flag.
-        flag_polarity:
-          type: integer
-          title: Flag Polarity
-          description: Positive (+1) indicates compliance/certification, negative (-1) indicates violations/sanctions.
-      type: object
-      required:
-      - id
-      - flag_type_description
-      - flag_type
-      - flag_subtype
-      - flag_polarity
-      title: FlagTypeResponse
-      description: "Response model for flag types without the score field.\n\nAttributes:\n\n    id: ID of the flag type.\n    flag_type_description: Description of the flag type.\n    flag_type: Type of the flag.\n    flag_subtype: Subtype of the flag.\n    flag_polarity: Polarity of the flag."
     Source:
       properties:
         id:
@@ -988,40 +961,61 @@ components:
       - type
       title: UpdateFlagResponse
       description: Response model for updated flags
-    Translation:
+    ExternalBulkFlagItem:
       properties:
-        translated_text:
+        entity_id:
           type: string
-          title: Translated Text
-          description: The full translated text
-        source_lang:
+          title: Entity Id
+          description: ID of the associated staged entity
+        flag_type:
           type: string
-          maxLength: 2
-          title: Source Language
-          description: The ISO 639 code for the language of the source text
-        result_lang:
+          title: Flag Type
+          description: Type of flag
+        flag_subtype:
           type: string
-          maxLength: 2
-          title: Result Language
-          description: The ISO 639 code for the language to which the source text has been translated
-        timestamp:
+          title: Flag Subtype
+          description: Subtype of flag
+        description:
           type: string
-          format: date-time
-          title: Translation Time
-          description: The date and time the translation was made
-        model:
-          title: Model
-          description: The model used to perform the translation
+          title: Description
+          description: Detailed description of the flag
+        tags:
+          title: Tags
+          description: Single word identifier for flag by subcategories
+          type: string
+          nullable: true
+        source_location:
+          type: string
+          title: Source Location
+          description: Source of Flag Information such as a URL
+        time_start:
+          title: Time Start
+          description: Start time of the flag's validity
+          type: string
+          nullable: true
+        time_end:
+          title: Time End
+          description: End time of the flag's validity
           type: string
           nullable: true
       type: object
       required:
-      - translated_text
-      - source_lang
-      - result_lang
-      - timestamp
-      title: Translation
-      description: "Represents a translation of a text.\n\nAttributes:\n    translated_text: the full text of the translation.\n    source_lang: the language of the source text.\n    result_lang: the language of the resulting translation.\n    timestamp: the date and time the translation was made.\n    model: the model used to perfom the translation."
+      - entity_id
+      - flag_type
+      - flag_subtype
+      - description
+      - source_location
+      title: ExternalBulkFlagItem
+      description: Individual flag item for bulk flag API
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

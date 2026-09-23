@@ -27,7 +27,8 @@
     "tradeverifyd-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "tradeverifyd-openapi-original.json: declared missing tag: Organizations",
     "tradeverifyd-openapi-original.json: declared missing tag: US Customs",
-    "tradeverifyd-transparency-service-openapi.yaml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0"
+    "tradeverifyd-transparency-service-openapi.yaml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "tradeverifyd-documents-api-openapi.yml: previously refined output, superseded by openapi/_original/",

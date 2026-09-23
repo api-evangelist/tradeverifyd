@@ -5,9 +5,7 @@ info:
 
     Obtain offline verifiable proof that an artifact was recorded in the log.
 
-    Query the log for statements about artifacts to build verifiable value chains.
-
-    '
+    Query the log for statements about artifacts to build verifiable value chains.'
   version: 1.0.0
   contact:
     name: Tradeverifyd
@@ -27,9 +25,7 @@ paths:
       summary: Service Configuration
       description: 'Get the SCITT service configuration including supported algorithms,
 
-        registration policies, and service metadata (per SCRAPI specification).
-
-        '
+        registration policies, and service metadata (per SCRAPI specification).'
       tags:
       - SCITT Reference APIs
       responses:
@@ -84,14 +80,14 @@ paths:
                 supported_hash_algorithms:
                 - SHA-256
                 tile_height: 8
+      operationId: getWellKnownScittConfiguration
+      x-operation-id-source: derived
   /.well-known/scitt-keys:
     get:
       summary: Service Verification Keys
       description: 'Get the service''s verification keys as a COSE Key Set in CBOR format
 
-        (per SCRAPI specification and RFC 9052 Section 7).
-
-        '
+        (per SCRAPI specification and RFC 9052 Section 7).'
       tags:
       - SCITT Reference APIs
       responses:
@@ -113,6 +109,8 @@ paths:
             text/plain:
               schema:
                 type: string
+      operationId: getWellKnownScittKeys
+      x-operation-id-source: derived
   /entries:
     post:
       summary: Register Statement
@@ -121,9 +119,7 @@ paths:
         The statement will be assigned an entry ID and included in the Merkle tree.
 
 
-        Supports both application/cose and application/scitt-statement+cose content types.
-
-        '
+        Supports both application/cose and application/scitt-statement+cose content types.'
       tags:
       - SCITT Reference APIs
       security:
@@ -168,14 +164,14 @@ paths:
             text/plain:
               schema:
                 type: string
+      operationId: postEntries
+      x-operation-id-source: derived
   /entries/{entry_id}:
     get:
       summary: Get Receipt
       description: 'Retrieve a transparency receipt for a registered statement.
 
-        The receipt contains a Merkle inclusion proof and signed checkpoint.
-
-        '
+        The receipt contains a Merkle inclusion proof and signed checkpoint.'
       tags:
       - SCITT Reference APIs
       parameters:
@@ -208,6 +204,8 @@ paths:
             text/plain:
               schema:
                 type: string
+      operationId: getEntriesByEntryId
+      x-operation-id-source: derived
 components:
   securitySchemes:
     bearerAuth:
