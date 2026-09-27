@@ -1388,88 +1388,6 @@ components:
           default: 0
       type: object
       title: Flags
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    EntityHsCodes:
-      properties:
-        incoming:
-          items:
-            type: string
-          type: array
-          title: Incoming
-          description: HS codes for products received by this entity
-        outgoing:
-          items:
-            type: string
-          type: array
-          title: Outgoing
-          description: HS codes for products shipped by this entity
-      type: object
-      title: EntityHsCodes
-      description: HS codes organized by trade direction for an Entity
-    ProblematicEntity:
-      properties:
-        id:
-          type: string
-          title: Id
-        name:
-          type: string
-          title: Name
-        flags:
-          items:
-            $ref: '#/components/schemas/VerificationFlag'
-          type: array
-          title: Flags
-          default: []
-        addresses:
-          items:
-            $ref: '#/components/schemas/Address'
-          type: array
-          title: Addresses
-          default: []
-        jurisdiction:
-          type: string
-          title: Jurisdiction
-        depth:
-          type: integer
-          title: Depth
-        tvpra_risks:
-          items:
-            $ref: '#/components/schemas/TVPRARisk'
-          type: array
-          title: Tvpra Risks
-          default: []
-        has_excessive_addresses:
-          type: boolean
-          title: Has Excessive Addresses
-          default: false
-      type: object
-      required:
-      - id
-      - name
-      - jurisdiction
-      - depth
-      title: ProblematicEntity
-      description: An Entity identified as problematic during verification.
     app__api__internal__schemas__reports__Pagination:
       properties:
         current_page:
@@ -1500,22 +1418,6 @@ components:
         total_records: the number of records found
 
         page_size: the current page size'
-    earthstream_services__services__entity__common__search_models__EntityReferences:
-      properties:
-        flags:
-          title: Information about flags found for an entity
-          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__Flags'
-          nullable: true
-        relationships:
-          title: Information about relationships for an entity
-          $ref: '#/components/schemas/earthstream_services__services__entity__common__search_models__Relationships'
-          nullable: true
-        risk_events:
-          title: Information about risk events for an entity
-          $ref: '#/components/schemas/RiskEvents'
-          nullable: true
-      type: object
-      title: EntityReferences
     HTTPValidationError:
       properties:
         detail:
@@ -1525,124 +1427,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    EntitySearchResult:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: The Mesur Entity Id.
-        name:
-          type: string
-          title: Name
-          description: Entity name
-        aliases:
-          title: Aliases
-          description: Alternative names and aliases
-          items:
-            type: string
-          type: array
-          nullable: true
-        jurisdiction:
-          title: Jurisdiction
-          description: The country the entity is associated with.
-          type: string
-          nullable: true
-        addresses:
-          title: Addresses
-          description: Entity addresses.
-          items:
-            type: string
-          type: array
-          nullable: true
-        flagged:
-          type: boolean
-          title: Flagged
-          description: Whether or not the Entity has active Flags.
-        has_positive_flags:
-          type: boolean
-          title: Has Positive Flags
-          description: Whether the Entity has any positive/compliant flags.
-          default: false
-        has_negative_flags:
-          type: boolean
-          title: Has Negative Flags
-          description: Whether the Entity has any negative/risk flags.
-          default: false
-        description:
-          title: Entity Description
-          description: Detailed information about the entity's purpose, background, or role.
-          type: string
-          maxLength: 4096
-          nullable: true
-        primary_role:
-          title: Primary Role
-          description: The primary role of the entity (e.g., supplier, grower)
-          type: string
-          nullable: true
-        url:
-          title: Entity URL
-          description: The official website or online resource associated with the entity.
-          type: string
-          nullable: true
-        extended_data:
-          title: Extended Data
-          description: Additional data points about the entity, including status and links to documents
-          additionalProperties: true
-          type: object
-          nullable: true
-        auto_research:
-          title: Research Entity
-          description: Flag indicating if the entity should be researched automatically.
-          type: boolean
-          nullable: true
-        monitor:
-          title: Monitor Entity
-          description: Flag indicating if the entity should be continuously monitored for updates or changes.
-          type: boolean
-          nullable: true
-        callback_url:
-          title: Callback URL
-          description: Registered URL to call when Entity activiy occurs
-          type: string
-          nullable: true
-        references:
-          title: Entity References
-          description: flag, relationships, other references to this entity
-          $ref: '#/components/schemas/earthstream_services__services__entity__common__search_models__EntityReferences'
-          nullable: true
-        count_inferred_relationships:
-          title: Inferred Relationships Count
-          description: The number of inferred relationships in the graph.  Will not be present if the graph counts have not been calculated yet.
-          $ref: '#/components/schemas/EntityGraphCounts'
-          nullable: true
-        external_ids:
-          title: External Identifiers
-          description: An optional list of external identifiers for an Entity.
-          items:
-            $ref: '#/components/schemas/ExternalEnttiyId'
-          type: array
-          nullable: true
-        modified_date:
-          title: Modified Date
-          description: Last time entity record was modified (timezone-aware UTC)
-          type: string
-          format: date-time
-          nullable: true
-        hs_codes:
-          title: HS Codes
-          description: Harmonized System codes for products traded by this entity, organized by direction
-          $ref: '#/components/schemas/HsCodes'
-          nullable: true
-      type: object
-      required:
-      - id
-      - name
-      - aliases
-      - jurisdiction
-      - addresses
-      - flagged
-      title: EntitySearchResult
-      description: Single Entity search result
     RiskEvents:
       properties:
         total:
@@ -1651,322 +1435,6 @@ components:
           default: 0
       type: object
       title: RiskEvents
-    ExternalEnttiyId:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: The External Id
-        type:
-          type: string
-          title: Type
-          description: The type of the identifier
-        source:
-          type: string
-          title: Source
-          description: The source of the identifieer
-      type: object
-      required:
-      - id
-      - type
-      - source
-      title: ExternalEnttiyId
-      description: Class for information about external Entity Identifiers
-    ExternalEntityId:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: The external identifier value
-        type:
-          type: string
-          title: Type
-          description: The type of the identifier (e.g. lei, us_fein)
-        source:
-          type: string
-          title: Source
-          description: The source of the identifier
-      type: object
-      required:
-      - id
-      - type
-      - source
-      title: ExternalEntityId
-      description: External identifier for an Entity
-    app__schemas__metadata__Identifier:
-      properties:
-        id:
-          type: string
-          title: Identifier
-          description: An identifer, e.g., a GTIN or CIN
-        active:
-          type: boolean
-          title: Active Status
-          description: A boolean field indicating if the object is active. Setting this to False acts as a soft delete.
-          default: true
-        created:
-          type: string
-          format: date-time
-          title: Date Added
-          description: The date and time when the object was added.
-        type:
-          type: string
-          title: Type
-          description: The type of identifier, e.g., a GTIN or CIN
-        source:
-          title: Source
-          description: A URL that can be dereferenced to provide more information about the id
-          type: string
-          nullable: true
-      type: object
-      required:
-      - id
-      - type
-      title: Identifier
-      description: "Represents an identifier that can be used for an entity, along with the\nidentifier type and a source URL.\n\nAttributes:\n    id: the value of the identifier.\n    type: the type of the identifier.\n    url: a URL source for the identifier."
-    Address:
-      properties:
-        address:
-          type: string
-          title: Address
-        problematic:
-          type: boolean
-          title: Problematic
-          default: false
-        problem_region:
-          title: Problem Region
-          type: string
-          nullable: true
-      type: object
-      required:
-      - address
-      title: Address
-      description: Information about an Entity's Address.
-    GetEntityResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique Entity identifier.
-        name:
-          type: string
-          title: Name
-          description: The formal or recognized name of the entity.
-        description:
-          title: Description
-          description: Detailed information about the entity's purpose, background, or role.
-          type: string
-          nullable: true
-        primary_role:
-          title: Primary Role
-          description: The primary role of the entity (e.g., supplier, grower)
-          type: string
-          nullable: true
-        aliases:
-          title: Aliases
-          description: Alternative names and aliases
-          items:
-            type: string
-          type: array
-          nullable: true
-        url:
-          title: Url
-          description: The official website or online resource associated with the entity.
-          type: string
-          nullable: true
-        jurisdiction:
-          type: string
-          title: Entity Jurisdiction
-          description: ISO 3166 country code of the country where the entity operates or is governed.
-        addresses:
-          title: Addresses
-          description: The physical or registered addresses of the entity.
-          items:
-            type: string
-          type: array
-          nullable: true
-        monitor:
-          type: boolean
-          title: Monitor Entity
-          description: If 'true', system events impacting this Entity or any Entity in its supply chain (as defined by the parameters set in Entity.subscription) will generate Notifications. Notifications can be viewed and acknowledged at /notifications endpoints.
-          default: false
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: Time record was created.
-        modified:
-          type: string
-          format: date-time
-          title: Modified
-          description: Last time record was modified.
-        region:
-          title: Region
-          description: Region code for the Enttiy
-          type: string
-          nullable: true
-        affiliated_jurisdiction:
-          title: Affiliated Jurisdiction
-          description: Supplemental jurisdction information. For example, some Entities may be associate with super-governmental bodies like the United Nations.
-          type: string
-          nullable: true
-        tradeverifyd_score:
-          title: Tradeverifyd Score
-          description: Entity's Tradeverifyd score. Entities with higher risk for supply chain or compliance issues will have a lower Tradeverifyd score.
-          type: integer
-          nullable: true
-        references:
-          title: Entity References
-          description: Summary counts of flags, relationships, and other references associated with this entity. Not specific to query.
-          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__EntityReferences'
-          nullable: true
-        count_inferred_relationships:
-          title: Inferred Relationships Count
-          description: The number of inferred relationships in the graph.  Will not be present if the graph counts have not been calculated yet.
-          $ref: '#/components/schemas/EntityGraphCounts'
-          nullable: true
-        flagged:
-          type: boolean
-          title: Flagged
-          description: Whether the Entity has active Flags visible to the requesting organization.
-          default: false
-        has_positive_flags:
-          type: boolean
-          title: Has Positive Flags
-          description: Whether the Entity has any positive/compliant flags.
-          default: false
-        has_negative_flags:
-          type: boolean
-          title: Has Negative Flags
-          description: Whether the Entity has any negative/risk flags.
-          default: false
-        external_ids:
-          title: External Ids
-          description: External identifiers for the Entity.
-          items:
-            $ref: '#/components/schemas/ExternalEntityId'
-          type: array
-          nullable: true
-        hs_codes:
-          description: Harmonized System codes for products traded by this entity, organized by direction.
-          $ref: '#/components/schemas/EntityHsCodes'
-          nullable: true
-      type: object
-      required:
-      - id
-      - name
-      - jurisdiction
-      - created_at
-      - modified
-      title: GetEntityResponse
-      description: "Response model for entities.\n\n Attributes:\n\n    id: Unique entity identifier.\n\n    name: Entity name.\n\n    description: Detailed information about the entity, covering its purpose,\n    background, or role.\n\n    primary_role: The primary role an entity plays.\n\n    aliases: Additional aliases that are associated with the entity.\n\n    url: The official website or a relevant online resource associated with the\n    entity.\n\n    jurisdiction: The country the entity is associated with.\n\n    addresses: The physical or registered addresses of the entity.\n\n    monitor: A boolean indicating if this entity's events will generate notifications.\n\n    created_at: Time the entity record was created.\n\n    modified: Time the record was last modified.\n\n    region: Entity's region code.\n\n    affiliated_jurisdiction: Supplemental jurisdiction information.\n\n    tradeverifyd_score: Computed Tradeverifyd score for the entity.\n\n    references: Summary counts of direct entity relationships and flags.\n\n    count_inferred_relationships: Optional value for number of inferred relationships in the entity graph, if already calculated."
-    PublicAbridgedGraph:
-      properties:
-        entrypoint:
-          $ref: '#/components/schemas/PublicEntity'
-          nullable: true
-        entities:
-          items:
-            $ref: '#/components/schemas/PublicEntity'
-          type: array
-          title: Entities
-        relationships:
-          items:
-            $ref: '#/components/schemas/PublicRelationship'
-          type: array
-          title: Relationships
-        page:
-          type: integer
-          title: Page
-          default: 0
-        page_size:
-          type: integer
-          title: Page Size
-          default: 0
-        records:
-          type: integer
-          title: Records
-          default: 0
-        total_records:
-          title: Total Records
-          type: integer
-          nullable: true
-        total_pages:
-          title: Total Pages
-          type: integer
-          nullable: true
-        entity_graph_counts:
-          title: Entity Graph Counts
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          nullable: true
-      type: object
-      required:
-      - entities
-      - relationships
-      title: PublicAbridgedGraph
-      description: Public abridged graph response model
-    PublicFlag:
-      properties:
-        id:
-          type: string
-          title: Id
-        entity_id:
-          type: string
-          title: Entity Id
-        entity_jurisdiction:
-          title: Entity Jurisdiction
-          type: string
-          nullable: true
-        type:
-          type: string
-          title: Type
-        subtype:
-          type: string
-          title: Subtype
-        flag_polarity:
-          title: Flag Polarity
-          type: integer
-          nullable: true
-        modified:
-          type: string
-          format: date-time
-          title: Modified
-        source:
-          title: Source
-          items:
-            type: string
-          type: array
-          nullable: true
-        description:
-          title: Description
-          type: string
-          nullable: true
-        tags:
-          title: Tags
-          items:
-            type: string
-          type: array
-          nullable: true
-      type: object
-      required:
-      - id
-      - entity_id
-      - type
-      - subtype
-      - modified
-      title: PublicFlag
-      description: Public flag response model - only exposes what consumers need
-    earthstream_services__services__entity__common__entity_dto__RelationshipCount:
-      properties:
-        count:
-          type: integer
-          title: The number of relationships found on an entity.
-          default: 0
-      type: object
-      title: RelationshipCount
     earthstream_services__services__entity__common__search_models__Relationships:
       properties:
         total:
@@ -1983,23 +1451,6 @@ components:
           nullable: true
       type: object
       title: Relationships
-    HsCodes:
-      properties:
-        incoming:
-          items:
-            type: string
-          type: array
-          title: Incoming
-          description: HS codes for products received by this entity
-        outgoing:
-          items:
-            type: string
-          type: array
-          title: Outgoing
-          description: HS codes for products shipped by this entity
-      type: object
-      title: HsCodes
-      description: HS codes organized by direction (incoming/outgoing shipments)
     PublicEntity:
       properties:
         id:
@@ -2048,90 +1499,6 @@ components:
       - jurisdiction
       title: PublicEntity
       description: Public entity response model - only exposes what consumers need
-    earthstream_services__services__entity__common__entity_dto__EntityReferences:
-      properties:
-        flags:
-          title: Information about flags found for an entity
-          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__Flags'
-          nullable: true
-        relationships:
-          title: Information about relationships for an entity
-          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__Relationships'
-          nullable: true
-      type: object
-      title: EntityReferences
-    EntityVerificationDetails:
-      properties:
-        id:
-          type: string
-          title: Id
-        name:
-          type: string
-          title: Name
-        jurisdiction:
-          type: string
-          title: Jurisdiction
-        addresses:
-          items:
-            type: string
-          type: array
-          title: Addresses
-        text_summary:
-          type: string
-          title: Text Summary
-        problematic_entities:
-          items:
-            $ref: '#/components/schemas/ProblematicEntity'
-          type: array
-          title: Problematic Entities
-          default: []
-        tradeverifyd_score:
-          type: number
-          title: Tradeverifyd Score
-          default: 0.0
-        total_entity_ct:
-          type: integer
-          title: Total Entity Ct
-          default: 0
-        identifiers:
-          items:
-            $ref: '#/components/schemas/mesur_data_access__tradeverifyd__datamodels__common__Identifier'
-          type: array
-          title: Identifiers
-          default: []
-        incoming_products:
-          items:
-            type: string
-          type: array
-          title: Incoming Products
-          default: []
-        outgoing_products:
-          items:
-            type: string
-          type: array
-          title: Outgoing Products
-          default: []
-        top_supplier_connections:
-          items:
-            $ref: '#/components/schemas/TopSupplierConnection'
-          type: array
-          title: Top Supplier Connections
-          default: []
-        top_customer_connections:
-          items:
-            $ref: '#/components/schemas/TopSupplierConnection'
-          type: array
-          title: Top Customer Connections
-          default: []
-      type: object
-      required:
-      - id
-      - name
-      - jurisdiction
-      - addresses
-      - text_summary
-      title: EntityVerificationDetails
-      description: Summary of verification details for an Entity.
     FlaggedRelationshipsResponse:
       properties:
         entities:
@@ -2243,110 +1610,6 @@ components:
         relationships, and flags. All ObjectIds are serialized as strings
 
         for JSON compatibility.'
-    mesur_data_access__tradeverifyd__datamodels__common__Identifier:
-      properties:
-        type:
-          type: string
-          title: Type
-        source:
-          type: string
-          title: Source
-        id:
-          type: string
-          title: Id
-      type: object
-      required:
-      - type
-      - source
-      - id
-      title: Identifier
-      description: External ID for an entity
-    TVPRARisk:
-      properties:
-        risk_type:
-          type: string
-          title: Risk Type
-        suspect_hs_codes:
-          items:
-            type: string
-          type: array
-          title: Suspect Hs Codes
-      type: object
-      required:
-      - risk_type
-      - suspect_hs_codes
-      title: TVPRARisk
-      description: Information about high-risk goods.
-    EntityGraphCounts:
-      properties:
-        depth:
-          type: integer
-          title: The depth of the graph traversal
-          default: 3
-        value:
-          type: integer
-          title: The total number of relationships in the graph
-          default: 0
-        flagged_count:
-          type: integer
-          title: Flagged Count
-          description: Flagged upstream entities count
-          default: 0
-        last_updated:
-          type: string
-          format: date-time
-          title: The last time the graph counts were updated
-          default: '2026-07-20T16:50:05.374936Z'
-      type: object
-      title: EntityGraphCounts
-    PublicRelationship:
-      properties:
-        id:
-          type: string
-          title: Id
-        type:
-          type: string
-          title: Type
-          description: Describes the relationship between subject and object.
-        target:
-          type: string
-          title: Target
-          description: Entity at the destination of the relationship.
-        source:
-          type: string
-          title: Source
-          description: Entity at the origin of the relationship.
-        hs_codes:
-          title: Hs Codes
-          items:
-            type: string
-          type: array
-          nullable: true
-        modified:
-          type: string
-          format: date-time
-          title: Modified
-        sources:
-          title: Sources
-          items:
-            type: string
-          type: array
-          nullable: true
-        aliases:
-          title: Aliases
-          items:
-            type: string
-          type: array
-          nullable: true
-      type: object
-      required:
-      - id
-      - type
-      - target
-      - source
-      - modified
-      title: PublicRelationship
-      description: Public relationship response model - only exposes what consumers need
     Coordinate:
       properties:
         lat:
@@ -2528,22 +1791,134 @@ components:
       - type
       title: RiskEvent
       description: "Represents an event, encapsulating key information for tracking or\nmonitoring purposes within various applications.\n\nAttributes:\n\n    id:  Database identifier.\n\n    timestamp: Time the event occurred or was recorded.\n\n    last_modified: Last time Risk Event record was modified.\n\n    countries: A list of countries impacted by the Risk Event.\n\n    time_start: Start time of the event, marking the beginning of its\n    occurrence.\n\n    time_end: End time of the event, indicating when it concluded.\n\n    title: Brief, descriptive title of the event.\n\n    description: Summary of the RiskEvent.\n\n    sources: Web URLs that reference or describe the event.\n\n    type: The type of Risk Event."
-    earthstream_services__services__entity__common__entity_dto__Relationships:
+    EntityVerificationDetails:
       properties:
-        total:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        jurisdiction:
+          type: string
+          title: Jurisdiction
+        addresses:
+          items:
+            type: string
+          type: array
+          title: Addresses
+        text_summary:
+          type: string
+          title: Text Summary
+        problematic_entities:
+          items:
+            $ref: '#/components/schemas/ProblematicEntity'
+          type: array
+          title: Problematic Entities
+          default: []
+        tradeverifyd_score:
+          type: number
+          title: Tradeverifyd Score
+          default: 0.0
+        total_entity_ct:
           type: integer
-          title: The number of relationships the entity is linked with
+          title: Total Entity Ct
           default: 0
-        from_relationships:
-          title: "\n            The relationships where the given entity is on the 'from' side.\n            These relationships are considered 'outbound' from the entity.\n        "
-          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__RelationshipCount'
-          nullable: true
-        to_relationships:
-          title: "\n            The relationships where the given entity is on the 'to' side.\n            These relationships are considered 'inbound' to the entity.\n        "
-          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__RelationshipCount'
-          nullable: true
+        identifiers:
+          items:
+            $ref: '#/components/schemas/mesur_data_access__tradeverifyd__datamodels__common__Identifier'
+          type: array
+          title: Identifiers
+          default: []
+        incoming_products:
+          items:
+            type: string
+          type: array
+          title: Incoming Products
+          default: []
+        outgoing_products:
+          items:
+            type: string
+          type: array
+          title: Outgoing Products
+          default: []
+        top_supplier_connections:
+          items:
+            $ref: '#/components/schemas/TopSupplierConnection'
+          type: array
+          title: Top Supplier Connections
+          default: []
+        top_customer_connections:
+          items:
+            $ref: '#/components/schemas/TopSupplierConnection'
+          type: array
+          title: Top Customer Connections
+          default: []
       type: object
-      title: Relationships
+      required:
+      - id
+      - name
+      - jurisdiction
+      - addresses
+      - text_summary
+      title: EntityVerificationDetails
+      description: Summary of verification details for an Entity.
+    mesur_data_access__tradeverifyd__datamodels__common__Identifier:
+      properties:
+        type:
+          type: string
+          title: Type
+        source:
+          type: string
+          title: Source
+        id:
+          type: string
+          title: Id
+      type: object
+      required:
+      - type
+      - source
+      - id
+      title: Identifier
+      description: External ID for an entity
+    HsCodes:
+      properties:
+        incoming:
+          items:
+            type: string
+          type: array
+          title: Incoming
+          description: HS codes for products received by this entity
+        outgoing:
+          items:
+            type: string
+          type: array
+          title: Outgoing
+          description: HS codes for products shipped by this entity
+      type: object
+      title: HsCodes
+      description: HS codes organized by direction (incoming/outgoing shipments)
+    ExternalEnttiyId:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: The External Id
+        type:
+          type: string
+          title: Type
+          description: The type of the identifier
+        source:
+          type: string
+          title: Source
+          description: The source of the identifieer
+      type: object
+      required:
+      - id
+      - type
+      - source
+      title: ExternalEnttiyId
+      description: Class for information about external Entity Identifiers
     TopSupplierConnection:
       properties:
         id:
@@ -2562,6 +1937,292 @@ components:
       - jurisdiction
       title: TopSupplierConnection
       description: Top supplier connection
+    earthstream_services__services__entity__common__entity_dto__EntityReferences:
+      properties:
+        flags:
+          title: Information about flags found for an entity
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__Flags'
+          nullable: true
+        relationships:
+          title: Information about relationships for an entity
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__Relationships'
+          nullable: true
+      type: object
+      title: EntityReferences
+    Address:
+      properties:
+        address:
+          type: string
+          title: Address
+        problematic:
+          type: boolean
+          title: Problematic
+          default: false
+        problem_region:
+          title: Problem Region
+          type: string
+          nullable: true
+      type: object
+      required:
+      - address
+      title: Address
+      description: Information about an Entity's Address.
+    ProblematicEntity:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        flags:
+          items:
+            $ref: '#/components/schemas/VerificationFlag'
+          type: array
+          title: Flags
+          default: []
+        addresses:
+          items:
+            $ref: '#/components/schemas/Address'
+          type: array
+          title: Addresses
+          default: []
+        jurisdiction:
+          type: string
+          title: Jurisdiction
+        depth:
+          type: integer
+          title: Depth
+        tvpra_risks:
+          items:
+            $ref: '#/components/schemas/TVPRARisk'
+          type: array
+          title: Tvpra Risks
+          default: []
+        has_excessive_addresses:
+          type: boolean
+          title: Has Excessive Addresses
+          default: false
+      type: object
+      required:
+      - id
+      - name
+      - jurisdiction
+      - depth
+      title: ProblematicEntity
+      description: An Entity identified as problematic during verification.
+    EntityGraphCounts:
+      properties:
+        depth:
+          type: integer
+          title: The depth of the graph traversal
+          default: 3
+        value:
+          type: integer
+          title: The total number of relationships in the graph
+          default: 0
+        flagged_count:
+          type: integer
+          title: Flagged Count
+          description: Flagged upstream entities count
+          default: 0
+        last_updated:
+          type: string
+          format: date-time
+          title: The last time the graph counts were updated
+          default: '2026-07-20T16:50:05.374936Z'
+      type: object
+      title: EntityGraphCounts
+    PublicAbridgedGraph:
+      properties:
+        entrypoint:
+          $ref: '#/components/schemas/PublicEntity'
+          nullable: true
+        entities:
+          items:
+            $ref: '#/components/schemas/PublicEntity'
+          type: array
+          title: Entities
+        relationships:
+          items:
+            $ref: '#/components/schemas/PublicRelationship'
+          type: array
+          title: Relationships
+        page:
+          type: integer
+          title: Page
+          default: 0
+        page_size:
+          type: integer
+          title: Page Size
+          default: 0
+        records:
+          type: integer
+          title: Records
+          default: 0
+        total_records:
+          title: Total Records
+          type: integer
+          nullable: true
+        total_pages:
+          title: Total Pages
+          type: integer
+          nullable: true
+        entity_graph_counts:
+          title: Entity Graph Counts
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          nullable: true
+      type: object
+      required:
+      - entities
+      - relationships
+      title: PublicAbridgedGraph
+      description: Public abridged graph response model
+    TVPRARisk:
+      properties:
+        risk_type:
+          type: string
+          title: Risk Type
+        suspect_hs_codes:
+          items:
+            type: string
+          type: array
+          title: Suspect Hs Codes
+      type: object
+      required:
+      - risk_type
+      - suspect_hs_codes
+      title: TVPRARisk
+      description: Information about high-risk goods.
+    earthstream_services__services__entity__common__entity_dto__RelationshipCount:
+      properties:
+        count:
+          type: integer
+          title: The number of relationships found on an entity.
+          default: 0
+      type: object
+      title: RelationshipCount
+    EntitySearchResult:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: The Mesur Entity Id.
+        name:
+          type: string
+          title: Name
+          description: Entity name
+        aliases:
+          title: Aliases
+          description: Alternative names and aliases
+          items:
+            type: string
+          type: array
+          nullable: true
+        jurisdiction:
+          title: Jurisdiction
+          description: The country the entity is associated with.
+          type: string
+          nullable: true
+        addresses:
+          title: Addresses
+          description: Entity addresses.
+          items:
+            type: string
+          type: array
+          nullable: true
+        flagged:
+          type: boolean
+          title: Flagged
+          description: Whether or not the Entity has active Flags.
+        has_positive_flags:
+          type: boolean
+          title: Has Positive Flags
+          description: Whether the Entity has any positive/compliant flags.
+          default: false
+        has_negative_flags:
+          type: boolean
+          title: Has Negative Flags
+          description: Whether the Entity has any negative/risk flags.
+          default: false
+        description:
+          title: Entity Description
+          description: Detailed information about the entity's purpose, background, or role.
+          type: string
+          maxLength: 4096
+          nullable: true
+        primary_role:
+          title: Primary Role
+          description: The primary role of the entity (e.g., supplier, grower)
+          type: string
+          nullable: true
+        url:
+          title: Entity URL
+          description: The official website or online resource associated with the entity.
+          type: string
+          nullable: true
+        extended_data:
+          title: Extended Data
+          description: Additional data points about the entity, including status and links to documents
+          additionalProperties: true
+          type: object
+          nullable: true
+        auto_research:
+          title: Research Entity
+          description: Flag indicating if the entity should be researched automatically.
+          type: boolean
+          nullable: true
+        monitor:
+          title: Monitor Entity
+          description: Flag indicating if the entity should be continuously monitored for updates or changes.
+          type: boolean
+          nullable: true
+        callback_url:
+          title: Callback URL
+          description: Registered URL to call when Entity activiy occurs
+          type: string
+          nullable: true
+        references:
+          title: Entity References
+          description: flag, relationships, other references to this entity
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__search_models__EntityReferences'
+          nullable: true
+        count_inferred_relationships:
+          title: Inferred Relationships Count
+          description: The number of inferred relationships in the graph.  Will not be present if the graph counts have not been calculated yet.
+          $ref: '#/components/schemas/EntityGraphCounts'
+          nullable: true
+        external_ids:
+          title: External Identifiers
+          description: An optional list of external identifiers for an Entity.
+          items:
+            $ref: '#/components/schemas/ExternalEnttiyId'
+          type: array
+          nullable: true
+        modified_date:
+          title: Modified Date
+          description: Last time entity record was modified (timezone-aware UTC)
+          type: string
+          format: date-time
+          nullable: true
+        hs_codes:
+          title: HS Codes
+          description: Harmonized System codes for products traded by this entity, organized by direction
+          $ref: '#/components/schemas/HsCodes'
+          nullable: true
+      type: object
+      required:
+      - id
+      - name
+      - aliases
+      - jurisdiction
+      - addresses
+      - flagged
+      title: EntitySearchResult
+      description: Single Entity search result
     VerificationFlag:
       properties:
         sources:
@@ -2586,6 +2247,345 @@ components:
       - subtype
       title: VerificationFlag
       description: Information about a Flag.
+    earthstream_services__services__entity__common__search_models__EntityReferences:
+      properties:
+        flags:
+          title: Information about flags found for an entity
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__Flags'
+          nullable: true
+        relationships:
+          title: Information about relationships for an entity
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__search_models__Relationships'
+          nullable: true
+        risk_events:
+          title: Information about risk events for an entity
+          $ref: '#/components/schemas/RiskEvents'
+          nullable: true
+      type: object
+      title: EntityReferences
+    PublicRelationship:
+      properties:
+        id:
+          type: string
+          title: Id
+        type:
+          type: string
+          title: Type
+          description: Describes the relationship between subject and object.
+        target:
+          type: string
+          title: Target
+          description: Entity at the destination of the relationship.
+        source:
+          type: string
+          title: Source
+          description: Entity at the origin of the relationship.
+        hs_codes:
+          title: Hs Codes
+          items:
+            type: string
+          type: array
+          nullable: true
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+        sources:
+          title: Sources
+          items:
+            type: string
+          type: array
+          nullable: true
+        aliases:
+          title: Aliases
+          items:
+            type: string
+          type: array
+          nullable: true
+      type: object
+      required:
+      - id
+      - type
+      - target
+      - source
+      - modified
+      title: PublicRelationship
+      description: Public relationship response model - only exposes what consumers need
+    ExternalEntityId:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: The external identifier value
+        type:
+          type: string
+          title: Type
+          description: The type of the identifier (e.g. lei, us_fein)
+        source:
+          type: string
+          title: Source
+          description: The source of the identifier
+      type: object
+      required:
+      - id
+      - type
+      - source
+      title: ExternalEntityId
+      description: External identifier for an Entity
+    earthstream_services__services__entity__common__entity_dto__Relationships:
+      properties:
+        total:
+          type: integer
+          title: The number of relationships the entity is linked with
+          default: 0
+        from_relationships:
+          title: "\n            The relationships where the given entity is on the 'from' side.\n            These relationships are considered 'outbound' from the entity.\n        "
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__RelationshipCount'
+          nullable: true
+        to_relationships:
+          title: "\n            The relationships where the given entity is on the 'to' side.\n            These relationships are considered 'inbound' to the entity.\n        "
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__RelationshipCount'
+          nullable: true
+      type: object
+      title: Relationships
+    EntityHsCodes:
+      properties:
+        incoming:
+          items:
+            type: string
+          type: array
+          title: Incoming
+          description: HS codes for products received by this entity
+        outgoing:
+          items:
+            type: string
+          type: array
+          title: Outgoing
+          description: HS codes for products shipped by this entity
+      type: object
+      title: EntityHsCodes
+      description: HS codes organized by trade direction for an Entity
+    PublicFlag:
+      properties:
+        id:
+          type: string
+          title: Id
+        entity_id:
+          type: string
+          title: Entity Id
+        entity_jurisdiction:
+          title: Entity Jurisdiction
+          type: string
+          nullable: true
+        type:
+          type: string
+          title: Type
+        subtype:
+          type: string
+          title: Subtype
+        flag_polarity:
+          title: Flag Polarity
+          type: integer
+          nullable: true
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+        source:
+          title: Source
+          items:
+            type: string
+          type: array
+          nullable: true
+        description:
+          title: Description
+          type: string
+          nullable: true
+        tags:
+          title: Tags
+          items:
+            type: string
+          type: array
+          nullable: true
+      type: object
+      required:
+      - id
+      - entity_id
+      - type
+      - subtype
+      - modified
+      title: PublicFlag
+      description: Public flag response model - only exposes what consumers need
+    app__schemas__metadata__Identifier:
+      properties:
+        id:
+          type: string
+          title: Identifier
+          description: An identifer, e.g., a GTIN or CIN
+        active:
+          type: boolean
+          title: Active Status
+          description: A boolean field indicating if the object is active. Setting this to False acts as a soft delete.
+          default: true
+        created:
+          type: string
+          format: date-time
+          title: Date Added
+          description: The date and time when the object was added.
+        type:
+          type: string
+          title: Type
+          description: The type of identifier, e.g., a GTIN or CIN
+        source:
+          title: Source
+          description: A URL that can be dereferenced to provide more information about the id
+          type: string
+          nullable: true
+      type: object
+      required:
+      - id
+      - type
+      title: Identifier
+      description: "Represents an identifier that can be used for an entity, along with the\nidentifier type and a source URL.\n\nAttributes:\n    id: the value of the identifier.\n    type: the type of the identifier.\n    url: a URL source for the identifier."
+    GetEntityResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique Entity identifier.
+        name:
+          type: string
+          title: Name
+          description: The formal or recognized name of the entity.
+        description:
+          title: Description
+          description: Detailed information about the entity's purpose, background, or role.
+          type: string
+          nullable: true
+        primary_role:
+          title: Primary Role
+          description: The primary role of the entity (e.g., supplier, grower)
+          type: string
+          nullable: true
+        aliases:
+          title: Aliases
+          description: Alternative names and aliases
+          items:
+            type: string
+          type: array
+          nullable: true
+        url:
+          title: Url
+          description: The official website or online resource associated with the entity.
+          type: string
+          nullable: true
+        jurisdiction:
+          type: string
+          title: Entity Jurisdiction
+          description: ISO 3166 country code of the country where the entity operates or is governed.
+        addresses:
+          title: Addresses
+          description: The physical or registered addresses of the entity.
+          items:
+            type: string
+          type: array
+          nullable: true
+        monitor:
+          type: boolean
+          title: Monitor Entity
+          description: If 'true', system events impacting this Entity or any Entity in its supply chain (as defined by the parameters set in Entity.subscription) will generate Notifications. Notifications can be viewed and acknowledged at /notifications endpoints.
+          default: false
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Time record was created.
+        modified:
+          type: string
+          format: date-time
+          title: Modified
+          description: Last time record was modified.
+        region:
+          title: Region
+          description: Region code for the Enttiy
+          type: string
+          nullable: true
+        affiliated_jurisdiction:
+          title: Affiliated Jurisdiction
+          description: Supplemental jurisdction information. For example, some Entities may be associate with super-governmental bodies like the United Nations.
+          type: string
+          nullable: true
+        tradeverifyd_score:
+          title: Tradeverifyd Score
+          description: Entity's Tradeverifyd score. Entities with higher risk for supply chain or compliance issues will have a lower Tradeverifyd score.
+          type: integer
+          nullable: true
+        references:
+          title: Entity References
+          description: Summary counts of flags, relationships, and other references associated with this entity. Not specific to query.
+          $ref: '#/components/schemas/earthstream_services__services__entity__common__entity_dto__EntityReferences'
+          nullable: true
+        count_inferred_relationships:
+          title: Inferred Relationships Count
+          description: The number of inferred relationships in the graph.  Will not be present if the graph counts have not been calculated yet.
+          $ref: '#/components/schemas/EntityGraphCounts'
+          nullable: true
+        flagged:
+          type: boolean
+          title: Flagged
+          description: Whether the Entity has active Flags visible to the requesting organization.
+          default: false
+        has_positive_flags:
+          type: boolean
+          title: Has Positive Flags
+          description: Whether the Entity has any positive/compliant flags.
+          default: false
+        has_negative_flags:
+          type: boolean
+          title: Has Negative Flags
+          description: Whether the Entity has any negative/risk flags.
+          default: false
+        external_ids:
+          title: External Ids
+          description: External identifiers for the Entity.
+          items:
+            $ref: '#/components/schemas/ExternalEntityId'
+          type: array
+          nullable: true
+        hs_codes:
+          description: Harmonized System codes for products traded by this entity, organized by direction.
+          $ref: '#/components/schemas/EntityHsCodes'
+          nullable: true
+      type: object
+      required:
+      - id
+      - name
+      - jurisdiction
+      - created_at
+      - modified
+      title: GetEntityResponse
+      description: "Response model for entities.\n\n Attributes:\n\n    id: Unique entity identifier.\n\n    name: Entity name.\n\n    description: Detailed information about the entity, covering its purpose,\n    background, or role.\n\n    primary_role: The primary role an entity plays.\n\n    aliases: Additional aliases that are associated with the entity.\n\n    url: The official website or a relevant online resource associated with the\n    entity.\n\n    jurisdiction: The country the entity is associated with.\n\n    addresses: The physical or registered addresses of the entity.\n\n    monitor: A boolean indicating if this entity's events will generate notifications.\n\n    created_at: Time the entity record was created.\n\n    modified: Time the record was last modified.\n\n    region: Entity's region code.\n\n    affiliated_jurisdiction: Supplemental jurisdiction information.\n\n    tradeverifyd_score: Computed Tradeverifyd score for the entity.\n\n    references: Summary counts of direct entity relationships and flags.\n\n    count_inferred_relationships: Optional value for number of inferred relationships in the entity graph, if already calculated."
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

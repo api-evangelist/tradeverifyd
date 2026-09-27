@@ -420,27 +420,32 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
+    Facet:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
         type:
           type: string
-          title: Error Type
+          enum:
+          - event_type
+          - event_country
+          title: Type
+          description: Facet type.
+        value:
+          type: string
+          minLength: 1
+          title: Value
+          description: Distinct facet value.
+        count:
+          type: integer
+          minimum: 1.0
+          title: Count
+          description: Number of records in the entire (non-paginated) result set matching the distinct facet value.
       type: object
       required:
-      - loc
-      - msg
       - type
-      title: ValidationError
+      - value
+      - count
+      title: Facet
+      description: Number of result values matching a distinct value for a given facet.
     GetRiskEventsResponse:
       properties:
         facets:
@@ -642,32 +647,27 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    Facet:
+    ValidationError:
       properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
         type:
           type: string
-          enum:
-          - event_type
-          - event_country
-          title: Type
-          description: Facet type.
-        value:
-          type: string
-          minLength: 1
-          title: Value
-          description: Distinct facet value.
-        count:
-          type: integer
-          minimum: 1.0
-          title: Count
-          description: Number of records in the entire (non-paginated) result set matching the distinct facet value.
+          title: Error Type
       type: object
       required:
+      - loc
+      - msg
       - type
-      - value
-      - count
-      title: Facet
-      description: Number of result values matching a distinct value for a given facet.
+      title: ValidationError
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
