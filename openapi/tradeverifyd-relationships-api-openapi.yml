@@ -187,6 +187,18 @@ paths:
                     detail: Internal server error
 components:
   schemas:
+    RelationshipTypeCategoriesResponse:
+      properties:
+        categories:
+          items:
+            $ref: '#/components/schemas/RelationshipTypeCategory'
+          type: array
+          title: Categories
+      type: object
+      required:
+      - categories
+      title: RelationshipTypeCategoriesResponse
+      description: "Response model for relationship type categories endpoint.\n\nAttributes:\n    categories: List of relationship type categories."
     RelationshipTypeDetailResponse:
       properties:
         type:
@@ -251,18 +263,6 @@ components:
       - types
       title: RelationshipTypeCategory
       description: "Response model for relationship type categories.\n\nAttributes:\n    name: The category name (e.g., ownership, supply_chain).\n    display_name: Human-readable name for the category.\n    description: Description of what this category represents.\n    relationship_count: Number of relationship types in this category.\n    types: List of relationship type names in this category."
-    RelationshipTypeCategoriesResponse:
-      properties:
-        categories:
-          items:
-            $ref: '#/components/schemas/RelationshipTypeCategory'
-          type: array
-          title: Categories
-      type: object
-      required:
-      - categories
-      title: RelationshipTypeCategoriesResponse
-      description: "Response model for relationship type categories endpoint.\n\nAttributes:\n    categories: List of relationship type categories."
     RelationshipTypeResponse:
       properties:
         relationship_type:

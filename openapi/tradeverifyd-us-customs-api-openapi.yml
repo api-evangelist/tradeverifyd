@@ -66,57 +66,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    SubmitPresentationResponse:
-      properties:
-        response_code:
-          type: integer
-          title: Response Code
-          description: The response code from the US Customs API
-        message:
-          type: string
-          title: Response Message
-          description: A message from the US Customs API
-        cbp_request:
-          title: CBP Request
-          description: The saved CBP Request record
-          $ref: '#/components/schemas/earthstream_services__services__us_customs__schemas__us_customs__CBPRequest'
-          nullable: true
-      type: object
-      required:
-      - response_code
-      - message
-      title: SubmitPresentationResponse
-      description: A response from submitting a presentation to US Customs
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     earthstream_services__services__us_customs__schemas__us_customs__CBPRequest:
       properties:
         id:
@@ -187,6 +136,36 @@ components:
       - cbp_response_code
       title: CBPRequest
       description: The object type for a CBP Request
+    SubmitPresentationResponse:
+      properties:
+        response_code:
+          type: integer
+          title: Response Code
+          description: The response code from the US Customs API
+        message:
+          type: string
+          title: Response Message
+          description: A message from the US Customs API
+        cbp_request:
+          title: CBP Request
+          description: The saved CBP Request record
+          $ref: '#/components/schemas/earthstream_services__services__us_customs__schemas__us_customs__CBPRequest'
+          nullable: true
+      type: object
+      required:
+      - response_code
+      - message
+      title: SubmitPresentationResponse
+      description: A response from submitting a presentation to US Customs
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     SubmitPresentationRequest:
       properties:
         shipment_id:
@@ -206,6 +185,27 @@ components:
       - credential_ids
       title: SubmitPresentationRequest
       description: A request to submit a presentation to US Customs
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
