@@ -187,18 +187,6 @@ paths:
                     detail: Internal server error
 components:
   schemas:
-    RelationshipTypeCategoriesResponse:
-      properties:
-        categories:
-          items:
-            $ref: '#/components/schemas/RelationshipTypeCategory'
-          type: array
-          title: Categories
-      type: object
-      required:
-      - categories
-      title: RelationshipTypeCategoriesResponse
-      description: "Response model for relationship type categories endpoint.\n\nAttributes:\n    categories: List of relationship type categories."
     RelationshipTypeDetailResponse:
       properties:
         type:
@@ -230,6 +218,22 @@ components:
       - bidirectional
       title: RelationshipTypeDetailResponse
       description: "Enhanced response model for relationship types with additional metadata.\n\nAttributes:\n    type: The type of relationship (e.g., IS_SUPPLIER_OF, DIRECTLY_CONSOLIDATES).\n    display_name: Human-readable name for the relationship type.\n    category: The category this relationship belongs to (e.g., supply_chain, ownership).\n    description: A description of what this relationship type means.\n    bidirectional: Whether this relationship type is bidirectional."
+    RelationshipTypeResponse:
+      properties:
+        relationship_type:
+          type: string
+          title: Relationship Type
+          description: The type of relationship
+        description:
+          type: string
+          title: Description
+          description: Description of what this relationship type means
+      type: object
+      required:
+      - relationship_type
+      - description
+      title: RelationshipTypeResponse
+      description: "Response model for relationship types.\n\nAttributes:\n    relationship_type: The type of relationship (e.g., IS_SUPPLIER_OF, IS_OTHERWISE_LINKED_TO).\n    description: A description of what this relationship type means."
     RelationshipTypeCategory:
       properties:
         name:
@@ -263,22 +267,18 @@ components:
       - types
       title: RelationshipTypeCategory
       description: "Response model for relationship type categories.\n\nAttributes:\n    name: The category name (e.g., ownership, supply_chain).\n    display_name: Human-readable name for the category.\n    description: Description of what this category represents.\n    relationship_count: Number of relationship types in this category.\n    types: List of relationship type names in this category."
-    RelationshipTypeResponse:
+    RelationshipTypeCategoriesResponse:
       properties:
-        relationship_type:
-          type: string
-          title: Relationship Type
-          description: The type of relationship
-        description:
-          type: string
-          title: Description
-          description: Description of what this relationship type means
+        categories:
+          items:
+            $ref: '#/components/schemas/RelationshipTypeCategory'
+          type: array
+          title: Categories
       type: object
       required:
-      - relationship_type
-      - description
-      title: RelationshipTypeResponse
-      description: "Response model for relationship types.\n\nAttributes:\n    relationship_type: The type of relationship (e.g., IS_SUPPLIER_OF, IS_OTHERWISE_LINKED_TO).\n    description: A description of what this relationship type means."
+      - categories
+      title: RelationshipTypeCategoriesResponse
+      description: "Response model for relationship type categories endpoint.\n\nAttributes:\n    categories: List of relationship type categories."
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

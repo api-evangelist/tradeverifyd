@@ -66,6 +66,25 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    SubmitPresentationRequest:
+      properties:
+        shipment_id:
+          type: string
+          title: Shipment ID
+          description: The shipment ID from tradeverifyd
+        credential_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: Credential IDs
+          description: The IDs of the verifiable credentials to submit
+      type: object
+      required:
+      - shipment_id
+      - credential_ids
+      title: SubmitPresentationRequest
+      description: A request to submit a presentation to US Customs
     earthstream_services__services__us_customs__schemas__us_customs__CBPRequest:
       properties:
         id:
@@ -136,27 +155,6 @@ components:
       - cbp_response_code
       title: CBPRequest
       description: The object type for a CBP Request
-    SubmitPresentationResponse:
-      properties:
-        response_code:
-          type: integer
-          title: Response Code
-          description: The response code from the US Customs API
-        message:
-          type: string
-          title: Response Message
-          description: A message from the US Customs API
-        cbp_request:
-          title: CBP Request
-          description: The saved CBP Request record
-          $ref: '#/components/schemas/earthstream_services__services__us_customs__schemas__us_customs__CBPRequest'
-          nullable: true
-      type: object
-      required:
-      - response_code
-      - message
-      title: SubmitPresentationResponse
-      description: A response from submitting a presentation to US Customs
     HTTPValidationError:
       properties:
         detail:
@@ -166,25 +164,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    SubmitPresentationRequest:
-      properties:
-        shipment_id:
-          type: string
-          title: Shipment ID
-          description: The shipment ID from tradeverifyd
-        credential_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          title: Credential IDs
-          description: The IDs of the verifiable credentials to submit
-      type: object
-      required:
-      - shipment_id
-      - credential_ids
-      title: SubmitPresentationRequest
-      description: A request to submit a presentation to US Customs
     ValidationError:
       properties:
         loc:
@@ -206,6 +185,27 @@ components:
       - msg
       - type
       title: ValidationError
+    SubmitPresentationResponse:
+      properties:
+        response_code:
+          type: integer
+          title: Response Code
+          description: The response code from the US Customs API
+        message:
+          type: string
+          title: Response Message
+          description: A message from the US Customs API
+        cbp_request:
+          title: CBP Request
+          description: The saved CBP Request record
+          $ref: '#/components/schemas/earthstream_services__services__us_customs__schemas__us_customs__CBPRequest'
+          nullable: true
+      type: object
+      required:
+      - response_code
+      - message
+      title: SubmitPresentationResponse
+      description: A response from submitting a presentation to US Customs
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

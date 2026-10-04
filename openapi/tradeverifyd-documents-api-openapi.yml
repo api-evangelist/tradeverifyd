@@ -90,15 +90,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     Body_upload_file_file_upload_post:
       properties:
         file:
@@ -109,20 +100,6 @@ components:
       required:
       - file
       title: Body_upload_file_file_upload_post
-    FileUploadResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        url:
-          type: string
-          title: Url
-      type: object
-      required:
-      - success
-      - url
-      title: FileUploadResponse
-      description: Response model for file upload operations.
     ValidationError:
       properties:
         loc:
@@ -144,6 +121,29 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    FileUploadResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        url:
+          type: string
+          title: Url
+      type: object
+      required:
+      - success
+      - url
+      title: FileUploadResponse
+      description: Response model for file upload operations.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

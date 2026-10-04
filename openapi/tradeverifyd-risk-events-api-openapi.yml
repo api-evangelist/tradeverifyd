@@ -420,6 +420,15 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     RiskEvent:
       properties:
         id:
@@ -580,15 +589,6 @@ components:
       - type
       title: RiskEvent
       description: "Represents an event, encapsulating key information for tracking or\nmonitoring purposes within various applications.\n\nAttributes:\n\n    id:  Database identifier.\n\n    timestamp: Time the event occurred or was recorded.\n\n    last_modified: Last time Risk Event record was modified.\n\n    countries: A list of countries impacted by the Risk Event.\n\n    time_start: Start time of the event, marking the beginning of its\n    occurrence.\n\n    time_end: End time of the event, indicating when it concluded.\n\n    title: Brief, descriptive title of the event.\n\n    description: Summary of the RiskEvent.\n\n    sources: Web URLs that reference or describe the event.\n\n    type: The type of Risk Event."
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     Facet:
       properties:
         type:
@@ -615,27 +615,6 @@ components:
       - count
       title: Facet
       description: Number of result values matching a distinct value for a given facet.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     GetRiskEventsResponse:
       properties:
         facets:
@@ -668,6 +647,27 @@ components:
       - total_results
       title: GetRiskEventsResponse
       description: Response payload for GET RiskEvents query
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
