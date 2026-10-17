@@ -66,25 +66,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    SubmitPresentationRequest:
-      properties:
-        shipment_id:
-          type: string
-          title: Shipment ID
-          description: The shipment ID from tradeverifyd
-        credential_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          title: Credential IDs
-          description: The IDs of the verifiable credentials to submit
-      type: object
-      required:
-      - shipment_id
-      - credential_ids
-      title: SubmitPresentationRequest
-      description: A request to submit a presentation to US Customs
     earthstream_services__services__us_customs__schemas__us_customs__CBPRequest:
       properties:
         id:
@@ -164,27 +145,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     SubmitPresentationResponse:
       properties:
         response_code:
@@ -206,6 +166,46 @@ components:
       - message
       title: SubmitPresentationResponse
       description: A response from submitting a presentation to US Customs
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SubmitPresentationRequest:
+      properties:
+        shipment_id:
+          type: string
+          title: Shipment ID
+          description: The shipment ID from tradeverifyd
+        credential_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: Credential IDs
+          description: The IDs of the verifiable credentials to submit
+      type: object
+      required:
+      - shipment_id
+      - credential_ids
+      title: SubmitPresentationRequest
+      description: A request to submit a presentation to US Customs
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

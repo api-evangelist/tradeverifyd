@@ -420,6 +420,38 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    GetRiskEventsResponse:
+      properties:
+        facets:
+          items:
+            $ref: '#/components/schemas/Facet'
+          type: array
+          title: Facets
+          description: Per-facet metadata.
+        page_results:
+          items:
+            $ref: '#/components/schemas/RiskEvent'
+          type: array
+          title: Page Results
+          description: 1 page of queried Risk Event records.
+        current_page:
+          type: integer
+          minimum: 1.0
+          title: Current Page
+          description: Current page.
+        total_results:
+          type: integer
+          minimum: 0.0
+          title: Total Results
+          description: Total number of records that matched the query.
+      type: object
+      required:
+      - facets
+      - page_results
+      - current_page
+      - total_results
+      title: GetRiskEventsResponse
+      description: Response payload for GET RiskEvents query
     HTTPValidationError:
       properties:
         detail:
@@ -429,6 +461,53 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    Facet:
+      properties:
+        type:
+          type: string
+          enum:
+          - event_type
+          - event_country
+          title: Type
+          description: Facet type.
+        value:
+          type: string
+          minLength: 1
+          title: Value
+          description: Distinct facet value.
+        count:
+          type: integer
+          minimum: 1.0
+          title: Count
+          description: Number of records in the entire (non-paginated) result set matching the distinct facet value.
+      type: object
+      required:
+      - type
+      - value
+      - count
+      title: Facet
+      description: Number of result values matching a distinct value for a given facet.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     RiskEvent:
       properties:
         id:
@@ -589,85 +668,6 @@ components:
       - type
       title: RiskEvent
       description: "Represents an event, encapsulating key information for tracking or\nmonitoring purposes within various applications.\n\nAttributes:\n\n    id:  Database identifier.\n\n    timestamp: Time the event occurred or was recorded.\n\n    last_modified: Last time Risk Event record was modified.\n\n    countries: A list of countries impacted by the Risk Event.\n\n    time_start: Start time of the event, marking the beginning of its\n    occurrence.\n\n    time_end: End time of the event, indicating when it concluded.\n\n    title: Brief, descriptive title of the event.\n\n    description: Summary of the RiskEvent.\n\n    sources: Web URLs that reference or describe the event.\n\n    type: The type of Risk Event."
-    Facet:
-      properties:
-        type:
-          type: string
-          enum:
-          - event_type
-          - event_country
-          title: Type
-          description: Facet type.
-        value:
-          type: string
-          minLength: 1
-          title: Value
-          description: Distinct facet value.
-        count:
-          type: integer
-          minimum: 1.0
-          title: Count
-          description: Number of records in the entire (non-paginated) result set matching the distinct facet value.
-      type: object
-      required:
-      - type
-      - value
-      - count
-      title: Facet
-      description: Number of result values matching a distinct value for a given facet.
-    GetRiskEventsResponse:
-      properties:
-        facets:
-          items:
-            $ref: '#/components/schemas/Facet'
-          type: array
-          title: Facets
-          description: Per-facet metadata.
-        page_results:
-          items:
-            $ref: '#/components/schemas/RiskEvent'
-          type: array
-          title: Page Results
-          description: 1 page of queried Risk Event records.
-        current_page:
-          type: integer
-          minimum: 1.0
-          title: Current Page
-          description: Current page.
-        total_results:
-          type: integer
-          minimum: 0.0
-          title: Total Results
-          description: Total number of records that matched the query.
-      type: object
-      required:
-      - facets
-      - page_results
-      - current_page
-      - total_results
-      title: GetRiskEventsResponse
-      description: Response payload for GET RiskEvents query
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

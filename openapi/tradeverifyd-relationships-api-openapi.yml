@@ -187,6 +187,51 @@ paths:
                     detail: Internal server error
 components:
   schemas:
+    RelationshipTypeCategoriesResponse:
+      properties:
+        categories:
+          items:
+            $ref: '#/components/schemas/RelationshipTypeCategory'
+          type: array
+          title: Categories
+      type: object
+      required:
+      - categories
+      title: RelationshipTypeCategoriesResponse
+      description: "Response model for relationship type categories endpoint.\n\nAttributes:\n    categories: List of relationship type categories."
+    RelationshipTypeCategory:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: The category name
+        display_name:
+          type: string
+          title: Display Name
+          description: Human-readable name for the category
+        description:
+          type: string
+          title: Description
+          description: Description of what this category represents
+        relationship_count:
+          type: integer
+          title: Relationship Count
+          description: Number of relationship types in this category
+        types:
+          items:
+            type: string
+          type: array
+          title: Types
+          description: List of relationship type names in this category
+      type: object
+      required:
+      - name
+      - display_name
+      - description
+      - relationship_count
+      - types
+      title: RelationshipTypeCategory
+      description: "Response model for relationship type categories.\n\nAttributes:\n    name: The category name (e.g., ownership, supply_chain).\n    display_name: Human-readable name for the category.\n    description: Description of what this category represents.\n    relationship_count: Number of relationship types in this category.\n    types: List of relationship type names in this category."
     RelationshipTypeDetailResponse:
       properties:
         type:
@@ -234,51 +279,6 @@ components:
       - description
       title: RelationshipTypeResponse
       description: "Response model for relationship types.\n\nAttributes:\n    relationship_type: The type of relationship (e.g., IS_SUPPLIER_OF, IS_OTHERWISE_LINKED_TO).\n    description: A description of what this relationship type means."
-    RelationshipTypeCategory:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: The category name
-        display_name:
-          type: string
-          title: Display Name
-          description: Human-readable name for the category
-        description:
-          type: string
-          title: Description
-          description: Description of what this category represents
-        relationship_count:
-          type: integer
-          title: Relationship Count
-          description: Number of relationship types in this category
-        types:
-          items:
-            type: string
-          type: array
-          title: Types
-          description: List of relationship type names in this category
-      type: object
-      required:
-      - name
-      - display_name
-      - description
-      - relationship_count
-      - types
-      title: RelationshipTypeCategory
-      description: "Response model for relationship type categories.\n\nAttributes:\n    name: The category name (e.g., ownership, supply_chain).\n    display_name: Human-readable name for the category.\n    description: Description of what this category represents.\n    relationship_count: Number of relationship types in this category.\n    types: List of relationship type names in this category."
-    RelationshipTypeCategoriesResponse:
-      properties:
-        categories:
-          items:
-            $ref: '#/components/schemas/RelationshipTypeCategory'
-          type: array
-          title: Categories
-      type: object
-      required:
-      - categories
-      title: RelationshipTypeCategoriesResponse
-      description: "Response model for relationship type categories endpoint.\n\nAttributes:\n    categories: List of relationship type categories."
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
